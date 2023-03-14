@@ -1,42 +1,23 @@
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
   Chip,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextareaAutosize,
-  TextField,
-} from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { NFTStorageContext } from "../../../context/NFTStorageContext";
-import { Templates } from "../../../Templates";
-import Template1 from "../../../Templates/Template1";
-import Template2 from "../../../Templates/Template2";
-import Template3 from "../../../Templates/Template3";
-import Template4 from "../../../Templates/Template4";
+  Divider, 
+  Stack, 
+} from "@mui/material"; 
+ 
+import { NFTStorageContext } from "../../../context/NFTStorageContext"; 
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
-import Slider from "react-slick";
-
-import CSVReader from "react-csv-reader";
-import Draggable from "react-draggable";
-import Temp1 from "../../../Templates/Temp1";
-import Temp2 from "../../../Templates/Temp2";
-import Temp3 from "../../../Templates/Temp3";
-import Temp4 from "../../../Templates/Temp4";
+import Slider from "react-slick"; 
+import Draggable from "react-draggable"; 
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../../firebase";
 import TemplateEdit from "../../template/TemplateEdit";
 
 function GetTemplate() {
-  const value = useContext(NFTStorageContext);
-  const formdata = value.labelInfo.formData;
-  const setCsvData = value.setCsvData;
+  const value = useContext(NFTStorageContext); 
   const [data, setdata] = useState();
   const [username, setUsername] = useState("Your username");
   const [docId, setDocId] = useState("");
@@ -100,26 +81,7 @@ function GetTemplate() {
         },
       },
     ],
-  };
-
-  const tempData = [
-    {
-      name: "divTotemp1",
-      img: "temp1.png",
-    },
-    {
-      name: "divTotemp2",
-      img: "temp2.png",
-    },
-    {
-      name: "divTotemp3",
-      img: "temp3.png",
-    },
-    {
-      name: "divTotemp4",
-      img: "temp4.png",
-    },
-  ];
+  }; 
 
   const handleSelectTemp = (id) => {
     setDocId(id);

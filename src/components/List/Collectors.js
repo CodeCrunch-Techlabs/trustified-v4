@@ -6,10 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { Button, Typography } from "@mui/material";
-import { collection, db, doc, getDocs, query, where } from "../../firebase";
-import { getDoc } from "firebase/firestore";
+import TableRow from "@mui/material/TableRow"; 
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -118,9 +115,7 @@ function Collectors() {
                 {collectors
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    {
-                      console.log(row.ipfsurl, "row.ipfsurl");
-                    }
+                    
                     return (
                       <TableRow
                         hover

@@ -1,13 +1,8 @@
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  where,
-} from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { EditText, EditTextarea } from "react-edit-text";
+import { 
+  doc,
+  getDoc, 
+} from "firebase/firestore";
 import { db } from "../../firebase";
 
 const TemplateEdit = ({ id }) => {

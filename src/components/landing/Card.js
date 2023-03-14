@@ -1,4 +1,4 @@
-import { Avatar, Button, Card, CardActions, CardContent, Stack, Typography } from '@mui/material';
+import { Avatar , Card,  CardContent, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 const CardComponent = () => {

@@ -14,16 +14,13 @@ const Pricing = () => {
   const getTemplates = async () => {
     const ary = [];
     const q = query(collection(db, "Templates"));
-    const querySnapshot = await getDocs(q);
-    console.log(querySnapshot, "querySnapshot");
-    querySnapshot.forEach((data)=>{
-      console.log(data,"data"); 
+    const querySnapshot = await getDocs(q); 
+    querySnapshot.forEach((data)=>{ 
      ary.push(data.data())
     })
     setTemp(ary);
   };
-
-  console.log(temp, "temp");
+ 
 
   return (
     <section className="pricing-one" id="pricing">

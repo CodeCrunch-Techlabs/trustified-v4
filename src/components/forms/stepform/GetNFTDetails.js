@@ -1,3 +1,5 @@
+
+import React, { useContext } from "react";
 import {
   TextareaAutosize,
   TextField,
@@ -14,7 +16,6 @@ import { ethers } from "ethers";
 
 import { toast } from "react-toastify";
 
-import React, { useContext } from "react";
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
 
 function GetNFTDetails() {

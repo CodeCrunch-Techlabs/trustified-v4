@@ -1,13 +1,9 @@
-import {
-  Button,
-  CircularProgress,
-  TextField,
-  Typography,
-  Box,
+import React, { useEffect, useState } from "react";
+import { 
+  TextField, 
   Divider,
 } from "@mui/material";
 import { useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import MyCollection from "../myCollection";

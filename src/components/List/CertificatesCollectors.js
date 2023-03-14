@@ -1,11 +1,5 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper";
-import { firebaseDataContext } from "../../context/FirebaseDataContext";
-import { useNavigate } from "react-router-dom";
-import List from "@mui/material/List";
-import Chip from "@mui/material/Chip";
-import Iconify from "../../components/utils/Iconify";
-import Tooltip from "@mui/material/Tooltip";
+import Paper from "@mui/material/Paper"; 
 
 export default function Certificates({data}) {
   const [certificates, setCertificates] = React.useState([]);
@@ -13,8 +7,7 @@ export default function Certificates({data}) {
   React.useEffect(() =>{
     setCertificates(data)
   },[data])
-
-  console.log(certificates);
+ 
 
   return (
     <>

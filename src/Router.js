@@ -3,12 +3,9 @@ import Claim from "./components/claim/Claim";
 import DashboardLayout from "./components/dashboard";
 import Collections from "./components/collection/Collection";
 import Landing from "./components/landing/Landing";
-import LendingPageLayout from "./components/landing/LendingPageLayout"; 
-import Profile from "./components/profile/Profile";
-import CreateTemplate from "./components/template/CreateTemplate";
-import Broadcast from "./components/Broadcast";
-import Collectors from "./components/List/Collectors";
-import Badge1 from "./badge/Badge";
+import LendingPageLayout from "./components/landing/LendingPageLayout";  
+import CreateTemplate from "./components/template/CreateTemplate"; 
+import Collectors from "./components/List/Collectors"; 
 import Index from "./badge/Index";
 import User from "./components/profile";
 import NewTemplates from "./components/template/NewTemplates";
@@ -37,10 +34,6 @@ export default function Router() {
         {
           path: "templates",
           element: <CreateTemplate />,
-        },
-        {
-          path: "broadcast",
-          element: <Broadcast />,
         }, 
         {
           path: "badge",

@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from "react";
 import { CircularProgress, TableCell } from "@mui/material";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+
 
 const TableRowComponent = ({ id, value, event, type }) => {
   const [pdf, setPdf] = useState("");
@@ -13,8 +14,7 @@ const TableRowComponent = ({ id, value, event, type }) => {
 
   const getUserSMetadata = async (url) => {
     if (type == "badge") {
-      let d = await axios.get(url);
-      // console.log(d.data, event);
+      let d = await axios.get(url); 
       const rep = d.data.image.replace(
         "ipfs://",
         "https://nftstorage.link/ipfs/"

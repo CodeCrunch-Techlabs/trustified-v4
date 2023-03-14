@@ -1,5 +1,5 @@
-import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material';
 import React from 'react';
+import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material';
 import { NFTStorageContext } from '../../context/NFTStorageContext';
 import GetNFTDetails from '../forms/stepform/GetNFTDetails';
 import GetChain from '../forms/stepform/GetChain';

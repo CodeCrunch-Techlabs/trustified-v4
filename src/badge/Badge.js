@@ -1,5 +1,4 @@
-import { Divider, Typography } from '@mui/material';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext} from 'react'; 
 import { data } from '../components/utils/BadgeTemplates';
 import { BadgeContext } from '../context/BadgeContext';
 import "./badge.css";

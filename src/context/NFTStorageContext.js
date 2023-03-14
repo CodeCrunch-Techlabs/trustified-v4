@@ -77,8 +77,7 @@ export const NFTStorageContextProvider = (props) => {
     console.log(ipfsurl);
     try {
       setUploading(true);
-      if (ipfsurl) {
-        console.log("if call");
+      if (ipfsurl) { 
         await createNFTCollection(
           csvData,
           labelInfo.formData,

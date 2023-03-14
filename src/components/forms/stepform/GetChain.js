@@ -1,3 +1,4 @@
+import React, { useContext, useState } from "react";
 import {
   Box,
   FormControl,
@@ -7,13 +8,10 @@ import {
   RadioGroup,
   Stack,
   Button,
-  TextField,
-  Switch,
+  TextField, 
   FormHelperText,
   Divider,
 } from "@mui/material";
-
-import React, { useContext, useState } from "react";
 import CSVReader from "react-csv-reader";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";

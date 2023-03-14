@@ -1,7 +1,6 @@
-import { Button, FormControlLabel, FormHelperText, Switch, TextField } from '@mui/material';
-import { Box, Stack } from '@mui/system';
 import React, { useContext } from 'react';
-import CSVReader from 'react-csv-reader';
+import {FormControlLabel, FormHelperText, Switch, TextField } from '@mui/material';
+import { Box, Stack } from '@mui/system';  
 import { BadgeContext } from '../../context/BadgeContext';
 
 const GetCsvFile = () => {

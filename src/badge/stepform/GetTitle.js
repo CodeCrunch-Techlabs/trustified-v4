@@ -1,3 +1,4 @@
+import React, { useContext } from "react";
 import {
   TextareaAutosize,
   TextField,
@@ -9,10 +10,7 @@ import {
   FormControlLabel,
   Box,
 } from "@mui/material";
-import { ethers } from "ethers";
-
-import React, { useContext } from "react";
-import { toast } from "react-toastify";
+import { ethers } from "ethers"; 
 import { BadgeContext } from "../../context/BadgeContext";
 
 function GetTitle() {

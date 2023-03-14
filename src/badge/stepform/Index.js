@@ -16,10 +16,7 @@ const steps = ['Badge Details', 'Create Your Badge', 'Upload Collectors List'];
 export default function BadgeStepperForm() {
 
     const formdatavalue = React.useContext(BadgeContext);
-    const formdata = formdatavalue.labelInfo.formData;
-    const btnDisbaled =
-        formdata.title.length > 0 &&
-        formdata.name.length > 0  
+    const formdata = formdatavalue.labelInfo.formData; 
 
     const [activeStep, setActiveStep] = React.useState(0);
     const [skipped, setSkipped] = React.useState(new Set());

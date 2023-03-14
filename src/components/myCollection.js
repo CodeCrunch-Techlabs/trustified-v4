@@ -1,18 +1,12 @@
+import React, { useEffect, useState } from "react";
 import {
   Button,
   CircularProgress,
   TextField,
   Typography,
   Box,
-} from "@mui/material";
-import { useParams } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { Web3Context } from "../context/Web3Context";
-import { firebaseDataContext } from "../context/FirebaseDataContext";
-import axios from "axios";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../firebase";
-
+} from "@mui/material"; 
+import { firebaseDataContext } from "../context/FirebaseDataContext"; 
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
@@ -58,8 +52,7 @@ export default function MyCollection({ show }) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-  };
-  console.log(myCollection, "myCollection");
+  }; 
   const [badgesData, setbadgesData] = useState([]);
   const [certificatesData, setcertificatesData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -158,8 +151,7 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={1}>
             <div className="row">
               {certificatesData.length != 0 &&
-                certificatesData.map((e, i) => {
-                  console.log(i,"iiiiii");
+                certificatesData.map((e, i) => { 
                   return (
                     <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
                       <div className="mt-4 template-card mb-4" style={{ display: "grid" }}>

@@ -1,9 +1,7 @@
-import { Divider, Typography } from "@mui/material";
-import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-import { data } from "../components/utils/BadgeTemplates";
+import React, { useEffect  } from "react"; 
+import { useNavigate } from "react-router-dom"; 
 import "./badge.css";
-import { Button, Paper, Chip } from "@mui/material";
+import { Paper, Chip } from "@mui/material";
 import { firebaseDataContext } from "../context/FirebaseDataContext";
 import Iconify from "../components/utils/Iconify";
 

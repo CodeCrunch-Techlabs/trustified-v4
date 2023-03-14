@@ -80,8 +80,7 @@ export const Web3ContextProvider = (props) => {
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {
-      setaLoading(false);
-      console.log(err);
+      setaLoading(false); 
       if (err.code === 4902) {
         try {
           setaLoading(true);
@@ -224,8 +223,7 @@ export const Web3ContextProvider = (props) => {
         ); // Bulk Mint NFT collection.
       }
 
-      let txm = await transactionMint.wait();
-      console.log(txm, "txm");
+      let txm = await transactionMint.wait(); 
       if (txm) {
         var event;
         if (type == "badge") {
@@ -246,8 +244,7 @@ export const Web3ContextProvider = (props) => {
         let tokenIds = await trustifiedContract.getTokenIds(
           parseInt(Number(eventId))
         );
-
-        console.log(tokenIds, "tokenIDs");
+  
 
         var array = [];
         for (let i = 0; i < tokenIds.length; i++) {
@@ -333,8 +330,7 @@ export const Web3ContextProvider = (props) => {
     position,
     previewUrl
   ) => {
-    try {
-      console.log(previewUrl, "previewUrl");
+    try { 
       const trustifiedContract = new ethers.Contract(
         formData.transferable == "on"
           ? trustifiedContracts[formData.chain].nonTransferable
@@ -346,11 +342,9 @@ export const Web3ContextProvider = (props) => {
       );
       let transactionMint = await trustifiedContract.bulkMintERC721(
         parseInt(csvdata.length)
-      );
-      console.log(transactionMint, "transactionMint");
+      ); 
       let txm = await transactionMint.wait();
-      if (txm) {
-        console.log(txm.events, "txm");
+      if (txm) { 
         let event = await txm.events[parseInt(csvdata?.length)];
         var eventId = event?.args[1];
         formData.contract = trustifiedContract.address;
@@ -434,10 +428,8 @@ export const Web3ContextProvider = (props) => {
   };
 
   const claimCertificate = async (claimToken, claimerAddress, claimer) => {
-    setClaimLoading(true);
-    console.log("call");
-    const input = document.getElementById("create-temp");
-    console.log(input, "input");
+    setClaimLoading(true); 
+    const input = document.getElementById("create-temp"); 
 
     var pdfBlob = await html2canvas(input, {
       allowTaint: true,
@@ -479,14 +471,11 @@ export const Web3ContextProvider = (props) => {
       image: imageFile,
       pdf: pdfFile,
       claimer: claimer?.claimer,
-    });
-
-    console.log(metadata, "metadata");
+    }); 
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    );
-    console.log(meta, "meta");
+    ); 
 
     const q = query(
       collection(db, "Collectors"),
@@ -586,8 +575,7 @@ export const Web3ContextProvider = (props) => {
     setClaimLoading(true);
 
     const input = document.getElementById("certificateX");
-
-    console.log(input, "input");
+ 
 
     var pdfBlob = await html2canvas(input, {
       allowTaint: true,
@@ -632,15 +620,12 @@ export const Web3ContextProvider = (props) => {
       pdf: pdfFile,
       claimer: claimer?.claimer,
     });
-
-    console.log(metadata, "metadata");
+ 
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
     );
-
-    console.log(meta, "meta");
-
+ 
     const q = query(
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
@@ -683,8 +668,7 @@ export const Web3ContextProvider = (props) => {
               "ipfs://",
               "https://nftstorage.link/ipfs/"
             );
-            toast.success("Claimed Certificate Successfully!");
-            console.log(url, "urll");
+            toast.success("Claimed Certificate Successfully!"); 
             window.open(url, "_blank");
             setClaimLoading(false);
           }

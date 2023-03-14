@@ -1,22 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper";
+import { Autoplay } from "swiper";
 
-const Testimonial = () => {
-  // const [swiper, setSwiper] = useState(null);
-
-  // const goNext = () => {
-  //   if (swiper !== null) {
-  //     swiper.slideNext();
-  //   }
-  // };
-
-  // const goPrev = () => {
-  //   if (swiper !== null) {
-  //     swiper.slidePrev();
-  //   }
-  // };
-
+const Testimonial = () => { 
   return (
     <div className="testimonials-one__carousel-outer">
       <div className="testimonials-one__carousel">

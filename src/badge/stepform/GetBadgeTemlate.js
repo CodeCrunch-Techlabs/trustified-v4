@@ -1,5 +1,5 @@
+import React, { useContext } from 'react';
 import { Box, Button, Chip, Divider, FormControl, IconButton, InputLabel, MenuItem, Select, Stack, TextField } from '@mui/material';
-import React, { useContext, useEffect, useState } from 'react';
 import { data } from '../../components/utils/BadgeTemplates';
 import { BadgeContext } from '../../context/BadgeContext';
 import Badge1 from '../Badge';

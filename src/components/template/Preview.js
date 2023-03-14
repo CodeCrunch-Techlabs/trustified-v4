@@ -1,5 +1,5 @@
-import { collection, getDocs, query } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
+import { collection, getDocs, query } from 'firebase/firestore'; 
 import { db } from '../../firebase';  
 
 const Preview = () => {
@@ -21,9 +21,7 @@ const Preview = () => {
     }, [])
 
     useEffect(() => {
-        data && data.map((d) => {
-            console.log(d.name.position.x, "x");
-            console.log(d.width, "width");
+        data && data.map((d) => { 
             let newPosition = { x: 0, y: 0 };
             newPosition.x = d.name.position.x * d.width / d.width;
             newPosition.y = d.name.position.y * d.height / d.height; 
