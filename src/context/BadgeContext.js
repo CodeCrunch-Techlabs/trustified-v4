@@ -95,18 +95,32 @@ export const BadgeContextProvider = (props) => {
       } else {
         const idd = `badgeToprint${labelInfo.formData.template}`;
         const input = document.getElementById(idd);
-        var pdfBlob = await html2canvas(input).then(async (canvas) => {
-          const imgData = canvas.toDataURL("image/png");
-          const img = new Image(); // create a new image element
-          img.src = imgData; // set the source of the image to the data URL
+
+
+        const pdfWidth = 400;
+        const pdfHeight = 400;
+        const canvasWidth = pdfWidth * 1;
+        const canvasHeight = pdfHeight * 1;
+
+        var pdfBlob = await html2canvas(input, {
+          width: canvasWidth,
+          height: canvasHeight,
+          scale: 2,
+          allowTaint: true,
+          useCORS: true,
+        }).then(async (canvas) => {
+          const imgData = canvas.toDataURL('image/jpeg', 1.0);
+          // const img = new Image(); // create a new image element
+          // img.src = imgData; // set the source of the image to the data URL
           const imageData = await fetch(imgData).then((r) => r.blob()); //
           var pdf;
           if (canvas.width > canvas.height) {
-            pdf = new jsPDF("l", "mm", [canvas.width, canvas.height]);
+            pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
           } else {
-            pdf = new jsPDF("p", "mm", [canvas.height, canvas.width]);
+            pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
           }
-          pdf.addImage(imgData, "JPEG", 10, 30, canvas.width, canvas.height);
+          pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+          // pdf.save('my-badge.pdf');
           const pdfBlob = pdf.output("blob");
           return { imageData, pdfBlob };
         });
