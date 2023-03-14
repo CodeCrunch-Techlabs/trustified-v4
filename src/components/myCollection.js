@@ -52,11 +52,7 @@ export default function MyCollection({ show }) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
-<<<<<<< HEAD
-  }; 
-=======
   };
->>>>>>> 710acebffdc0fe4ff2f68c8de918c7c1e58e1630
   const [badgesData, setbadgesData] = useState([]);
   const [certificatesData, setcertificatesData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -159,12 +155,8 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={1}>
             <div className="row">
               {certificatesData.length != 0 &&
-<<<<<<< HEAD
-                certificatesData.map((e, i) => { 
-=======
                 certificatesData.map((e, i) => {
            
->>>>>>> 710acebffdc0fe4ff2f68c8de918c7c1e58e1630
                   return (
                     <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
                       <div
