@@ -510,7 +510,7 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -521,17 +521,11 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
+
             toast.success("Claimed Certificate Successfully!");
-            window.open(url, "_blank");
+
             setClaimLoading(false);
           }
         } else {
@@ -545,7 +539,7 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -556,17 +550,11 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
+
             toast.success("Claimed Certificate Successfully!");
-            window.open(url, "_blank");
+
             setClaimLoading(false);
           }
         }
@@ -663,7 +651,7 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -674,18 +662,11 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
+
             toast.success("Claimed Certificate Successfully!");
-            console.log(url, "urll");
-            window.open(url, "_blank");
+
             setClaimLoading(false);
           }
         } else {
@@ -699,7 +680,7 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -710,18 +691,11 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
+
             toast.success("Claimed Certificate Successfully!");
-            console.log(url, "urll");
-            window.open(url, "_blank");
+
             setClaimLoading(false);
           }
         }

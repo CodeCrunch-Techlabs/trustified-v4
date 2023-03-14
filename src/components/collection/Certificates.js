@@ -40,10 +40,7 @@ export default function Certificates() {
             <Paper className="certificatesCard">
               <img
                 className="certificate"
-                src={item?.ipfsUrl?.replace(
-                  "ipfs://",
-                  "https://nftstorage.link/ipfs/"
-                )}
+                src={item?.ipfsUrl}
                 alt={item.name}
               />
 

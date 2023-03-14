@@ -39,10 +39,7 @@ const Badges = () => {
             <Paper className="badgeCard" sx={{ borderRadius: "2em" }}>
               <img
                 className="badgeItem m-auto m-2"
-                src={item?.ipfsUrl?.replace(
-                  "ipfs://",
-                  "https://nftstorage.link/ipfs/"
-                )}
+                src={item?.ipfsUrl}
                 alt={item.name}
               />
 
