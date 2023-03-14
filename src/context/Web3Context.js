@@ -80,7 +80,7 @@ export const Web3ContextProvider = (props) => {
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {
-      setaLoading(false); 
+      setaLoading(false);
       if (err.code === 4902) {
         try {
           setaLoading(true);
@@ -223,7 +223,7 @@ export const Web3ContextProvider = (props) => {
         ); // Bulk Mint NFT collection.
       }
 
-      let txm = await transactionMint.wait(); 
+      let txm = await transactionMint.wait();
       if (txm) {
         var event;
         if (type == "badge") {
@@ -244,7 +244,7 @@ export const Web3ContextProvider = (props) => {
         let tokenIds = await trustifiedContract.getTokenIds(
           parseInt(Number(eventId))
         );
-  
+
 
         var array = [];
         for (let i = 0; i < tokenIds.length; i++) {
@@ -330,7 +330,7 @@ export const Web3ContextProvider = (props) => {
     position,
     previewUrl
   ) => {
-    try { 
+    try {
       const trustifiedContract = new ethers.Contract(
         formData.transferable == "on"
           ? trustifiedContracts[formData.chain].nonTransferable
@@ -342,9 +342,9 @@ export const Web3ContextProvider = (props) => {
       );
       let transactionMint = await trustifiedContract.bulkMintERC721(
         parseInt(csvdata.length)
-      ); 
+      );
       let txm = await transactionMint.wait();
-      if (txm) { 
+      if (txm) {
         let event = await txm.events[parseInt(csvdata?.length)];
         var eventId = event?.args[1];
         formData.contract = trustifiedContract.address;
@@ -428,24 +428,32 @@ export const Web3ContextProvider = (props) => {
   };
 
   const claimCertificate = async (claimToken, claimerAddress, claimer) => {
-    setClaimLoading(true); 
-    const input = document.getElementById("create-temp"); 
+    setClaimLoading(true);
+    const input = document.getElementById("create-temp");
+    const pdfWidth = 800;
+    const pdfHeight = 600;
+    const canvasWidth = pdfWidth * 1;
+    const canvasHeight = pdfHeight * 1;
 
-    var pdfBlob = await html2canvas(input, {
+    var pdfBlob = await html2canvas(input, { 
+      width: canvasWidth,
+      height: canvasHeight,
+      scale: 2,
       allowTaint: true,
       useCORS: true,
-    }).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const imageData = await fetch(imgData).then((r) => r.blob()); //
-
+    }).then(async (canvas) => { 
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+      // pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height); 
+      // pdf.save('my-pdf.pdf'); 
+      // const imgData = canvas.toDataURL("image/png");
+      const imageData = await fetch(imgData).then((r) => r.blob());  
       var pdf;
       if (canvas.width > canvas.height) {
-        pdf = new jsPDF("l", "mm", [canvas.width, canvas.height]);
+        pdf =  new jsPDF('l', 'pt', [pdfWidth, pdfHeight]); 
       } else {
-        pdf = new jsPDF("p", "mm", [canvas.height, canvas.width]);
-      }
-
-      pdf.addImage(imgData, "JPEG", 10, 30, canvas.width, canvas.height);
+        pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
+      } 
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };
@@ -499,7 +507,7 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` 
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -510,17 +518,10 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` ,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
-            toast.success("Claimed Certificate Successfully!");
-            window.open(url, "_blank");
+
+            toast.success("Claimed Certificate Successfully!"); 
             setClaimLoading(false);
           }
         } else {
@@ -534,7 +535,7 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` 
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -545,17 +546,10 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` ,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
-            toast.success("Claimed Certificate Successfully!");
-            window.open(url, "_blank");
+
+            toast.success("Claimed Certificate Successfully!"); 
             setClaimLoading(false);
           }
         }
@@ -575,11 +569,13 @@ export const Web3ContextProvider = (props) => {
     setClaimLoading(true);
 
     const input = document.getElementById("certificateX");
- 
+
 
     var pdfBlob = await html2canvas(input, {
       allowTaint: true,
       useCORS: true,
+      height: 600,
+      width: 800,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/png");
       // const img = new Image(); // create a new image element
@@ -620,12 +616,12 @@ export const Web3ContextProvider = (props) => {
       pdf: pdfFile,
       claimer: claimer?.claimer,
     });
- 
+
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
     );
- 
+
     const q = query(
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
@@ -648,7 +644,7 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -659,17 +655,10 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
-            toast.success("Claimed Certificate Successfully!"); 
-            window.open(url, "_blank");
+            toast.success("Claimed Certificate Successfully!");
+
             setClaimLoading(false);
           }
         } else {
@@ -683,7 +672,7 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -694,18 +683,11 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            let url = meta.data.image.replace(
-              "ipfs://",
-              "https://nftstorage.link/ipfs/"
-            );
+
             toast.success("Claimed Certificate Successfully!");
-            console.log(url, "urll");
-            window.open(url, "_blank");
+
             setClaimLoading(false);
           }
         }

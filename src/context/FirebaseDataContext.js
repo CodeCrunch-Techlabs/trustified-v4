@@ -387,6 +387,7 @@ export const FirebaseDataContextProvider = (props) => {
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (fire) => {
+      console.log(fire.data().ipfsurl,"ipfsurl");
       var obj;
       if (fire.exists) {
         obj = fire.data();

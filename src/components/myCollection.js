@@ -132,7 +132,7 @@ export default function MyCollection({ show }) {
                             }}
                           >
                             <img
-                              height="240"
+                              height="auto"
                               width="100%"
                               className="claimBadge"
                               src={e.ipfsurl}
@@ -160,7 +160,7 @@ export default function MyCollection({ show }) {
                   return (
                     <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
                       <div
-                        className="mt-4 template-card mb-4"
+                        className="mt-2 template-card mb-2"
                         style={{ display: "grid" }}
                       >
                         <Typography
@@ -172,14 +172,14 @@ export default function MyCollection({ show }) {
                             textTransform: "uppercase",
                             fontWeight: 600,
                             color: "#84a8fb",
-                            margin: "20px",
+                            margin: "20px 0",
                             textDecoration: "none",
                           }}
                         >
                           {e.name}
                         </Typography>
                         <img
-                          height="240"
+                          height="auto"
                           width="100%"
                           className="claimCertificate"
                           src={e.ipfsurl}
