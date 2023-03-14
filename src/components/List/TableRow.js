@@ -2,7 +2,7 @@ import { CircularProgress, TableCell } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const TableRowComponent = ({ id, value, event }) => {
+const TableRowComponent = ({ id, value, event, type }) => {
   const [pdf, setPdf] = useState("");
 
   useEffect(() => {
@@ -12,14 +12,18 @@ const TableRowComponent = ({ id, value, event }) => {
   }, [event, value]);
 
   const getUserSMetadata = async (url) => {
-    let d = await axios.get(url);
-    // console.log(d.data, event);
-    const rep = d.data.image.replace(
-      "ipfs://",
-      "https://nftstorage.link/ipfs/"
-    );
+    if (type == "badge") {
+      let d = await axios.get(url);
+      // console.log(d.data, event);
+      const rep = d.data.image.replace(
+        "ipfs://",
+        "https://nftstorage.link/ipfs/"
+      );
 
-    setPdf(rep);
+      setPdf(rep);
+    } else {
+      setPdf(url);
+    }
   };
   return (
     <TableCell key={id}>

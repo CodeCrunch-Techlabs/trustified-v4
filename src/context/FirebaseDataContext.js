@@ -29,6 +29,7 @@ export const FirebaseDataContextProvider = (props) => {
   const [myCollection, setMyCollection] = useState([]);
   const [claimer, setClaimer] = useState();
   const [template, setTemplate] = useState();
+  const [type, setType] = useState("");
 
   function createDataCollector(
     claimToken,
@@ -172,6 +173,7 @@ export const FirebaseDataContextProvider = (props) => {
       );
       const collectorsSnapshot = await getDocs(collectors);
       collectorsSnapshot.forEach((e) => {
+        setType(e.data().type);
         arry.push(
           createDataCollector(
             e.data().claimToken,
@@ -433,6 +435,7 @@ export const FirebaseDataContextProvider = (props) => {
         myCollection,
         getTemplate,
         template,
+        type
       }}
       {...props}
     >

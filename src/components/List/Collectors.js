@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Paper from "@mui/material/Paper";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -15,37 +15,18 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import TableRowComponent from "./TableRow";
 
-const columns = [
-  {
-    id: "name",
-    label: "Name",
-  },
-  {
-    id: "tokenContract",
-    label: "Token Contract",
-  },
-  {
-    id: "ipfsurl",
-    label: "Certificate",
-  },
-  {
-    id: "claimed",
-    label: "Claimed",
-  },
-  { id: "tokenId", label: "TokenId" },
-  { id: "type", label: "Type" },
-];
-
 function Collectors() {
   const params = useParams();
   const fireDataContext = React.useContext(firebaseDataContext);
-  const { claim, getClaimers } = fireDataContext;
+  const { claim, getClaimers, type } = fireDataContext;
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [collectors, setCollectors] = React.useState([]);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
+
+  const [columns, setColumns] = useState([]);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -60,10 +41,52 @@ function Collectors() {
     setCollectors(claim);
   }, [claim]);
 
-  const getUserSMetadata = async (url) => {
-    let d = await axios.get(url);
-    console.log(d, "d");
-  };
+  useEffect(() => {
+    if (type == "badge") {
+      setColumns([
+        {
+          id: "tokenContract",
+          label: "Token Contract",
+        },
+        {
+          id: "ipfsurl",
+          label: "Certificate",
+        },
+        {
+          id: "claimed",
+          label: "Claimed",
+        },
+        { id: "tokenId", label: "TokenId" },
+        { id: "type", label: "Type" },
+      ]);
+    } else {
+      setColumns([
+        {
+          id: "name",
+          label: "Name",
+        },
+        {
+          id: "tokenContract",
+          label: "Token Contract",
+        },
+        {
+          id: "ipfsurl",
+          label: "Certificate",
+        },
+        {
+          id: "claimed",
+          label: "Claimed",
+        },
+        { id: "tokenId", label: "TokenId" },
+        { id: "type", label: "Type" },
+      ]);
+    }
+  }, [type]);
+
+  // const getUserSMetadata = async (url) => {
+  //   let d = await axios.get(url);
+  //   console.log(d, "d");
+  // };
 
   return (
     <div className="footer-position">
@@ -95,6 +118,9 @@ function Collectors() {
                 {collectors
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
+                    {
+                      console.log(row.ipfsurl, "row.ipfsurl");
+                    }
                     return (
                       <TableRow
                         hover
@@ -111,6 +137,7 @@ function Collectors() {
                               value={value}
                               url={row.ipfsurl}
                               index={index}
+                              type={type}
                             />
                           );
                         })}
