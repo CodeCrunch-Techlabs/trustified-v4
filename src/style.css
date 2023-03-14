@@ -3016,10 +3016,10 @@ img.claimBadge {
   border-radius: 50%;
 }
 
-img.claimCertificate {
+/* img.claimCertificate {
   height: 10em;
   width: 15em;
-}
+} */
 
 .claimBanner {
   justify-content: center;
