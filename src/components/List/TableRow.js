@@ -13,17 +13,13 @@ const TableRowComponent = ({ id, value, event, type }) => {
   }, [event, value]);
 
   const getUserSMetadata = async (url) => {
-    if (type == "badge") {
-      let d = await axios.get(url); 
-      const rep = d.data.image.replace(
-        "ipfs://",
-        "https://nftstorage.link/ipfs/"
-      );
+    let d = await axios.get(url); 
+    const rep = d.data.pdf.replace(
+      "ipfs://",
+      "https://nftstorage.link/ipfs/"
+    );
 
-      setPdf(rep);
-    } else {
-      setPdf(url);
-    }
+    setPdf(rep);
   };
   return (
     <TableCell key={id}>

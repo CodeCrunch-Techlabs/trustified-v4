@@ -52,20 +52,32 @@ export default function MyCollection({ show }) {
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+<<<<<<< HEAD
   }; 
+=======
+  };
+>>>>>>> 710acebffdc0fe4ff2f68c8de918c7c1e58e1630
   const [badgesData, setbadgesData] = useState([]);
   const [certificatesData, setcertificatesData] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    let badges =
-      myCollection.length > 0 && myCollection.filter((c) => c.type == "badge");
-    badges.length > 0 && setbadgesData(badges);
+    let badges = [];
+    let certificates = [];
+    if (myCollection.length > 0) {
+      for (let i = 0; i < myCollection.length; i++) {
+        if (myCollection[i].type == "badge") {
+          badges.push(myCollection[i]);
+        } else {
+          certificates.push(myCollection[i]);
+        }
+      }
+    }
 
-    let certificates =
-      myCollection.length > 0 &&
-      myCollection.filter((c) => c.type == "certificate");
-    certificates.length > 0 && setcertificatesData(certificates);
+    console.log(certificates, "certificates");
+
+    setbadgesData(badges);
+    setcertificatesData(certificates);
   }, [myCollection]);
 
   return (
@@ -106,35 +118,31 @@ export default function MyCollection({ show }) {
                         key={i}
                         className="col-12 col-lg-4 col-sm-6 col-md-4"
                       >
-                        <div className="mt-4 template-card mb-4" style={{ display: "grid" }}>
+                        <div
+                          className="mt-4 template-card mb-4"
+                          style={{ display: "grid" }}
+                        >
                           <Typography
-                            variant="h5"
+                            variant="span"
                             component="a"
-                            href={e.pdf.replace(
-                              "ipfs://",
-                              "https://nftstorage.link/ipfs/"
-                            )}
+                            href={e.pdf}
                             target="_blank"
                             sx={{
                               textTransform: "uppercase",
-                              fontWeight: 600,
+
                               color: "#84a8fb",
-                              margin: "10px",
+
                               textDecoration: "none",
                             }}
                           >
-                            {e.name}
+                            <img
+                              height="240"
+                              width="100%"
+                              className="claimBadge"
+                              src={e.ipfsurl}
+                              alt={e.name}
+                            />
                           </Typography>
-                          <img
-                            height="240"
-                            width="100%"
-                            className="claimBadge"
-                            src={e.ipfsurl.replace(
-                              "ipfs://",
-                              "https://nftstorage.link/ipfs/"
-                            )}
-                            alt={e.name}
-                          />
                         </div>
                       </div>
                     );
@@ -151,14 +159,22 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={1}>
             <div className="row">
               {certificatesData.length != 0 &&
+<<<<<<< HEAD
                 certificatesData.map((e, i) => { 
+=======
+                certificatesData.map((e, i) => {
+           
+>>>>>>> 710acebffdc0fe4ff2f68c8de918c7c1e58e1630
                   return (
                     <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
-                      <div className="mt-4 template-card mb-4" style={{ display: "grid" }}>
+                      <div
+                        className="mt-4 template-card mb-4"
+                        style={{ display: "grid" }}
+                      >
                         <Typography
                           variant="body"
                           component="a"
-                          href={e.ipfsurl}
+                          href={e.pdf}
                           target="_blank"
                           sx={{
                             textTransform: "uppercase",
