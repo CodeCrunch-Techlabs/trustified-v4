@@ -1,7 +1,7 @@
 export const trustifiedContracts = {
   fevm: {
-    transferable: "0x160209a7e47Ce280002E6dE3C31c46D3aCEcBB1F",
-    nonTransferable: "0xd0fAAd4584e2352e71603194455DaEfFCEF58B88",
+    transferable: "0x6DE91BcA8E4660037409A0d1d6654f35616cC317",
+    nonTransferable: "0x70D4CcC4d02D40CcDd3324b3Dd5A7DD143b8536c",
     trustifiedCreds: "",
     verifier: "",
   },

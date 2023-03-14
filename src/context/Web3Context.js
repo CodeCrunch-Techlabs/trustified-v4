@@ -80,7 +80,7 @@ export const Web3ContextProvider = (props) => {
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {
-      setaLoading(false); 
+      setaLoading(false);
       if (err.code === 4902) {
         try {
           setaLoading(true);
@@ -208,28 +208,18 @@ export const Web3ContextProvider = (props) => {
       );
       var transactionMint;
       if (type == "badge") {
-        console.log(
+        transactionMint = await trustifiedContract.bulkMintERC721(
           data.tokenUris[0],
           parseInt(firebasedata.quantity),
-          "test1"
-        );
-        transactionMint = await trustifiedContract.bulkMintBadgesERC721(
-          data.tokenUris[0],
-          parseInt(firebasedata.quantity)
-        ); // Bulk Mint NFT collection.
-      } else {
-        transactionMint = await trustifiedContract.bulkMintERC721(
-          data.tokenUris
+          0
         ); // Bulk Mint NFT collection.
       }
 
-      let txm = await transactionMint.wait(); 
+      let txm = await transactionMint.wait();
       if (txm) {
         var event;
         if (type == "badge") {
           event = await txm.events[parseInt(firebasedata.quantity)];
-        } else {
-          event = await txm.events[parseInt(data?.tokenUris?.length)];
         }
 
         var eventId = event?.args[1];
@@ -244,7 +234,6 @@ export const Web3ContextProvider = (props) => {
         let tokenIds = await trustifiedContract.getTokenIds(
           parseInt(Number(eventId))
         );
-  
 
         var array = [];
         for (let i = 0; i < tokenIds.length; i++) {
@@ -330,7 +319,7 @@ export const Web3ContextProvider = (props) => {
     position,
     previewUrl
   ) => {
-    try { 
+    try {
       const trustifiedContract = new ethers.Contract(
         formData.transferable == "on"
           ? trustifiedContracts[formData.chain].nonTransferable
@@ -341,10 +330,12 @@ export const Web3ContextProvider = (props) => {
         signer
       );
       let transactionMint = await trustifiedContract.bulkMintERC721(
-        parseInt(csvdata.length)
-      ); 
+        "",
+        parseInt(csvdata.length),
+        1
+      );
       let txm = await transactionMint.wait();
-      if (txm) { 
+      if (txm) {
         let event = await txm.events[parseInt(csvdata?.length)];
         var eventId = event?.args[1];
         formData.contract = trustifiedContract.address;
@@ -428,8 +419,8 @@ export const Web3ContextProvider = (props) => {
   };
 
   const claimCertificate = async (claimToken, claimerAddress, claimer) => {
-    setClaimLoading(true); 
-    const input = document.getElementById("create-temp"); 
+    setClaimLoading(true);
+    const input = document.getElementById("create-temp");
 
     var pdfBlob = await html2canvas(input, {
       allowTaint: true,
@@ -471,11 +462,11 @@ export const Web3ContextProvider = (props) => {
       image: imageFile,
       pdf: pdfFile,
       claimer: claimer?.claimer,
-    }); 
+    });
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    ); 
+    );
 
     const q = query(
       collection(db, "Collectors"),
@@ -499,7 +490,8 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/"),
+            1
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -534,7 +526,8 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/"),
+            1
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -575,7 +568,6 @@ export const Web3ContextProvider = (props) => {
     setClaimLoading(true);
 
     const input = document.getElementById("certificateX");
- 
 
     var pdfBlob = await html2canvas(input, {
       allowTaint: true,
@@ -620,12 +612,11 @@ export const Web3ContextProvider = (props) => {
       pdf: pdfFile,
       claimer: claimer?.claimer,
     });
- 
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
     );
- 
+
     const q = query(
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
@@ -648,7 +639,8 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/"),
+            1
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -668,7 +660,7 @@ export const Web3ContextProvider = (props) => {
               "ipfs://",
               "https://nftstorage.link/ipfs/"
             );
-            toast.success("Claimed Certificate Successfully!"); 
+            toast.success("Claimed Certificate Successfully!");
             window.open(url, "_blank");
             setClaimLoading(false);
           }
@@ -683,7 +675,8 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/")
+            meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/"),
+            1
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -737,12 +730,13 @@ export const Web3ContextProvider = (props) => {
             signer
           );
 
-          let transferTokenTransaction =
-            await trustifiedContract.transferBadgesToken(
-              fire.data().tokenContract,
-              claimerAddress,
-              fire.data().tokenId
-            );
+          let transferTokenTransaction = await trustifiedContract.transferToken(
+            fire.data().tokenContract,
+            claimerAddress,
+            fire.data().tokenId,
+            "",
+            0
+          );
 
           const txt = await transferTokenTransaction.wait();
 
@@ -764,12 +758,13 @@ export const Web3ContextProvider = (props) => {
             signer
           );
 
-          let transferTokenTransaction =
-            await trustifiedContract.transferBadgesToken(
-              address,
-              claimerAddress,
-              fire.data().tokenId
-            );
+          let transferTokenTransaction = await trustifiedContract.transferToken(
+            address,
+            claimerAddress,
+            fire.data().tokenId,
+            "",
+            0
+          );
 
           const txt = await transferTokenTransaction.wait();
 
