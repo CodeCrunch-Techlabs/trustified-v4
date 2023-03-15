@@ -14,7 +14,7 @@ module.exports = {
       runs: 10000,
     },
   },
-  defaultNetwork: "hyperspace",
+  // defaultNetwork: "hyperspace",
   networks: {
     hardhat: {},
     hyperspace: {
@@ -22,19 +22,19 @@ module.exports = {
       url: "https://api.hyperspace.node.glif.io/rpc/v1",
       accounts: [PRIVATE_KEY],
     },
-    // mumbai: {
-    //   url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
-    //   accounts: [PRIVATE_KEY],
-    // },
-    // goerli: {
-    //   url: `https://eth-goerli.alchemyapi.io/v2/${process.env.REACT_APP_ALCHEMY_KEY_GOERLI}`,
-    //   accounts: [PRIVATE_KEY],
-    // },
-    // bsc: {
-    //   url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-    //   chainId: 97,
-    //   accounts: [PRIVATE_KEY],
-    // },
+    mumbai: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
+      accounts: [PRIVATE_KEY],
+    },
+    goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.REACT_APP_ALCHEMY_KEY_GOERLI}`,
+      accounts: [PRIVATE_KEY],
+    },
+    bsc: {
+      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
+      chainId: 97,
+      accounts: [PRIVATE_KEY],
+    },
   },
   mocha: {
     timeout: 400000000,

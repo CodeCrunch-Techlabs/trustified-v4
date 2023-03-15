@@ -296,13 +296,13 @@ export const Web3ContextProvider = (props) => {
             console.log(error);
           });
 
-        var hiddenElement = document.createElement("a");
-        hiddenElement.href =
-          "data:text/csv;charset=utf-8," + encodeURI(response.data);
-        hiddenElement.target = "_blank";
-        //provide the name for the CSV file to be downloaded
-        hiddenElement.download = `${firebasedata.title}.csv`;
-        hiddenElement.click();
+        const blob = new Blob([response.data], { type: "text/csv" });
+
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `${firebasedata.title}.csv`;
+        downloadLink.click();
+
         toast.success("Successfully created NFT collection!!");
       }
     } catch (err) {
@@ -403,13 +403,12 @@ export const Web3ContextProvider = (props) => {
             console.log(error);
           });
 
-        var hiddenElement = document.createElement("a");
-        hiddenElement.href =
-          "data:text/csv;charset=utf-8," + encodeURI(response.data);
-        hiddenElement.target = "_blank";
-        //provide the name for the CSV file to be downloaded
-        hiddenElement.download = `${formData.title}.csv`;
-        hiddenElement.click();
+        const blob = new Blob([response.data], { type: "text/csv" });
+
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(blob);
+        downloadLink.download = `${formData.title}.csv`;
+        downloadLink.click();
         toast.success("Successfully created NFT collection!!");
       }
     } catch (err) {
@@ -426,25 +425,25 @@ export const Web3ContextProvider = (props) => {
     const canvasWidth = pdfWidth * 1;
     const canvasHeight = pdfHeight * 1;
 
-    var pdfBlob = await html2canvas(input, { 
+    var pdfBlob = await html2canvas(input, {
       width: canvasWidth,
       height: canvasHeight,
       scale: 2,
       allowTaint: true,
       useCORS: true,
-    }).then(async (canvas) => { 
-      const imgData = canvas.toDataURL('image/jpeg', 1.0);
-      // pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height); 
-      // pdf.save('my-pdf.pdf'); 
+    }).then(async (canvas) => {
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      // pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
+      // pdf.save('my-pdf.pdf');
       // const imgData = canvas.toDataURL("image/png");
-      const imageData = await fetch(imgData).then((r) => r.blob());  
+      const imageData = await fetch(imgData).then((r) => r.blob());
       var pdf;
       if (canvas.width > canvas.height) {
-        pdf =  new jsPDF('l', 'pt', [pdfWidth, pdfHeight]); 
+        pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
       } else {
         pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
-      } 
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      }
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };
@@ -510,10 +509,10 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` ,
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
 
-            toast.success("Claimed Certificate Successfully!"); 
+            toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
           }
         } else {
@@ -527,7 +526,7 @@ export const Web3ContextProvider = (props) => {
             address,
             claimerAddress,
             fire.data().tokenId,
-            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` ,
+            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             1
           );
 
@@ -539,10 +538,10 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
-              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json` ,
+              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
 
-            toast.success("Claimed Certificate Successfully!"); 
+            toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
           }
         }

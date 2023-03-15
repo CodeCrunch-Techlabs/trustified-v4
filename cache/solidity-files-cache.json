@@ -1269,8 +1269,8 @@
       ]
     },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/contracts/Trustified-NonTransferable.sol": {
-      "lastModificationDate": 1678801248723,
-      "contentHash": "d87c5c92fc701ce1ae42aa6ccfd08637",
+      "lastModificationDate": 1678801692914,
+      "contentHash": "ca2c7c42a8eb1e20f296ac3c6b85d1dd",
       "sourceName": "contracts/Trustified-NonTransferable.sol",
       "solcConfig": {
         "version": "0.8.4",
