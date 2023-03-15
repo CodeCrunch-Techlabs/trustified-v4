@@ -317,7 +317,8 @@ export const Web3ContextProvider = (props) => {
     type,
     templateId,
     position,
-    previewUrl
+    previewUrl,
+    uploadObj
   ) => {
     try {
       const trustifiedContract = new ethers.Contract(
@@ -367,6 +368,8 @@ export const Web3ContextProvider = (props) => {
             });
           }
 
+         
+
           obj.token = claimToken;
           obj.tokenContract = trustifiedContract.address;
           obj.tokenId = parseInt(Number(tokenIds[i]));
@@ -383,6 +386,8 @@ export const Web3ContextProvider = (props) => {
           obj.description = formData.description;
           obj.expireDate = formData.expireDate;
           obj.position = previewUrl ? position : "";
+          obj.uploadCertData = uploadObj ? uploadObj.name : "";
+          
 
           await addCollectors(obj);
         } // Generating CSV file with unique link and storing data in firebase.

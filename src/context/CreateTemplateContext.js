@@ -60,6 +60,7 @@ export const TemplateContextProvider = (props) => {
   const [bgurl, setBgurl] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [signUrl, setSignUrl] = useState("");
+ 
 
   const imageRef = React.useRef();
 
@@ -355,7 +356,7 @@ export const TemplateContextProvider = (props) => {
         setSubTitle,
         bgurl,
         logoUrl,
-        signUrl,
+        signUrl, 
       }}
       {...props}
     >

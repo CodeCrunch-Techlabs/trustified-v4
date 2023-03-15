@@ -3052,3 +3052,8 @@ button#simple-tab-0, button#simple-tab-1{
 }
 
 /* Pagination */
+.sketch-picker{
+/* position: absolute;
+right: 5%; */
+z-index: 9;
+}

@@ -21,6 +21,7 @@ export const NFTStorageContextProvider = (props) => {
   const [template, setTemplate] = useState("");
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [ipfsurl, setIpfsurl] = useState("");
+  const [uploadObj, setUploadObj] = useState({});
 
   const [labelInfo, setlabelInfo] = useState({
     formData: {
@@ -84,8 +85,10 @@ export const NFTStorageContextProvider = (props) => {
           "certificate",
           selectedTemplateId,
           usernamePos,
-          ipfsurl
+          ipfsurl,
+          uploadObj
         );
+        setUploadObj("")
       } else {
         await createNFTCollection(
           csvData,
@@ -93,16 +96,20 @@ export const NFTStorageContextProvider = (props) => {
           "certificate",
           selectedTemplateId,
           usernamePos,
-          ipfsurl
+          ipfsurl,
+          uploadObj
         );
       }
 
       setUploading(false);
+      setUploadObj("")
     } catch (error) {
       console.log(error);
       setUploading(false);
     }
   };
+
+  console.log(uploadObj,"uploadObj");
 
   return (
     <NFTStorageContext.Provider
@@ -124,6 +131,7 @@ export const NFTStorageContextProvider = (props) => {
         setTemplate,
         selectTemplate,
         uploadCertificate,
+        setUploadObj,
       }}
       {...props}
     >
