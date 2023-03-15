@@ -50,7 +50,7 @@ const GetBadgeTemlate = () => {
 
                         {value.previewUrl && (
                             <div id="badgeId">
-                                <img width="100%" height="auto" src={value.previewUrl} />
+                                <img width="200px" height="200px" id="badge-img" src={value.previewUrl} />
                             </div>
                         )}
 
