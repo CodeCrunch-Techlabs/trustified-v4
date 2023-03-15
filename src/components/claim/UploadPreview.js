@@ -5,9 +5,11 @@ const UploadPreview = ({ claimer }) => {
     const input = document.getElementById("certificateX");
     var inputText = document.getElementById("certText");
     inputText.style.position = "absolute";
-    inputText.style.fontFamily = "Pinyon Script";
-    inputText.style.fontSize = "24px";
+    inputText.style.fontFamily = "Poppins";
+    inputText.style.fontSize = "32px";
     inputText.style.position = "absolute";
+    inputText.style.color = "#fff";
+    inputText.style.fontWeight = "bold";
     inputText.style.transform =
       `translate(${claimer.position.x}px,${claimer.position.y}px)`;
   });

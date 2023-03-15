@@ -47,6 +47,7 @@ export const BadgeContextProvider = (props) => {
     });
   };
   const createBadge = async () => {
+    console.log("badge call");
     try {
       setLoading(true);
       var array = [];
@@ -70,43 +71,37 @@ export const BadgeContextProvider = (props) => {
           const pdfBlob = pdf.output("blob");
           return { imageData, pdfBlob };
         });
-        const imageFile = new File(
-          [pdfBlob.imageData],
-          `${labelInfo.formData.title.replace(/ +/g, "")}.png`,
-          {
-            type: "image/png",
-          }
-        );
-        const pdfFile = new File(
-          [pdfBlob.pdfBlob],
-          `${labelInfo.formData.title}.pdf`,
-          {
-            type: "application/pdf",
-          }
-        );
-        const metadata = await client.store({
-          name: labelInfo.formData.title,
-          description: labelInfo.formData.description,
-          image: imageFile,
-          pdf: pdfFile,
-          claimer: "",
-        });
+        // const imageFile = new File(
+        //   [pdfBlob.imageData],
+        //   `${labelInfo.formData.title.replace(/ +/g, "")}.png`,
+        //   {
+        //     type: "image/png",
+        //   }
+        // );
+        // const pdfFile = new File(
+        //   [pdfBlob.pdfBlob],
+        //   `${labelInfo.formData.title}.pdf`,
+        //   {
+        //     type: "application/pdf",
+        //   }
+        // );
+        // const metadata = await client.store({
+        //   name: labelInfo.formData.title,
+        //   description: labelInfo.formData.description,
+        //   image: imageFile,
+        //   pdf: pdfFile,
+        //   claimer: "",
+        // });
         array.push(metadata.ipnft);
       } else {
         const idd = `badgeToprint${labelInfo.formData.template}`;
         const input = document.getElementById(idd);
-
-
-        const pdfWidth = 400;
-        const pdfHeight = 400;
-        const canvasWidth = pdfWidth * 1;
-        const canvasHeight = pdfHeight * 1;
+        const pdfWidth = 290;
+        const pdfHeight = 290;
 
         var pdfBlob = await html2canvas(input, {
-          width: canvasWidth,
-          height: canvasHeight,
-          scale: 2,
           allowTaint: true,
+          scale: 6,
           useCORS: true,
         }).then(async (canvas) => {
           const imgData = canvas.toDataURL('image/jpeg', 1.0);
@@ -119,43 +114,44 @@ export const BadgeContextProvider = (props) => {
           } else {
             pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
           }
-          pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-          // pdf.save('my-badge.pdf');
+             pdf.addImage(imgData, "JPEG", 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getHeight());
+
+          pdf.save('my-badge.pdf');
           const pdfBlob = pdf.output("blob");
           return { imageData, pdfBlob };
         });
-        const imageFile = new File(
-          [pdfBlob.imageData],
-          `${labelInfo.formData.title}.png`,
-          {
-            type: "image/png",
-          }
-        );
-        const pdfFile = new File(
-          [pdfBlob.pdfBlob],
-          `${labelInfo.formData.title}.pdf`,
-          {
-            type: "application/pdf",
-          }
-        );
-        const metadata = await client.store({
-          name: labelInfo.formData.title,
-          description: labelInfo.formData.description,
-          image: imageFile,
-          pdf: pdfFile,
-          claimer: "",
-        });
-        array.push(metadata.ipnft);
+        // const imageFile = new File(
+        //   [pdfBlob.imageData],
+        //   `${labelInfo.formData.title}.png`,
+        //   {
+        //     type: "image/png",
+        //   }
+        // );
+        // const pdfFile = new File(
+        //   [pdfBlob.pdfBlob],
+        //   `${labelInfo.formData.title}.pdf`,
+        //   {
+        //     type: "application/pdf",
+        //   }
+        // );
+        // const metadata = await client.store({
+        //   name: labelInfo.formData.title,
+        //   description: labelInfo.formData.description,
+        //   image: imageFile,
+        //   pdf: pdfFile,
+        //   claimer: "",
+        // });
+        // array.push(metadata.ipnft);
       }
-      if (array.length > 0) {
-        await createBadgesNFTCollecion(
-          {
-            tokenUris: array,
-          },
-          labelInfo.formData,
-          "badge"
-        );
-      }
+      // if (array.length > 0) {
+      //   await createBadgesNFTCollecion(
+      //     {
+      //       tokenUris: array,
+      //     },
+      //     labelInfo.formData,
+      //     "badge"
+      //   );
+      // }
       setLoading(false);
     } catch (error) {
       console.log(error);

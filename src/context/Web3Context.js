@@ -576,6 +576,7 @@ export const Web3ContextProvider = (props) => {
       useCORS: true,
       height: 600,
       width: 800,
+      scale:4,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/png");
       // const img = new Image(); // create a new image element
@@ -589,7 +590,7 @@ export const Web3ContextProvider = (props) => {
         pdf = new jsPDF("p", "mm", [canvas.height, canvas.width]);
       }
 
-      pdf.addImage(imgData, "JPEG", 10, 30, canvas.width, canvas.height);
+      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width, canvas.height);
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };

@@ -19,7 +19,7 @@ import TemplateEdit from "../../template/TemplateEdit";
 function GetTemplate() {
   const value = useContext(NFTStorageContext); 
   const [data, setdata] = useState();
-  const [username, setUsername] = useState("Your username");
+  const [username, setUsername] = useState("Your Name");
   const [docId, setDocId] = useState("");
 
   const handleImageChange = (e) => {
