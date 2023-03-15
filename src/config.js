@@ -1,25 +1,25 @@
 export const trustifiedContracts = {
   fevm: {
-    transferable: "0x160209a7e47Ce280002E6dE3C31c46D3aCEcBB1F",
-    nonTransferable: "0xd0fAAd4584e2352e71603194455DaEfFCEF58B88",
+    transferable: "0x6DE91BcA8E4660037409A0d1d6654f35616cC317",
+    nonTransferable: "0x70D4CcC4d02D40CcDd3324b3Dd5A7DD143b8536c",
     trustifiedCreds: "",
     verifier: "",
   },
   mumbai: {
-    transferable: "0x0522c53344c4D99032E12388DFE313f92207Eb7D",
-    nonTransferable: "0x77f398fb6206a41351082B83a517D4250b9AA057",
+    transferable: "0x5df5A3d5F3170adEcB372C14E58e91F688f2774d",
+    nonTransferable: "0x514A25f2068754c135c9Efc1e60D1dde742b165d",
     trustifiedCreds: "",
     verifier: "",
   },
   goerli: {
-    transferable: "0x74f5aaC116a5BA54998A0A18ea17451702619A0d",
-    nonTransferable: "0xb6c26AB08cD10431426b1Ac53904d2971e3292CE",
+    transferable: "0xF913b6A387e15f0FcDBb1d8ce4c16C34927c0542",
+    nonTransferable: "0x27C433Cf7d6Af672F2e67498692C56DA1D314A70",
     trustifiedCreds: "",
     verifier: "",
   },
   bsc: {
-    transferable: "0x68260CdB730466700510e8eb227eFe88Fd5eDFdD",
-    nonTransferable: "0x58b9818D5CfEaA30f45317D98a5C7cece32969Eb",
+    transferable: "0x73da391fA9B5DA9353e99872e7C965fB8201fE62",
+    nonTransferable: "0x046a721c2172B68eBECec82EFCD89fa80AD9770d",
     trustifiedCreds: "",
     verifier: "",
   },

@@ -230,13 +230,12 @@ export const FirebaseDataContextProvider = (props) => {
         console.log(error);
       });
 
-    var hiddenElement = document.createElement("a");
-    hiddenElement.href =
-      "data:text/csv;charset=utf-8," + encodeURI(response.data);
-    hiddenElement.target = "_blank";
-    //provide the name for the CSV file to be downloaded
-    hiddenElement.download = `${eventTitle}.csv`;
-    hiddenElement.click();
+    const blob = new Blob([response.data], { type: "text/csv" });
+
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = `${eventTitle}.csv`;
+    downloadLink.click();
   }
 
   async function getClaimer(claimToken) {
@@ -387,7 +386,7 @@ export const FirebaseDataContextProvider = (props) => {
     );
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (fire) => {
-      console.log(fire.data().ipfsurl,"ipfsurl");
+      console.log(fire.data().ipfsurl, "ipfsurl");
       var obj;
       if (fire.exists) {
         obj = fire.data();

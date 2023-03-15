@@ -15,52 +15,40 @@ contract Trustified is ERC721URIStorage {
     mapping(uint256 => uint256[]) public tokenIds;
 
     event TokenMinted(address, uint256);
-    event TokenTransfered(address, address, uint256);
 
     constructor() ERC721("Trustified", "TFN") {}
 
-    function safeMint() public returns (uint256) {
+    function safeMint(
+        string calldata tokenURI,
+        uint256 value
+    ) public returns (uint256) {
+        require(value >= 0 && value <= 1, "Invalid value");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _mint(address(this), tokenId);
-
+        if (value == 0) {
+            _setTokenURI(tokenId, tokenURI);
+        }
         return tokenId;
     }
 
-     function safeMintBadge(string memory tokenURI) public returns (uint256) {
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
-        _mint(address(this), tokenId);
-        _setTokenURI(tokenId, tokenURI);
-        return tokenId;
-    }
-
-
-    function bulkMintERC721(uint256 quantity) public {
+    function bulkMintERC721(
+        string calldata tokenUri,
+        uint256 quantity,
+        uint256 value
+    ) external {
         uint256 eventId = _eventIdCounter.current();
         _eventIdCounter.increment();
         for (uint256 i = 0; i < quantity; i++) {
-            uint256 tokenId = safeMint();
+            uint256 tokenId = safeMint(tokenUri, value);
             tokenIds[eventId].push(tokenId);
         }
         emit TokenMinted(msg.sender, eventId);
     }
 
-      function bulkMintBadgesERC721(string memory tokenUri, uint256 quantity) public {
-        uint256 eventId = _eventIdCounter.current();
-        _eventIdCounter.increment();
-        for (uint256 i = 0; i < quantity; i++) {
-            uint256 tokenId = safeMintBadge(tokenUri);
-            tokenIds[eventId].push(tokenId);
-        }
-        emit TokenMinted(msg.sender, eventId);
-    }
-
-    function getTokenIds(uint256 eventId)
-        public
-        view
-        returns (uint256[] memory)
-    {
+    function getTokenIds(
+        uint256 eventId
+    ) external view returns (uint256[] memory) {
         return tokenIds[eventId];
     }
 
@@ -68,19 +56,13 @@ contract Trustified is ERC721URIStorage {
         address from,
         address to,
         uint256 tokenId,
-        string memory tokenURI
-    ) public {
-        _setTokenURI(tokenId, tokenURI);
-        IERC721(address(this)).transferFrom(from, to, tokenId);       
-        emit TokenTransfered(from, to, tokenId);
-    }
-
-      function transferBadgesToken(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public {
+        string calldata tokenURI,
+        uint256 value
+    ) external {
+        require(value >= 0 && value <= 1, "Invalid value");
+        if (value == 1) {
+            _setTokenURI(tokenId, tokenURI);
+        }
         IERC721(address(this)).transferFrom(from, to, tokenId);
-        emit TokenTransfered(from, to, tokenId);
     }
 }
