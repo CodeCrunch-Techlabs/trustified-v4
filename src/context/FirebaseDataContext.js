@@ -32,6 +32,7 @@ export const FirebaseDataContextProvider = (props) => {
   const [template, setTemplate] = useState();
   const [type, setType] = useState("");
   const [certLoad, setCertLoad] = useState(false);
+  const [exportLoading, setExportLoading] = useState(false);
 
   function createDataCollector(
     claimToken,
@@ -202,6 +203,7 @@ export const FirebaseDataContextProvider = (props) => {
   }
 
   async function generateClaimersExcellSheet(eventId, eventTitle, type) {
+    setExportLoading(true);
     let claimers = await getClaimers(eventId);
     var arr = [];
     for (let i = 0; i < claimers.length; i++) {
@@ -232,6 +234,8 @@ export const FirebaseDataContextProvider = (props) => {
       .catch((error) => {
         console.log(error);
       });
+
+      setExportLoading(false);
 
     const blob = new Blob([response.data], { type: "text/csv" });
 
@@ -457,6 +461,7 @@ export const FirebaseDataContextProvider = (props) => {
         template,
         type,
         certLoad, 
+        exportLoading,
         setCertLoad,
       }}
       {...props}

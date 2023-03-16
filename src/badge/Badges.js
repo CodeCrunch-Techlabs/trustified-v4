@@ -1,15 +1,19 @@
-import React, { useEffect  } from "react"; 
-import { useNavigate } from "react-router-dom"; 
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./badge.css";
-import { Paper, Chip } from "@mui/material";
+import { Paper, Chip, CircularProgress } from "@mui/material";
 import { firebaseDataContext } from "../context/FirebaseDataContext";
 import Iconify from "../components/utils/Iconify";
 
 const Badges = () => {
   const navigate = useNavigate();
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { getNFTCollections, badgesData, generateClaimersExcellSheet } =
-    firebaseContext;
+  const {
+    getNFTCollections,
+    badgesData,
+    generateClaimersExcellSheet,
+    exportLoading,
+  } = firebaseContext;
 
   const [badges, setBadges] = React.useState([]);
 
@@ -48,15 +52,23 @@ const Badges = () => {
                   color="primary"
                   variant="outlined"
                 />
-                <Iconify
-                  icon="mdi:download-circle-outline"
-                  width={30}
-                  height={30}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    generateClaimersExcellSheet(item.eventId, item.name, "badge");
-                  }}
-                />
+                {exportLoading ? (
+                  <CircularProgress />
+                ) : (
+                  <Iconify
+                    icon="mdi:download-circle-outline"
+                    width={30}
+                    height={30}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      generateClaimersExcellSheet(
+                        item.eventId,
+                        item.name,
+                        "badge"
+                      );
+                    }}
+                  />
+                )}
               </span>
             </Paper>
           </div>
