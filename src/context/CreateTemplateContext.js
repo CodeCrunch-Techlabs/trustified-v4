@@ -282,7 +282,7 @@ export const TemplateContextProvider = (props) => {
     setBold(e.target.value)
   }, []);
 
-  useEffect(() => {
+  useEffect(() => { 
     if (selectedElement === "title") {
       setTitle({ ...title, font: selectedFont, color: colors, size: fontSize, bold: bold });
     } else if (selectedElement === "sub-title") {

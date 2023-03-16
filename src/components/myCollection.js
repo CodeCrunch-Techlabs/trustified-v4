@@ -46,7 +46,7 @@ function a11yProps(index) {
 
 export default function MyCollection({ show }) {
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { myCollection } = firebaseContext;
+  const { myCollection, certLoad } = firebaseContext;
 
   const [value, setValue] = React.useState(0);
 
@@ -68,9 +68,7 @@ export default function MyCollection({ show }) {
           certificates.push(myCollection[i]);
         }
       }
-    }
-
-    console.log(certificates, "certificates");
+    } 
 
     setbadgesData(badges);
     setcertificatesData(certificates);
@@ -107,6 +105,9 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={0}>
             <div className="container collections">
               <div className="row">
+                {
+                  certLoad && <CircularProgress/>
+                }
                 {badgesData.length != 0 &&
                   badgesData.map((e, i) => {
                     return (
@@ -131,19 +132,22 @@ export default function MyCollection({ show }) {
                               textDecoration: "none",
                             }}
                           >
-                            <img
+                            {
+                              e.ipfsurl ? <img
                               height="auto"
                               width="100%"
                               className="claimBadge"
                               src={e.ipfsurl}
                               alt={e.name}
-                            />
+                            /> :  <CircularProgress />
+                            }
+                            
                           </Typography>
                         </div>
                       </div>
                     );
                   })}
-                {loading && <CircularProgress />}
+                {certLoad && <CircularProgress />}
                 {badgesData.length === 0 && show == true && (
                   <div className="col">
                     <h4>No Collection!</h4>

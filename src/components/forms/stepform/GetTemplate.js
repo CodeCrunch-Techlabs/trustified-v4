@@ -67,25 +67,23 @@ function GetTemplate() {
   const textName = {
     name: {
       text: 'Your Name',
-      position: username,
       style: {
         position: 'absolute',
         color: username?.color?.hex ? username?.color?.hex : '#860a1e',
         fontSize: `${username?.size}px` ? `${username?.size}px` : '40px',
-        textAlign: 'center', 
+        textAlign: 'center',
         margin: '10px auto',
         fontFamily: username?.font ? username?.font : 'Poppins',
         fontWeight: username?.bold ? username?.bold : 800,
         transform: `translate(${username.x}px, ${username.y}px)`
       }
     }
-  };
-
+  }; 
   useEffect(() => {
     if (selectedElement === "certText") {
       setUsername({ ...username, font: selectedFont, color: colors, size: fontSize, bold: bold });
       value.setUploadObj(textName);
-    } 
+    }
   }, [selectedFont, colors, fontSize, bold])
 
 
@@ -93,9 +91,7 @@ function GetTemplate() {
     event.stopPropagation();
     setSelectedElement(event.currentTarget.id);
   };
-  const handleClickPicker = () => {
-    setShow(!show);
-  }
+ 
   const handleFontChange = useCallback(event => {
     setSelectedFont(event.target.value);
   }, []);
@@ -302,10 +298,10 @@ function GetTemplate() {
                     horizontal: 'left',
                   }}
                 >
-                 <SketchPicker color={colors} onChange={handleChangeColor} /> 
-                </Popover> 
+                  <SketchPicker color={colors} onChange={handleChangeColor} />
+                </Popover>
               </Stack>
-            } 
+            }
 
 
             {value.previewUrl !== "" && (
@@ -326,9 +322,9 @@ function GetTemplate() {
               <div id="certificateX" style={{ width: '800px', height: '600px' }}>
                 <img width="800" height="600" src={value.previewUrl} />
                 <Draggable
-                  position={value.usernamePos}
+                  position={username}
                   onStop={(e, data) =>
-                    value.setUsernamePos({ x: data.x, y: data.y })
+                     setUsername({ ...username, x: data.x, y: data.y })
                   }
                   onMouseDown={(e) => {
                     handleDivClick(e);

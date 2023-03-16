@@ -14,6 +14,7 @@ import {
 import Iconify from "../components/utils/Iconify";
 
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const firebaseDataContext = createContext(undefined);
 
@@ -30,6 +31,7 @@ export const FirebaseDataContextProvider = (props) => {
   const [claimer, setClaimer] = useState();
   const [template, setTemplate] = useState();
   const [type, setType] = useState("");
+  const [certLoad, setCertLoad] = useState(false);
 
   function createDataCollector(
     claimToken,
@@ -377,9 +379,8 @@ export const FirebaseDataContextProvider = (props) => {
   }
 
   async function getMyCollection(address) {
-    setLoading(true);
-    console.log(address);
-
+   if(address){
+  setCertLoad(true) ;
     var array = [];
     const q = query(
       collection(db, "Collectors"),
@@ -409,8 +410,10 @@ export const FirebaseDataContextProvider = (props) => {
       }
       setMyCollection(arr);
     });
-
-    setLoading(false);
+   setCertLoad(false) 
+   } else {
+    toast.error("Please provide address!");
+   }
   }
 
   const getTemplate = async (id) => {
@@ -454,6 +457,8 @@ export const FirebaseDataContextProvider = (props) => {
         getTemplate,
         template,
         type,
+        certLoad, 
+        setCertLoad,
       }}
       {...props}
     >

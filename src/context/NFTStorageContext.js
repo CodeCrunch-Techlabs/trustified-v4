@@ -108,8 +108,7 @@ export const NFTStorageContextProvider = (props) => {
       setUploading(false);
     }
   };
-
-  console.log(uploadObj,"uploadObj");
+ 
 
   return (
     <NFTStorageContext.Provider
