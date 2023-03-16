@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Button, Container, Divider, Grid, IconButton, Menu, MenuItem, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Container,
+  Divider,
+  Grid,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { Web3Context } from "../../../context/Web3Context";
@@ -13,14 +26,23 @@ import DialogContent from "@mui/material/DialogContent";
 
 const NavOne = () => {
   const web3Context = React.useContext(Web3Context);
-  const { connectWallet, loginWithTrustified, disconnectWallet,
-    update, shortAddress ,userId,data,getFirestoreData, aLoading} = web3Context;
+  const {
+    connectWallet,
+    loginWithTrustified,
+    disconnectWallet,
+    update,
+    shortAddress,
+    userId,
+    data,
+    getFirestoreData,
+    aLoading,
+  } = web3Context;
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [sticky, setSticky] = useState(false);
   const [menu, setMenu] = useState(false);
-  const [user, setUser] = React.useState(""); 
-  const [anchorElUser, setAnchorElUser] = React.useState(false); 
+  const [user, setUser] = React.useState("");
+  const [anchorElUser, setAnchorElUser] = React.useState(false);
   const [open, setOpen] = useState(false);
 
   const formik = useFormik({
@@ -37,7 +59,6 @@ const NavOne = () => {
     setOpen(true);
   };
 
-
   const { handleSubmit } = formik;
 
   const handleOpenUserMenu = (event) => {
@@ -48,22 +69,21 @@ const NavOne = () => {
     setAnchorElUser(false);
   };
 
-
   React.useEffect(() => {
     const user = window.localStorage.getItem("address");
     setUser(user);
     getFirestoreData();
-  }, [update])
+  }, [update]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
-  }, [])
+  }, []);
 
   const handleScroll = () => {
     if (window.scrollY > 70) {
-      setSticky(true)
+      setSticky(true);
     } else if (window.scrollY < 70) {
-      setSticky(false)
+      setSticky(false);
     }
   };
 
@@ -72,22 +92,23 @@ const NavOne = () => {
   };
 
   const handleNavigate = (e) => {
-    if(user != null){
-      navigate(`${e}`); 
-    }else{
-      toast.error("Please Login!")
+    if (user != null) {
+      navigate(`${e}`);
+    } else {
+      toast.error("Please Login!");
     }
-  }
- 
+  };
+
   return (
     <header className="site-header site-header__header-one">
       <nav
-        className={`navbar navbar-expand-lg navbar-light header-navigation stricky ${sticky ? "stricked-menu stricky-fixed" : ""
-          }`}
+        className={`navbar navbar-expand-lg navbar-light header-navigation stricky ${
+          sticky ? "stricked-menu stricky-fixed" : ""
+        }`}
       >
         <div className="container clearfix">
           <div className="logo-box clearfix">
-            <a className="navbar-brand" onClick={() => handleNavigate('/')}>
+            <a className="navbar-brand" onClick={() => handleNavigate("/")}>
               <img
                 src="/images/logo.png"
                 className="main-logo"
@@ -99,32 +120,39 @@ const NavOne = () => {
               <span className="fa fa-bars"></span>
             </button>
           </div>
-          <div className="main-navigation" style={{ display: menu ? "block" : "none" }}>
+          <div
+            className="main-navigation"
+            style={{ display: menu ? "block" : "none" }}
+          >
             <ul className=" one-page-scroll-menu navigation-box">
-
-              <li className="current scrollToLink" onClick={() => handleNavigate('/')}>
+              <li
+                className="current scrollToLink"
+                onClick={() => handleNavigate("/")}
+              >
                 <a>&nbsp;&nbsp;&nbsp;&nbsp;</a>
               </li>
             </ul>
           </div>
           <div className="right-side-box">
             &nbsp;&nbsp;
-            <a className="thm-btn header__cta-btn" onClick={() => handleNavigate('/dashboard/collection')}>
+            <a
+              className="thm-btn header__cta-btn"
+              onClick={() => handleNavigate("/dashboard/collection")}
+            >
               <span>Create</span>
             </a>
             &nbsp;&nbsp;
-            {
-              user === null ? <a className="thm-btn header__cta-btn" onClick={connectWallet}>
+            {user === null ? (
+              <a className="thm-btn header__cta-btn" onClick={connectWallet}>
                 <span>Connect</span>
-              </a> :
-                <Tooltip title="">
-
-                  <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                    <Avatar alt="Jaydip Patel" src={data ? data.Photo : ""} />
-                  </IconButton>
-                </Tooltip>
-            }
-
+              </a>
+            ) : (
+              <Tooltip title="">
+                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                  <Avatar alt="Jaydip Patel" src={data ? data.Photo : ""} />
+                </IconButton>
+              </Tooltip>
+            )}
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
@@ -149,71 +177,69 @@ const NavOne = () => {
               <Divider />
               {/* <MenuItem onClick={() => handleNavigate("/dashboard/profile")}>
                 <Typography textAlign="center">Profile</Typography>
-              </MenuItem>
-              <MenuItem onClick={() => handleNavigate("/dashboard/templates")}>
-                <Typography textAlign="center">Dashboard</Typography>
               </MenuItem> */}
+              <MenuItem onClick={() => handleNavigate("/my-collection")}>
+                <Typography textAlign="center">Browse Collection</Typography>
+              </MenuItem>
               <MenuItem onClick={disconnectWallet}>
-                <a className="thm-btn header__cta-btn mx-auto" >
+                <a className="thm-btn header__cta-btn mx-auto">
                   <span>Logout</span>
                 </a>
               </MenuItem>
             </Menu>
-
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-        <DialogTitle
-          style={{
-            textAlign: "center",
-          }}
-        >
-          Create Id
-        </DialogTitle>
+              <DialogTitle
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Create Id
+              </DialogTitle>
 
-        <DialogContent style={{ overflowX: "hidden" }}>
-          <Container maxWidth="sm">
-            <form
-              onSubmit={handleSubmit}
-              style={{
-                justifyContent: "center",
-                marginLeft: "auto",
-                marginRight: "auto",
-                // marginTop: "100px",
-              }}
-            >
-              <Stack spacing={3}>
-                <TextField
-                  fullWidth
-                  label="Enter name"
-                  name="name"
-                  id="name"
-                  type="text"
-                  required
-                  {...formik.getFieldProps("name")}
-                />
-              </Stack>
-
-              <DialogActions>
-                <Grid container justifyContent="center">
-                  <Button
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                    disabled={aLoading}
+              <DialogContent style={{ overflowX: "hidden" }}>
+                <Container maxWidth="sm">
+                  <form
+                    onSubmit={handleSubmit}
+                    style={{
+                      justifyContent: "center",
+                      marginLeft: "auto",
+                      marginRight: "auto",
+                      // marginTop: "100px",
+                    }}
                   >
-                    {aLoading ? "Creating..." : "Create"}
-                  </Button>
-                </Grid>
-              </DialogActions>
-            </form>
-          </Container>
-        </DialogContent>
-      </Dialog>
+                    <Stack spacing={3}>
+                      <TextField
+                        fullWidth
+                        label="Enter name"
+                        name="name"
+                        id="name"
+                        type="text"
+                        required
+                        {...formik.getFieldProps("name")}
+                      />
+                    </Stack>
 
+                    <DialogActions>
+                      <Grid container justifyContent="center">
+                        <Button
+                          size="large"
+                          type="submit"
+                          variant="contained"
+                          disabled={aLoading}
+                        >
+                          {aLoading ? "Creating..." : "Create"}
+                        </Button>
+                      </Grid>
+                    </DialogActions>
+                  </form>
+                </Container>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </nav>
     </header>
   );
-}
+};
 
 export default NavOne;

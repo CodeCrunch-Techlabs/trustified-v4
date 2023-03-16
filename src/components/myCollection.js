@@ -10,6 +10,8 @@ import { firebaseDataContext } from "../context/FirebaseDataContext";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import web3 from "web3";
+import { useLocation } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,9 +48,19 @@ function a11yProps(index) {
 
 export default function MyCollection({ show }) {
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { myCollection, certLoad } = firebaseContext;
+  const { myCollection, certLoad, getMyCollection } = firebaseContext;
+
+  const location = useLocation();
+  console.log(location);
 
   const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    let add = localStorage.getItem("address");
+    console.log(web3.utils.toChecksumAddress(add));
+
+    getMyCollection(web3.utils.toChecksumAddress(add));
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -75,7 +87,13 @@ export default function MyCollection({ show }) {
   }, [myCollection]);
 
   return (
-    <div className="container collections">
+    <div
+      className={
+        location.pathname == "/my-collection"
+          ? "bannercontainer container"
+          : "container collections"
+      }
+    >
       <div className="row">
         <div className="col">
           {myCollection.length > 0 && (

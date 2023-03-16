@@ -16,7 +16,6 @@ export default function Certificates() {
     getNFTCollections,
     certificatesData,
     generateClaimersExcellSheet,
-    exportLoading,
   } = fireDataContext;
 
   const [certificates, setCertificates] = React.useState([]);
@@ -72,11 +71,13 @@ export default function Certificates() {
                         newLoadingStates[index] = true;
                         setLoadingStates(newLoadingStates);
                         e.stopPropagation();
+                      
                         await generateClaimersExcellSheet(
                           item.eventId,
                           item.name,
                           "certificate"
                         );
+                       
 
                         newLoadingStates[index] = false;
                         setLoadingStates(newLoadingStates);

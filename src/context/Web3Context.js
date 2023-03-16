@@ -47,7 +47,6 @@ export const Web3ContextProvider = (props) => {
   }, [update]);
 
   useEffect(() => {
-  
     const initialize = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -62,7 +61,7 @@ export const Web3ContextProvider = (props) => {
       setAddress(accounts[0]);
     };
     let add = localStorage.getItem("address");
-  
+
     if (add) {
       initialize();
     }
@@ -280,6 +279,7 @@ export const Web3ContextProvider = (props) => {
           obj.description = firebasedata.description;
           obj.expireDate = "";
           obj.position = "";
+          obj.uploadCertData = "";
 
           await addCollectors(obj);
         } // Generating CSV file with unique link and storing data in firebase.
@@ -373,8 +373,6 @@ export const Web3ContextProvider = (props) => {
             });
           }
 
-         
-
           obj.token = claimToken;
           obj.tokenContract = trustifiedContract.address;
           obj.tokenId = parseInt(Number(tokenIds[i]));
@@ -390,8 +388,8 @@ export const Web3ContextProvider = (props) => {
           obj.title = formData.title;
           obj.description = formData.description;
           obj.expireDate = formData.expireDate;
-          obj.position = previewUrl ? position : ""; 
-          obj.uploadCertData = previewUrl ? uploadObj.name : "";  
+          obj.position = previewUrl ? position : "";
+          obj.uploadCertData = previewUrl ? uploadObj.name : "";
           await addCollectors(obj);
         } // Generating CSV file with unique link and storing data in firebase.
         let obj = {
@@ -594,7 +592,6 @@ export const Web3ContextProvider = (props) => {
       }
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };

@@ -47,10 +47,6 @@ function Profile() {
   const firebaseContext = React.useContext(firebaseDataContext);
   const { getMyCollection } = firebaseContext;
 
-  useEffect(() => {
-    getMyCollection();
-  },[])
-
   const handleEditProfile = () => {
     setOpen(!open);
   };
@@ -84,7 +80,7 @@ function Profile() {
       setUpdate(!update);
       toast.success("Profile successfully Added!!");
     } else {
-      querySnapshot.forEach((fire) => { 
+      querySnapshot.forEach((fire) => {
         const data = {
           Name: name !== "" ? name : fire.data().Name,
           UserName: userName !== "" ? userName : fire.data().UserName,

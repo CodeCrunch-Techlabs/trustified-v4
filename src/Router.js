@@ -3,29 +3,30 @@ import Claim from "./components/claim/Claim";
 import DashboardLayout from "./components/dashboard";
 import Collections from "./components/collection/Collection";
 import Landing from "./components/landing/Landing";
-import LendingPageLayout from "./components/landing/LendingPageLayout";  
-import CreateTemplate from "./components/template/CreateTemplate"; 
-import Collectors from "./components/List/Collectors"; 
+import LendingPageLayout from "./components/landing/LendingPageLayout";
+import CreateTemplate from "./components/template/CreateTemplate";
+import Collectors from "./components/List/Collectors";
 import Index from "./badge/Index";
 import User from "./components/profile";
 import NewTemplates from "./components/template/NewTemplates";
 import DemoTemplate from "./components/template/DemoTemplate";
 import Preview from "./components/template/Preview";
 import BadgeTemplate from "./components/template/BadgeTemplate";
+import MyCollection from "./components/myCollection";
 
 export default function Router() {
   return useRoutes([
     {
       path: "/dashboard",
       element: <DashboardLayout />,
-      children: [ 
+      children: [
         {
           path: "collection",
-          element: <Collections />, 
+          element: <Collections />,
         },
         {
-          path:"collectors/:token",
-          element: <Collectors/>
+          path: "collectors/:token",
+          element: <Collectors />,
         },
         {
           path: "profile",
@@ -34,26 +35,26 @@ export default function Router() {
         {
           path: "templates",
           element: <CreateTemplate />,
-        }, 
+        },
         {
           path: "badge",
-          element: <Index/> ,
+          element: <Index />,
         },
         {
           path: "temp",
-          element: <NewTemplates/> ,
+          element: <NewTemplates />,
         },
         {
           path: "badges",
-          element: <BadgeTemplate/> ,
+          element: <BadgeTemplate />,
         },
         {
           path: "test",
-          element: <DemoTemplate/> ,
+          element: <DemoTemplate />,
         },
         {
           path: "preview",
-          element: <Preview/> ,
+          element: <Preview />,
         },
       ],
     },
@@ -66,6 +67,13 @@ export default function Router() {
       path: "/claim",
       element: <LendingPageLayout />,
       children: [{ path: "/claim/:token", element: <Claim /> }],
+    },
+    {
+      path: "/my-collection",
+      element: <LendingPageLayout />,
+      children: [
+        { path: "/my-collection", element: <MyCollection show={true} /> },
+      ],
     },
   ]);
 }
