@@ -54,22 +54,23 @@ export const BadgeContextProvider = (props) => {
       if (previewUrl) {
         const input = document.getElementById("badgeId");
         const badgeImg = document.getElementById("badge-img");
-  console.log(input,"input");
         const pdfWidth = 290;
         const pdfHeight = 290;
-        var pdfBlob = await html2canvas(badgeImg,{
-          allowTaint: true, 
+
+        var pdfBlob = await html2canvas(badgeImg, {
+          allowTaint: true,
           scale: 2,
           useCORS: true,
         }).then(async (canvas) => {
-          const imgData = canvas.toDataURL("image/jpeg", 1.0); 
-          const imageData = await fetch(imgData).then((r) => r.blob());  
+          const imgData = canvas.toDataURL("image/jpeg", 1.0);
+          const imageData = await fetch(imgData).then((r) => r.blob());
           var pdf;
           if (canvas.width > canvas.height) {
             pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
           } else {
             pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
           }
+          pdf.roundedRect(10, 60, 190, 220, 5, 5, "S");
           pdf.addImage(
             imgData,
             "JPEG",
@@ -79,7 +80,6 @@ export const BadgeContextProvider = (props) => {
             pdf.internal.pageSize.getHeight()
           );
 
-  
 
           const pdfBlob = pdf.output("blob");
           return { imageData, pdfBlob };

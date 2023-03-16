@@ -47,6 +47,7 @@ export const Web3ContextProvider = (props) => {
   }, [update]);
 
   useEffect(() => {
+  
     const initialize = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
@@ -60,7 +61,11 @@ export const Web3ContextProvider = (props) => {
 
       setAddress(accounts[0]);
     };
-    initialize();
+    let add = localStorage.getItem("address");
+  
+    if (add) {
+      initialize();
+    }
   }, []);
 
   const connectWallet = async (issuerName) => {
@@ -572,7 +577,7 @@ export const Web3ContextProvider = (props) => {
       useCORS: true,
       height: 600,
       width: 800,
-      scale:4,
+      scale: 4,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/png");
       // const img = new Image(); // create a new image element
