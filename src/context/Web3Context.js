@@ -390,10 +390,8 @@ export const Web3ContextProvider = (props) => {
           obj.title = formData.title;
           obj.description = formData.description;
           obj.expireDate = formData.expireDate;
-          obj.position = previewUrl ? position : "";
-          obj.uploadCertData = uploadObj ? uploadObj.name : "";
-          
-
+          obj.position = previewUrl ? position : ""; 
+          obj.uploadCertData = previewUrl ? uploadObj.name : "";  
           await addCollectors(obj);
         } // Generating CSV file with unique link and storing data in firebase.
         let obj = {
@@ -571,12 +569,16 @@ export const Web3ContextProvider = (props) => {
     setClaimLoading(true);
 
     const input = document.getElementById("certificateX");
+    const pdfWidth = 800;
+    const pdfHeight = 600;
+    const canvasWidth = pdfWidth * 1;
+    const canvasHeight = pdfHeight * 1;
 
     var pdfBlob = await html2canvas(input, {
       allowTaint: true,
       useCORS: true,
-      height: 600,
-      width: 800,
+      width: canvasWidth,
+      height: canvasHeight,
       scale: 4,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/png");
@@ -586,12 +588,14 @@ export const Web3ContextProvider = (props) => {
 
       var pdf;
       if (canvas.width > canvas.height) {
-        pdf = new jsPDF("l", "mm", [canvas.width, canvas.height]);
+        pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
       } else {
-        pdf = new jsPDF("p", "mm", [canvas.height, canvas.width]);
+        pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
       }
 
-      pdf.addImage(imgData, "JPEG", 0, 0, canvas.width, canvas.height);
+      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+
+      pdf.save("test.pdf");
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };
