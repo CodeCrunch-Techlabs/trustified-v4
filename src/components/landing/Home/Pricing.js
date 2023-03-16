@@ -1,7 +1,6 @@
 import { collection, getDoc, getDocs, query } from "firebase/firestore";
 import React, { Component, useEffect, useState } from "react";
-import { db, doc } from "../../../firebase";
-import { Templates } from "../../../Templates";
+import { db, doc } from "../../../firebase"; 
 
 const Pricing = () => {
   const [temp, setTemp] = useState([]);

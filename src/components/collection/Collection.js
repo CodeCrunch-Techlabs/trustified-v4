@@ -1,21 +1,10 @@
 import React from "react";
-import { Button, Typography, Box } from "@mui/material";
-
-import NftList from "./NftList";
-import CreateNftModal from "../modals/CreateNftModal";
-import HorizontalLinearStepper from "../forms/stepform/Index";
+import {  Box } from "@mui/material";
+ 
 import Certificates from "./Certificates";
 import { useNavigate } from "react-router-dom";
 
-function Collections() {
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+function Collections() { 
   const navigate = useNavigate();
 
   const handleClickNavigate=()=>{
