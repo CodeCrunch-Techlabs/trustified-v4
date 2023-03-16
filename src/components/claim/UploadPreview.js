@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 
-const UploadPreview = ({ claimer }) => {  
-  console.log(claimer,"claimer"); 
+const UploadPreview = ({ claimer }) => {   
   return (
     <>
       <div id="certificateX" style={{position:'relative'}}>

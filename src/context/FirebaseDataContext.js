@@ -387,8 +387,7 @@ export const FirebaseDataContextProvider = (props) => {
       where("claimerAddress", "==", address)
     );
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (fire) => {
-      console.log(fire.data().ipfsurl, "ipfsurl");
+    querySnapshot.forEach(async (fire) => { 
       var obj;
       if (fire.exists) {
         obj = fire.data();
