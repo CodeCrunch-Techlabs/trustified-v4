@@ -5,11 +5,13 @@ import {
   TextField,
   Typography,
   Box,
-} from "@mui/material"; 
-import { firebaseDataContext } from "../context/FirebaseDataContext"; 
+} from "@mui/material";
+import { firebaseDataContext } from "../context/FirebaseDataContext";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
+import web3 from "web3";
+import { useLocation } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -46,9 +48,19 @@ function a11yProps(index) {
 
 export default function MyCollection({ show }) {
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { myCollection, certLoad } = firebaseContext;
+  const { myCollection, certLoad, getMyCollection } = firebaseContext;
+
+  const location = useLocation();
+  console.log(location);
 
   const [value, setValue] = React.useState(0);
+
+  useEffect(() => {
+    let add = localStorage.getItem("address");
+    console.log(web3.utils.toChecksumAddress(add));
+
+    getMyCollection(web3.utils.toChecksumAddress(add));
+  }, []);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -68,14 +80,20 @@ export default function MyCollection({ show }) {
           certificates.push(myCollection[i]);
         }
       }
-    } 
+    }
 
     setbadgesData(badges);
     setcertificatesData(certificates);
   }, [myCollection]);
 
   return (
-    <div className="container collections">
+    <div
+      className={
+        location.pathname == "/my-collection"
+          ? "bannercontainer container"
+          : "container collections"
+      }
+    >
       <div className="row">
         <div className="col">
           {myCollection.length > 0 && (
@@ -105,9 +123,6 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={0}>
             <div className="container collections">
               <div className="row">
-                {
-                  certLoad && <CircularProgress/>
-                }
                 {badgesData.length != 0 &&
                   badgesData.map((e, i) => {
                     return (
@@ -132,23 +147,24 @@ export default function MyCollection({ show }) {
                               textDecoration: "none",
                             }}
                           >
-                            {
-                              e.ipfsurl ? <img
-                              height="auto"
-                              width="100%"
-                              className="claimBadge"
-                              src={e.ipfsurl}
-                              alt={e.name}
-                            /> :  <CircularProgress />
-                            }
-                            
+                            {e.ipfsurl ? (
+                              <img
+                                height="auto"
+                                width="100%"
+                                className="claimBadge"
+                                src={e.ipfsurl}
+                                alt={e.name}
+                              />
+                            ) : (
+                              <CircularProgress />
+                            )}
                           </Typography>
                         </div>
                       </div>
                     );
                   })}
                 {certLoad && <CircularProgress />}
-                {badgesData.length === 0 && show == true && (
+                {badgesData.length === 0 && show == true && !certLoad && (
                   <div className="col">
                     <h4>No Collection!</h4>
                   </div>
@@ -160,7 +176,6 @@ export default function MyCollection({ show }) {
             <div className="row">
               {certificatesData.length != 0 &&
                 certificatesData.map((e, i) => {
-           
                   return (
                     <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
                       <div

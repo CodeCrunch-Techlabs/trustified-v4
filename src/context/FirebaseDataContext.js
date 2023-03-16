@@ -44,7 +44,7 @@ export const FirebaseDataContextProvider = (props) => {
     claimed,
     type,
     transferable,
-    eventId 
+    eventId
   ) {
     return {
       claimToken,
@@ -56,7 +56,7 @@ export const FirebaseDataContextProvider = (props) => {
       claimed,
       type,
       transferable,
-      eventId 
+      eventId,
     };
   }
   function createDataCollection(
@@ -189,7 +189,7 @@ export const FirebaseDataContextProvider = (props) => {
             e.data().claimed,
             e.data().type,
             e.data().transferable,
-            e.data().eventId 
+            e.data().eventId
           )
         );
       });
@@ -235,7 +235,7 @@ export const FirebaseDataContextProvider = (props) => {
         console.log(error);
       });
 
-      setExportLoading(false);
+    setExportLoading(false);
 
     const blob = new Blob([response.data], { type: "text/csv" });
 
@@ -258,7 +258,7 @@ export const FirebaseDataContextProvider = (props) => {
       querySnapshot.forEach(async (fire) => {
         var obj = {};
 
-        console.log(fire.data(),"fire");
+        console.log(fire.data(), "fire");
 
         const template =
           fire.data().type == "badge"
@@ -272,7 +272,7 @@ export const FirebaseDataContextProvider = (props) => {
         obj.claimer = fire.data().name;
         obj.description = fire.data().description;
         obj.title = fire.data().title;
-        obj.uploadObj = fire.data().uploadObj; 
+        obj.uploadObj = fire.data().uploadObj;
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);
@@ -282,6 +282,12 @@ export const FirebaseDataContextProvider = (props) => {
           );
         } else if (fire.data().ipfsurl == "") {
           obj.ipfsurl = "";
+        } else if (fire.data().claimed == "Yes") {
+          let meta = await axios.get(fire.data().ipfsurl);
+          obj.ipfsurl = meta.data.image.replace(
+            "ipfs://",
+            "https://nftstorage.link/ipfs/"
+          );
         } else {
           obj.ipfsurl = fire.data().ipfsurl;
         }
@@ -383,40 +389,40 @@ export const FirebaseDataContextProvider = (props) => {
   }
 
   async function getMyCollection(address) {
-   if(address){
-  setCertLoad(true) ;
-    var array = [];
-    const q = query(
-      collection(db, "Collectors"),
-      where("claimerAddress", "==", address)
-    );
-    const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (fire) => { 
-      var obj;
-      if (fire.exists) {
-        obj = fire.data();
-        const d = await axios.get(fire.data().ipfsurl);
-        obj.ipfsurl = d.data.image.replace(
-          "ipfs://",
-          "https://nftstorage.link/ipfs/"
-        );
-        obj.pdf = d.data.pdf.replace(
-          "ipfs://",
-          "https://nftstorage.link/ipfs/"
-        );
+    if (address) {
+      setCertLoad(true);
+      var array = [];
+      const q = query(
+        collection(db, "Collectors"),
+        where("claimerAddress", "==", address)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach(async (fire) => {
+        var obj;
+        if (fire.exists) {
+          obj = fire.data();
+          const d = await axios.get(fire.data().ipfsurl);
+          obj.ipfsurl = d.data.image.replace(
+            "ipfs://",
+            "https://nftstorage.link/ipfs/"
+          );
+          obj.pdf = d.data.pdf.replace(
+            "ipfs://",
+            "https://nftstorage.link/ipfs/"
+          );
 
-        array.push(obj);
-      }
-      let arr = [];
-      for (let i = 0; i < array.length; i++) {
-        arr[i] = array[i];
-      }
-      setMyCollection(arr);
-    });
-   setCertLoad(false) 
-   } else {
-    toast.error("Please provide address!");
-   }
+          array.push(obj);
+        }
+        let arr = [];
+        for (let i = 0; i < array.length; i++) {
+          arr[i] = array[i];
+        }
+        setMyCollection(arr);
+      });
+      setCertLoad(false);
+    } else {
+      toast.error("Please provide address!");
+    }
   }
 
   const getTemplate = async (id) => {
@@ -460,7 +466,7 @@ export const FirebaseDataContextProvider = (props) => {
         getTemplate,
         template,
         type,
-        certLoad, 
+        certLoad,
         exportLoading,
         setCertLoad,
       }}

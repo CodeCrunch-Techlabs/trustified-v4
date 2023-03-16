@@ -8,14 +8,13 @@ import Iconify from "../components/utils/Iconify";
 const Badges = () => {
   const navigate = useNavigate();
   const firebaseContext = React.useContext(firebaseDataContext);
-  const {
-    getNFTCollections,
-    badgesData,
-    generateClaimersExcellSheet,
-    exportLoading,
-  } = firebaseContext;
+  const { getNFTCollections, badgesData, generateClaimersExcellSheet } =
+    firebaseContext;
 
   const [badges, setBadges] = React.useState([]);
+  const [loadingStates, setLoadingStates] = React.useState(
+    Array(badges.length).fill(false)
+  );
 
   const navigateTo = (id) => {
     navigate(`/dashboard/collectors/${id}`);
@@ -31,10 +30,10 @@ const Badges = () => {
 
   return (
     <>
-      {badges.map((item, i) => {
+      {badges.map((item, index) => {
         return (
           <div
-            key={i}
+            key={index}
             className="col-lg-3 col-md-4 col-sm-6 col-12"
             onClick={() => navigateTo(item.eventId)}
           >
@@ -52,20 +51,25 @@ const Badges = () => {
                   color="primary"
                   variant="outlined"
                 />
-                {exportLoading ? (
+                {loadingStates[index] ? (
                   <CircularProgress />
                 ) : (
                   <Iconify
                     icon="mdi:download-circle-outline"
                     width={30}
                     height={30}
-                    onClick={(e) => {
+                    onClick={async (e) => {
+                      const newLoadingStates = [...loadingStates];
+                      newLoadingStates[index] = true;
+                      setLoadingStates(newLoadingStates);
                       e.stopPropagation();
-                      generateClaimersExcellSheet(
+                      await generateClaimersExcellSheet(
                         item.eventId,
                         item.name,
                         "badge"
                       );
+                      newLoadingStates[index] = false;
+                      setLoadingStates(newLoadingStates);
                     }}
                   />
                 )}

@@ -17,7 +17,6 @@ export default function Certificates() {
     getNFTCollections,
     certificatesData,
     generateClaimersExcellSheet,
-    exportLoading,
   } = fireDataContext;
 
   const [certificates, setCertificates] = React.useState([]);
