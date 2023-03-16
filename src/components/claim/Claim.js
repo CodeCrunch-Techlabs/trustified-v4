@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { 
-  TextField, 
-  Divider,
-} from "@mui/material";
+import { TextField, Divider, CircularProgress } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
@@ -45,32 +42,38 @@ export default function Claim() {
     document.location.reload();
   }
 
+  console.log(claimer, "claimer");
+
   return (
     <section className="banner-one" id="banner">
       <div className="bannercontainer container">
         <div className="row">
           <div className="col-xl-12 col-lg-8">
             <div className="banner-one__claimcontent">
-              <div
-                className="py-4"
-                style={{ justifyContent: "center", display: "flex" }}
-              >
-                {claimer?.type == "badge" ? (
-                  <img className="claimBadge" src={claimer?.ipfsurl} />
-                ) : (
-                  <>
-                    {claimer?.position != "" &&
-                    claimer?.position != undefined ? (
-                      <UploadPreview claimer={claimer} />
-                    ) : (
-                      <TemplatePreview
-                        data={claimer?.template}
-                        name={claimer?.claimer}
-                      />
-                    )}
-                  </>
-                )}
-              </div>
+              {claimer ? (
+                <div
+                  className="py-4"
+                  style={{ justifyContent: "center", display: "flex" }}
+                >
+                  {claimer?.type == "badge" ? (
+                    <img className="claimBadge" src={claimer?.ipfsurl} />
+                  ) : (
+                    <>
+                      {claimer?.position != "" &&
+                      claimer?.position != undefined ? (
+                        <UploadPreview claimer={claimer} />
+                      ) : (
+                        <TemplatePreview
+                          data={claimer?.template}
+                          name={claimer?.claimer}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              ) : (
+                <CircularProgress />
+              )}
               <div className="row">
                 <div className="col-6 mx-auto text-center">
                   <div className="row">
