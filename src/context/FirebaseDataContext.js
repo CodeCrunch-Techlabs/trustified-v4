@@ -41,7 +41,7 @@ export const FirebaseDataContextProvider = (props) => {
     claimed,
     type,
     transferable,
-    eventId
+    eventId 
   ) {
     return {
       claimToken,
@@ -53,7 +53,7 @@ export const FirebaseDataContextProvider = (props) => {
       claimed,
       type,
       transferable,
-      eventId,
+      eventId 
     };
   }
   function createDataCollection(
@@ -124,6 +124,7 @@ export const FirebaseDataContextProvider = (props) => {
       description: data.description,
       expireDate: data.expireDate,
       position: data.position,
+      uploadObj: data.uploadCertData,
     });
     setLoading(false);
     setUpdated(!updated);
@@ -185,7 +186,7 @@ export const FirebaseDataContextProvider = (props) => {
             e.data().claimed,
             e.data().type,
             e.data().transferable,
-            e.data().eventId
+            e.data().eventId 
           )
         );
       });
@@ -251,6 +252,8 @@ export const FirebaseDataContextProvider = (props) => {
       querySnapshot.forEach(async (fire) => {
         var obj = {};
 
+        console.log(fire.data(),"fire");
+
         const template =
           fire.data().type == "badge"
             ? ""
@@ -263,8 +266,7 @@ export const FirebaseDataContextProvider = (props) => {
         obj.claimer = fire.data().name;
         obj.description = fire.data().description;
         obj.title = fire.data().title;
-
-        console.log(fire.data(), "dd");
+        obj.uploadObj = fire.data().uploadObj; 
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);
@@ -280,7 +282,6 @@ export const FirebaseDataContextProvider = (props) => {
 
         obj.expireDate = fire.data().expireDate;
         obj.position = fire.data().position;
-
         setClaimer(obj);
       });
       setLoading(true);
