@@ -12,6 +12,7 @@ import NewTemplates from "./components/template/NewTemplates";
 import DemoTemplate from "./components/template/DemoTemplate";
 import Preview from "./components/template/Preview";
 import BadgeTemplate from "./components/template/BadgeTemplate";
+import MyCollection from "./components/myCollection";
 
 export default function Router() {
   return useRoutes([
@@ -66,6 +67,11 @@ export default function Router() {
       path: "/claim",
       element: <LendingPageLayout />,
       children: [{ path: "/claim/:token", element: <Claim /> }],
+    },
+    {
+      path: "/collection",
+      element: <LendingPageLayout />,
+      children: [{ path: "/collection", element: <MyCollection /> }],
     },
   ]);
 }

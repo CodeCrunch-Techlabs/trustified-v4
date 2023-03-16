@@ -2993,13 +2993,12 @@ img.badgeItem {
 img.certificate {
   height: 100%;
   width: 100%;
-  border-radius: 5px !important;
+  border-top-right-radius: 5px;
+  border-top-left-radius: 5px; 
 }
 
 .certificateDescription {
-  padding: 15px 20px 0px 20px;
-  display: flex;
-  text-align: center;
+  padding: 10px; 
 }
 
 .optionspan {
@@ -3056,4 +3055,45 @@ button#simple-tab-0, button#simple-tab-1{
 /* position: absolute;
 right: 5%; */
 z-index: 9;
+}
+
+.card-root{
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 16px; 
+}
+.card-root img{
+  border-radius: 16px;
+  min-height: 200px;
+}
+.card-body-cert{
+  margin: 20px 10px -10px 10px;
+}
+
+.card-h4{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 200px;
+}
+ 
+ 
+.card-p{
+  margin: 0 10px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.card-root h4{ 
+  margin-bottom: 5px;
+  margin-bottom: 0;
+  text-transform: capitalize;  
+  font-size: 16px; 
+  font-weight: bold; 
+  color: #2a2833; 
+}
+.card-root p{ 
+   font-size: 14px;  
+   color: #74727a;
 }

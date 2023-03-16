@@ -1,7 +1,5 @@
 import React, { useEffect } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import PlaceholderImage from "../../../public/images/placeholder.jpg";
-
+import { LazyLoadImage } from "react-lazy-load-image-component"; 
 const UploadPreview = ({ claimer }) => {
   return (
     <>
@@ -10,7 +8,7 @@ const UploadPreview = ({ claimer }) => {
           src={claimer.ipfsurl}
           width={800}
           height={600}
-          PlaceholderSrc={PlaceholderImage}
+          PlaceholderSrc="/images/placeholder.jpg"
           alt="Image Alt"
         />
         {/* <img width="800" height="600" src={claimer.ipfsurl} /> */}
