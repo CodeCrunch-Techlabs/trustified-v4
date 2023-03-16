@@ -595,7 +595,6 @@ export const Web3ContextProvider = (props) => {
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
-      pdf.save("test.pdf");
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };
