@@ -3097,3 +3097,17 @@ z-index: 9;
    font-size: 14px;  
    color: #74727a;
 }
+
+.claim-card{
+  padding: 25px 12px 25px 12px;
+}
+
+h4.card-h4.claim-h4{
+ font-size: 25px;
+ line-height: 40px;
+}
+
+p.card-p.claim-des {
+  font-size: 17px;
+  line-height: 35px;
+}
