@@ -5,8 +5,14 @@ import { SketchPicker } from 'react-color';
 import { TemplateConext } from '../../context/CreateTemplateContext';
 import Upload from './Editor/Upload';
 import SelectFonts from './Editor/Fonts';
+import Popover from '@mui/material/Popover';
+import {
+    Box 
+  } from "@mui/material";
 
 const DemoTemplate = () => {
+
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const templateConext = React.useContext(TemplateConext);
     const [show, setShow] = useState(false);
     const {
@@ -42,37 +48,54 @@ const DemoTemplate = () => {
     } = templateConext;
 
 
-    const handleClickPicker = () => {
-        setShow(!show);
-    }
+    
+
+    const handleClick = (event) => {
+      setAnchorEl(event.currentTarget);
+    };
+  
+    const handleClose = () => {
+      setAnchorEl(null);
+    };
+  
+    const open = Boolean(anchorEl);
+    const id = open ? 'simple-popover' : undefined;
 
     return (
         <div className='container mt-5 mb-5'>
             <p>Create Template</p>
             <Upload />
-            <SelectFonts />
+            <SelectFonts /> 
+            <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
+                  <div style={{
+                    padding: '5px',
+                    background: '#fff',
+                    borderRadius: '1px',
+                    boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
+                    display: 'inline-block',
+                    cursor: 'pointer',
+                  }} onClick={handleClick}>
+                    <div style={{
+                      width: '50px',
+                      height: '20px',
+                      borderRadius: '2px',
+                      backgroundColor: colors,
+                    }}></div>
+                  </div>
+                </Box>
 
-            <div style={{
-                padding: '5px',
-                background: '#fff',
-                borderRadius: '1px',
-                boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
-                display: 'inline-block',
-                cursor: 'pointer',
-            }} onClick={handleClickPicker}>
-                <div style={{
-                    width: '50px',
-                    height: '20px',
-                    borderRadius: '2px',
-                    backgroundColor: colors,
-                }}></div>
-            </div>
-            {
-                show ? <SketchPicker color={colors} onChange={handleChangeColor} /> : null
-
-            }
-
-
+            <Popover
+                  id={id}
+                  open={open}
+                  anchorEl={anchorEl}
+                  onClose={handleClose}
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                  }}
+                >
+                  <SketchPicker color={colors} onChange={handleChangeColor} />
+                </Popover> 
 
             <div className='row'>
                 <div className='col-12 mx-auto'>

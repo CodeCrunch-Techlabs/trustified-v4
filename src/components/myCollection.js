@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import web3 from "web3";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -91,7 +91,7 @@ export default function MyCollection({ show }) {
       className={
         location.pathname == "/my-collection"
           ? "bannercontainer container footer-position"
-          : "container collections footer-position"
+          : "container  footer-position"
       }
     >
       <div className="row">
@@ -104,72 +104,72 @@ export default function MyCollection({ show }) {
                 sx={{
                   fontWeight: 600,
                   margin: "10px",
-                  textAlign: "center",
                 }}
               >
                 Your Collection
               </Typography>
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="basic tabs example"
-              >
-                <Tab label="My Badges" {...a11yProps(0)} />
-                <Tab label="My Certificates" {...a11yProps(1)} />
-              </Tabs>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  aria-label="basic tabs example"
+                >
+                  <Tab label="My Badges" {...a11yProps(0)} />
+                  <Tab label="My Certificates" {...a11yProps(1)} />
+                </Tabs>
+              </Box>
             </>
           )}
 
           <TabPanel value={value} index={0}>
-            <div className="container collections">
-              <div className="row">
-                {badgesData.length != 0 &&
-                  badgesData.map((e, i) => {
-                    return (
+            <div className="row">
+              {badgesData.length != 0 &&
+                badgesData.map((e, i) => { 
+                  return (
+                    <div
+                      key={i}
+                      className="col-12 col-lg-4 col-sm-6 col-md-4"
+                    >
                       <div
-                        key={i}
-                        className="col-12 col-lg-4 col-sm-6 col-md-4"
+                        className="mt-2 template-card mb-2"
+                        style={{ display: "grid" }}
                       >
-                        <div
-                          className="mt-4 template-card mb-4"
-                          style={{ display: "grid" }}
+
+                        <Link to={e.ipfsurl} target="_blank" style={{width:'50%'}}>
+                          <img
+                            height="auto"
+                            width="100%"
+                            className="claimBadge"
+                            src={e.ipfsurl}
+                            alt={e.title}
+                          />
+                        </Link> 
+
+                        <Typography
+                          variant="body"
+                          component="a"
+                          href={e.pdf}
+                          target="_blank"
+                          sx={{
+                            textTransform: "uppercase",
+                            fontWeight: 600,
+                            margin: '10px',
+                            color: "#84a8fb",
+                            textDecoration: "none",
+                          }}
                         >
-                          <Typography
-                            variant="span"
-                            component="a"
-                            href={e.pdf}
-                            target="_blank"
-                            sx={{
-                              textTransform: "uppercase",
-
-                              color: "#84a8fb",
-
-                              textDecoration: "none",
-                            }}
-                          >
-                            {e.ipfsurl ? (
-                              <img
-                                height="auto"
-                                width="100%"
-                                className="claimBadge"
-                                src={e.ipfsurl}
-                                alt={e.name}
-                              />
-                            ) : (
-                              <CircularProgress />
-                            )}
-                          </Typography>
-                        </div>
+                          {e.title}
+                        </Typography>
                       </div>
-                    );
-                  })}
-                {certLoad && <CircularProgress />}
-                {badgesData.length === 0 && show == true && !certLoad && (
-                  <div className="col">
-                    <h4>No Collection!</h4>
-                  </div>
-                )}
-              </div>
+                    </div>
+                  );
+                })}
+              {certLoad && <CircularProgress />}
+              {badgesData.length === 0 && show == true && !certLoad && (
+                <div className="col">
+                  <h4>No Collection!</h4>
+                </div>
+              )}
             </div>
           </TabPanel>
           <TabPanel value={value} index={1}>
@@ -191,19 +191,33 @@ export default function MyCollection({ show }) {
                             textTransform: "uppercase",
                             fontWeight: 600,
                             color: "#84a8fb",
-                            margin: "20px 0",
                             textDecoration: "none",
                           }}
                         >
-                          {e.name}
+                          {e.title}
                         </Typography>
-                        <img
-                          height="auto"
-                          width="100%"
-                          className="claimCertificate"
-                          src={e.ipfsurl}
-                          alt={e.name}
-                        />
+                        <Typography
+                          variant="body"
+                          component="p"
+                          sx={{
+                            color: "#74727a",
+                            marginBottom: '20px',
+                            textDecoration: "none",
+                          }}
+                        >
+                          {e.description}
+                        </Typography>
+
+
+                        <Link to={e.ipfsurl} target="_blank">
+                          <img
+                            height="auto"
+                            width="100%"
+                            className="claimCertificate"
+                            src={e.ipfsurl}
+                            alt={e.title}
+                          />
+                        </Link>
                       </div>
                     </div>
                   );

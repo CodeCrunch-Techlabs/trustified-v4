@@ -2141,6 +2141,7 @@ a:visited {
   align-items: center;
   padding: 20px;
   position: relative;
+  margin: auto;
 }
 .fact-one__single:before {
   content: "";
@@ -3064,7 +3065,7 @@ z-index: 9;
 }
 .card-root img{
   border-radius: 16px;
-  min-height: 200px;
+  height: 200px;
 }
 .card-body-cert{
   margin: 20px 10px -10px 10px;
@@ -3106,8 +3107,8 @@ z-index: 9;
 }
 .badge-root img{
   border-radius: 50%;
-  width: 200px;
-  height: 200px;  
+  /* width: 200px;
+  height: 200px;   */
   margin: 10px auto; 
 }
 .badge-body{
