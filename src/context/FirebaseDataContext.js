@@ -43,7 +43,7 @@ export const FirebaseDataContextProvider = (props) => {
     name,
     claimed,
     type,
-    transferable,
+    Nontransferable,
     eventId
   ) {
     return {
@@ -55,7 +55,7 @@ export const FirebaseDataContextProvider = (props) => {
       name,
       claimed,
       type,
-      transferable,
+      Nontransferable,
       eventId,
     };
   }
@@ -99,7 +99,7 @@ export const FirebaseDataContextProvider = (props) => {
       issueDate: new Date(),
       eventId: data.eventId,
       type: data.type,
-      transferable: data.transferable,
+      Nontransferable: data.Nontransferable,
       image: data.image,
       templateId: data.templateId,
     });
@@ -120,7 +120,7 @@ export const FirebaseDataContextProvider = (props) => {
       name: data.name,
       claimed: data.claimed,
       type: data.type,
-      transferable: data.transferable,
+      Nontransferable: data.Nontransferable,
       eventId: data.eventId,
       templateId: data.templateId,
       title: data.title,
@@ -188,7 +188,7 @@ export const FirebaseDataContextProvider = (props) => {
             e.data().name,
             e.data().claimed,
             e.data().type,
-            e.data().transferable,
+            e.data().Nontransferable,
             e.data().eventId
           )
         );

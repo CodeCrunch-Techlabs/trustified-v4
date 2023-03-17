@@ -22,6 +22,7 @@ export const NFTStorageContextProvider = (props) => {
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const [ipfsurl, setIpfsurl] = useState("");
   const [uploadObj, setUploadObj] = useState({});
+  const [checked, setChecked] = useState(true);
 
   const [labelInfo, setlabelInfo] = useState({
     formData: {
@@ -29,7 +30,7 @@ export const NFTStorageContextProvider = (props) => {
       description: "",
       chain: "fevm",
       expireDate: "",
-      transferable: "off",
+      Nontransferable: "on",
     },
   });
 
@@ -38,6 +39,11 @@ export const NFTStorageContextProvider = (props) => {
 
   const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
+
+  const switchHandler = (event) => {
+    setChecked(event.target.checked);
+  };
+
 
   const handleClickOpen = () => {
     setOpen(true);

@@ -199,13 +199,18 @@ export const Web3ContextProvider = (props) => {
     return result;
   }
 
-  const createBadgesNFTCollecion = async (data, firebasedata, type) => {
+  const createBadgesNFTCollecion = async (
+    data,
+    firebasedata,
+    checked,
+    type
+  ) => {
     try {
       const trustifiedContract = new ethers.Contract(
-        firebasedata.transferable == "on"
+        checked == true
           ? trustifiedContracts[firebasedata.chain].nonTransferable
           : trustifiedContracts[firebasedata.chain].transferable,
-        firebasedata.transferable == "on"
+        checked == true
           ? trustifiedNonTransferableContractAbi.abi
           : trustifiedContractAbi.abi,
         signer
@@ -233,6 +238,7 @@ export const Web3ContextProvider = (props) => {
         firebasedata.type = type;
         firebasedata.image = data.tokenUris[0];
         firebasedata.templateId = "";
+        firebasedata.Nontransferable = checked == true ? "on" : "off";
         await addCollection(firebasedata);
 
         let tokenIds = await trustifiedContract.getTokenIds(
@@ -273,7 +279,7 @@ export const Web3ContextProvider = (props) => {
           obj.claimed = "No";
           obj.eventId = parseInt(Number(eventId));
           obj.templateId = "";
-          obj.transferable = firebasedata.transferable;
+          obj.Nontransferable = checked == true ? "on" : "off";
           obj.templateId = "";
           obj.title = firebasedata.title;
           obj.description = firebasedata.description;
@@ -327,10 +333,10 @@ export const Web3ContextProvider = (props) => {
   ) => {
     try {
       const trustifiedContract = new ethers.Contract(
-        formData.transferable == "on"
+        formData.Nontransferable == "on"
           ? trustifiedContracts[formData.chain].nonTransferable
           : trustifiedContracts[formData.chain].transferable,
-        formData.transferable == "on"
+        formData.Nontransferable == "on"
           ? trustifiedNonTransferableContractAbi.abi
           : trustifiedContractAbi.abi,
         signer
@@ -383,7 +389,7 @@ export const Web3ContextProvider = (props) => {
           obj.type = type;
           obj.claimed = "No";
           obj.eventId = parseInt(Number(eventId));
-          obj.transferable = formData.transferable;
+          obj.Nontransferable = formData.Nontransferable;
           obj.templateId = previewUrl ? "" : templateId;
           obj.title = formData.title;
           obj.description = formData.description;
@@ -493,7 +499,7 @@ export const Web3ContextProvider = (props) => {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
             fire.data().tokenContract,
-            fire.data().transferable == "on"
+            fire.data().Nontransferable == "on"
               ? trustifiedNonTransferableContractAbi.abi
               : trustifiedContractAbi.abi,
             signer
@@ -635,7 +641,7 @@ export const Web3ContextProvider = (props) => {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
             fire.data().tokenContract,
-            fire.data().transferable == "on"
+            fire.data().Nontransferable == "on"
               ? trustifiedNonTransferableContractAbi.abi
               : trustifiedContractAbi.abi,
             signer
@@ -716,7 +722,7 @@ export const Web3ContextProvider = (props) => {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
             fire.data().tokenContract,
-            fire.data().transferable == "on"
+            fire.data().Nontransferable == "on"
               ? trustifiedNonTransferableContractAbi.abi
               : trustifiedContractAbi.abi,
             signer
