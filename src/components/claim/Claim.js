@@ -45,7 +45,7 @@ export default function Claim() {
   console.log(claimer, "claimer");
 
   return (
-    <section className="banner-one" id="banner">
+    <section className="banner-one footer-position" id="banner">
       <div className="bannercontainer container">
         <div className="row">
           <div className="col-xl-12 col-lg-8">

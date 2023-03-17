@@ -17,7 +17,7 @@ function Collections() {
           <Box sx={{ width: "100%" }}>
             <div className="d-flex justify-content-between  mb-3">
               <h2 className="block-title__title">
-                <span>Certificates</span>
+                <span>Collections</span>
               </h2>
               <a className="thm-btn header__cta-btn" onClick={handleClickNavigate} >
              <span>Create NFT</span>
