@@ -3097,3 +3097,46 @@ z-index: 9;
    font-size: 14px;  
    color: #74727a;
 }
+
+.badge-root{
+  background-color: #fff;
+  padding: 12px;
+  border-radius: 16px; 
+  text-align: center;
+}
+.badge-root img{
+  border-radius: 50%;
+  width: 200px;
+  height: 200px;  
+  margin: 10px auto; 
+}
+.badge-body{
+  margin: 20px 10px;
+}
+.badge-body h4 , .badge-card-body h4{
+  margin-bottom: 5px;
+  margin-bottom: 0;
+  text-transform: capitalize;  
+  font-size: 16px; 
+  font-weight: bold; 
+  color: #2a2833; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.badge-body p, .badge-card-body p{
+  font-size: 14px;  
+  color: #74727a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.badge-card-body{
+  margin: 20px 10px 5px;
+}
+.badge-footer{
+  margin: 0 10px 10px;
+}
+.css-oehwmn{
+  min-height: 100vh !important;
+}

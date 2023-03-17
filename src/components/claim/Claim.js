@@ -41,8 +41,7 @@ export default function Claim() {
     });
     document.location.reload();
   }
-
-  console.log(claimer, "claimer");
+ 
 
   return (
     <section className="banner-one footer-position" id="banner">
