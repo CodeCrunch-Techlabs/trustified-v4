@@ -7,6 +7,7 @@ import MyCollection from "../myCollection";
 import { ethers } from "ethers";
 import TemplatePreview from "./Preview";
 import UploadPreview from "./UploadPreview";
+import Chip from "@mui/material/Chip";
 
 export default function Claim() {
   const web3Context = React.useContext(Web3Context);
@@ -40,11 +41,10 @@ export default function Claim() {
       params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
     });
     document.location.reload();
-  }
- 
+  } 
 
   return (
-    <section className="banner-one footer-position" id="banner">
+    <section className="footer-position" id="banner">
       <div className="bannercontainer container">
         <div className="row">
           <div className="col-xl-12 col-lg-8">
@@ -72,6 +72,38 @@ export default function Claim() {
                 </div>
               ) : (
                 <CircularProgress />
+              )}
+
+              {claimer && (
+                <div
+                  className="justify-content-center"
+                  style={{ width: "50%", margin: "auto" }}
+                >
+                  <div className="card-root claim-card">
+                    <div className="justify-content-center d-flex">
+                      <h4 className="card-h4 claim-h4">{claimer?.title}</h4>
+                    </div>
+                    <p className="card-p claim-des">{claimer?.description}</p>
+                    <div className="card-body-cert d-flex justify-content-between">
+                      <div>
+                        <h4>TokenId</h4>
+                        <p>#{claimer?.tokenId}</p>
+                      </div>
+                      <div>
+                        <h4>Chain</h4>
+                        <p>{claimer?.chain}</p>
+                      </div>
+                      <div>
+                        <h4>Type</h4>
+                        <p>
+                          {claimer?.nfttype == "on"
+                            ? "Non-Transferrable"
+                            : "Transferrable"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
               <div className="row">
                 <div className="col-6 mx-auto text-center">
@@ -118,10 +150,17 @@ export default function Claim() {
                               await claimUploadedCertificate(
                                 token,
                                 add,
-                                claimer
+                                claimer,
+                                claimer?.uploadObj.style.color
                               );
                             } else {
-                              await claimCertificate(token, add, claimer);
+                              await claimCertificate(
+                                token,
+                                add,
+                                claimer,
+                                claimer?.template.name.style.color,
+                                claimer?.template.name.style.fontFamily
+                              );
                             }
                           }
                         }}
@@ -147,8 +186,7 @@ export default function Claim() {
             </div>
           </div>
         </div>
-      </div>
-      <Divider sx={{ m: 3 }} />
+      </div> 
       {show && <MyCollection show={show}></MyCollection>}
     </section>
   );

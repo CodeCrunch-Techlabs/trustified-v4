@@ -51,7 +51,6 @@ export default function MyCollection({ show }) {
   const { myCollection, certLoad, getMyCollection } = firebaseContext;
 
   const location = useLocation();
-  console.log(location);
 
   const [value, setValue] = React.useState(0);
 

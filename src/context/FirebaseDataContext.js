@@ -258,7 +258,7 @@ export const FirebaseDataContextProvider = (props) => {
       querySnapshot.forEach(async (fire) => {
         var obj = {};
 
-        console.log(fire.data(), "fire");
+    
 
         const template =
           fire.data().type == "badge"
@@ -273,6 +273,11 @@ export const FirebaseDataContextProvider = (props) => {
         obj.description = fire.data().description;
         obj.title = fire.data().title;
         obj.uploadObj = fire.data().uploadObj;
+        obj.issueDate = fire.data().issueDate;
+        obj.eventId = fire.data().eventId;
+        obj.tokenId = fire.data().tokenId;
+        obj.status = fire.data().claimed;
+        obj.nfttype = fire.data().Nontransferable;
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);

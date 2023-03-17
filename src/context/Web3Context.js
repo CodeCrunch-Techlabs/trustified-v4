@@ -429,7 +429,13 @@ export const Web3ContextProvider = (props) => {
     }
   };
 
-  const claimCertificate = async (claimToken, claimerAddress, claimer) => {
+  const claimCertificate = async (
+    claimToken,
+    claimerAddress,
+    claimer,
+    textcolor,
+    textFamily
+  ) => {
     setClaimLoading(true);
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
@@ -457,6 +463,28 @@ export const Web3ContextProvider = (props) => {
       }
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
+      var text = `Certificate Id: #${claimer?.tokenId}`;
+
+      // Set the font size and style for the footer text
+
+      pdf.setFontSize(17);
+      pdf.setFont(textFamily);
+      pdf.setTextColor(textcolor);
+
+      // Get the number of pages in the document
+      var pageCount = pdf.internal.getNumberOfPages();
+
+      // Loop through each page and add the footer text
+      for (var i = 1; i <= pageCount; i++) {
+        pdf.setPage(i);
+        pdf.text(
+          text,
+          pdf.internal.pageSize.getWidth() -
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
+          pdf.internal.pageSize.getHeight() - 10
+        );
+      }
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };
     });
@@ -568,7 +596,8 @@ export const Web3ContextProvider = (props) => {
   const claimUploadedCertificate = async (
     claimToken,
     claimerAddress,
-    claimer
+    claimer,
+    textcolor
   ) => {
     setClaimLoading(true);
 
@@ -598,6 +627,28 @@ export const Web3ContextProvider = (props) => {
       }
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
+
+      var text = `Certificate Id: #${claimer?.tokenId}`;
+
+      // Set the font size and style for the footer text
+      pdf.setFontSize(17);
+      pdf.setFont("italic");
+      pdf.setTextColor(textcolor);
+
+      // Get the number of pages in the document
+      var pageCount = pdf.internal.getNumberOfPages();
+
+      // Loop through each page and add the footer text
+      for (var i = 1; i <= pageCount; i++) {
+        pdf.setPage(i);
+        pdf.text(
+          text,
+          pdf.internal.pageSize.getWidth() -
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
+          pdf.internal.pageSize.getHeight() - 10
+        );
+      }
 
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };

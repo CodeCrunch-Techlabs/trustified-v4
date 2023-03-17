@@ -3028,7 +3028,7 @@ img.claimBadge {
 
 .bannercontainer {
   padding-top: 150px !important;
-  padding-bottom: 230px;
+  padding-bottom: 50px;
   position: relative;
 }
 
@@ -3140,4 +3140,17 @@ z-index: 9;
 }
 .css-oehwmn{
   min-height: 100vh !important;
+}
+.claim-card{
+  padding: 25px 12px 25px 12px;
+}
+
+h4.card-h4.claim-h4{
+ font-size: 25px;
+ line-height: 40px;
+}
+
+p.card-p.claim-des {
+  font-size: 17px;
+  line-height: 35px;
 }
