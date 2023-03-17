@@ -8,7 +8,7 @@ import {
   RadioGroup,
   Stack,
   Button,
-  TextField, 
+  TextField,
   FormHelperText,
   Divider,
 } from "@mui/material";
@@ -20,7 +20,7 @@ function GetChain() {
   const value = useContext(NFTStorageContext);
   const formdata = value.labelInfo.formData;
   const setCsvData = value.setCsvData;
-  const [validity, setValidity] = useState("lifetime"); 
+  const [validity, setValidity] = useState("lifetime");
 
   return (
     <div>
@@ -73,48 +73,50 @@ function GetChain() {
             </FormControl>
           </Box>
         )}
-     <Divider/>
+        <Divider />
 
-
-
-     <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <FormLabel id="demo-controlled-radio-buttons-group">
-                NFT Type
-              </FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={formdata.transferable}
+        <Box sx={{ minWidth: 120 }}>
+          <FormControl fullWidth>
+            <FormLabel id="demo-controlled-radio-buttons-group">
+              NFT Type
+            </FormLabel>
+            <RadioGroup
+              aria-labelledby="demo-controlled-radio-buttons-group"
+              name="controlled-radio-buttons-group"
+              value={formdata.Nontransferable}
+            >
+              <Stack
+                direction="row"
+                justifyContent="start"
+                alignItems="center"
+                spacing={2}
               >
-                <Stack
-                  direction="row"
-                  justifyContent="start"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <FormControlLabel
-                    value="off" 
-                    control={<Radio />}
-                    label="Transferable"
-                    onChange={value.setFormdata("transferable")}
-                  />
-                  <FormControlLabel
-                    value="on" 
-                    control={<Radio />}
-                    label="Non-transferable(Soulbound NFT)"
-                    onChange={value.setFormdata("transferable")}
-                  />
-                </Stack>
-              </RadioGroup>
-              <FormHelperText>Make your NFT non-transferable</FormHelperText>
-            </FormControl>
-          </Box>  
-      <Divider/>
+                <FormControlLabel
+                  value="off"
+                  control={<Radio />}
+                  label="Transferable"
+                  onChange={value.setFormdata("Nontransferable")}
+                />
+                <FormControlLabel
+                  value="on"
+                  control={<Radio />}
+                  label="Non-transferable(Soulbound NFT)"
+                  onChange={value.setFormdata("Nontransferable")}
+                />
+              </Stack>
+            </RadioGroup>
+            <FormHelperText>Make your NFT non-transferable</FormHelperText>
+          </FormControl>
+        </Box>
+        <Divider />
         <Stack spacing={3} sx={{ margin: "20px" }}>
           <span>Upload excel sheet of collectors data</span>
           <Box sx={{ m: 1 }}>
-            <Button sx={{ m: 1,color:'white' }} variant="contained" component="label">
+            <Button
+              sx={{ m: 1, color: "white" }}
+              variant="contained"
+              component="label"
+            >
               Upload File
               <CSVReader
                 inputStyle={{ display: "none" }}

@@ -13,6 +13,7 @@ export const BadgeContextProvider = (props) => {
   const { createBadgesNFTCollecion } = web3Context;
   const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
+  const [checked, setChecked] = useState(true);
 
   const [previewUrl, setPreviewUrl] = useState("");
   const [usernamePos, setUsernamePos] = useState({ x: 112, y: -171 });
@@ -25,7 +26,7 @@ export const BadgeContextProvider = (props) => {
       name: "",
       chain: "fevm",
       badgeName: "",
-      transferable: "off",
+      Nontransferable: true,
       quantity: 0,
     },
   });
@@ -46,6 +47,11 @@ export const BadgeContextProvider = (props) => {
       formData: { ...labelInfo.formData, [prop]: event.target.value },
     });
   };
+
+  const switchHandler = (event) => {
+    setChecked(event.target.checked);
+  };
+
   const createBadge = async () => {
     try {
       setLoading(true);
@@ -79,7 +85,6 @@ export const BadgeContextProvider = (props) => {
             pdf.internal.pageSize.getWidth(),
             pdf.internal.pageSize.getHeight()
           );
-
 
           const pdfBlob = pdf.output("blob");
           return { imageData, pdfBlob };
@@ -162,12 +167,14 @@ export const BadgeContextProvider = (props) => {
         });
         array.push(metadata.ipnft);
       }
+
       if (array.length > 0) {
         await createBadgesNFTCollecion(
           {
             tokenUris: array,
           },
           labelInfo.formData,
+          checked,
           "badge"
         );
       }
@@ -195,6 +202,8 @@ export const BadgeContextProvider = (props) => {
         previewUrl,
         usernamePos,
         setPreviewUrl,
+        checked,
+        switchHandler,
       }}
       {...props}
     >
