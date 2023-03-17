@@ -90,8 +90,8 @@ export default function MyCollection({ show }) {
     <div
       className={
         location.pathname == "/my-collection"
-          ? "bannercontainer container"
-          : "container collections"
+          ? "bannercontainer container footer-position"
+          : "container collections footer-position"
       }
     >
       <div className="row">
