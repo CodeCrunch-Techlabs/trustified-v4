@@ -612,7 +612,7 @@ export const Web3ContextProvider = (props) => {
       useCORS: true,
       width: canvasWidth,
       height: canvasHeight,
-      scale: 4,
+      scale: 2,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/png");
       // const img = new Image(); // create a new image element
