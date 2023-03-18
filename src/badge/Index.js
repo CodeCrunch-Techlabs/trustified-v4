@@ -1,10 +1,10 @@
-import React from "react"; 
-import Box from "@mui/material/Box"; 
+import React from "react";
+import Box from "@mui/material/Box";
 import Badges from "./Badges";
 import { useNavigate } from "react-router-dom";
- 
- 
-const Index = () => {  
+import AddIcon from '@mui/icons-material/Add';
+
+const Index = () => {
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate("/dashboard/badges");
@@ -16,12 +16,19 @@ const Index = () => {
         <div className="col-12">
           <Box sx={{ width: "100%" }}>
             <div className="d-flex justify-content-between  mb-3">
-              <h2 className="block-title__title">
+              <div className='cert-coll'>
+                <span>Trustified</span>
+                <p >Badges</p>
+              </div>
+
+              {/* <h2 className="block-title__title">
                 <span>Badges</span>
-              </h2> 
-              <a className="thm-btn header__cta-btn" onClick={handleNavigate}>
-                <span>Create Badge</span>
-              </a>
+              </h2>  */}
+              <div>
+                <a className="thm-btn header__cta-btn" onClick={handleNavigate}>
+                  <span><AddIcon />Create Badge</span>
+                </a>
+              </div>
 
             </div>
           </Box>

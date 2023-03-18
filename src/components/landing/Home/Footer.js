@@ -27,7 +27,7 @@ const  scrollTop = () => {
           <div className="container">
             <div className="inner-container text-center">
               <p className="site-footer__copy" style={{fontWeight:'500'}}> 
-              Built with not just love but, hard work, last minute changes, lots of brainstorming, and teamwork!
+              Built with not just love but, hard work, lots of brainstorming, and teamwork!
                 <a href="#none"> 😍</a>
               </p>
             </div>

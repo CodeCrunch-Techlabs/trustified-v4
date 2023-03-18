@@ -95,8 +95,7 @@ export default function MyCollection({ show }) {
     >
       <div className="row">
         <div className="col">
-          {myCollection.length > 0 && (
-            <>
+           
               <Typography
                 variant="h5"
                 component="h6"
@@ -116,10 +115,7 @@ export default function MyCollection({ show }) {
                   <Tab label="My Badges" {...a11yProps(0)} />
                   <Tab label="My Certificates" {...a11yProps(1)} />
                 </Tabs>
-              </Box>
-            </>
-          )}
-
+              </Box> 
           <TabPanel value={value} index={0}>
             <div className="row">
               {badgesData.length != 0 &&

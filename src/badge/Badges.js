@@ -34,7 +34,7 @@ const Badges = () => {
   return (
     <div className="container">
       <div className="row">
-        {badges && badges.map((item, index) => {
+        {badges.length != 0 ? badges.map((item, index) => {
           return (
             <div key={index} className='col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4'>
               <div className='badge-root'>
@@ -82,7 +82,9 @@ const Badges = () => {
               </div>
             </div>
           );
-        })}
+        }) : <div className='col-12'>
+        <p>No Badges has been issued by you till now. Click on "Create" to issue Badges. </p>
+      </div>   }
       </div>
     </div>
   );
