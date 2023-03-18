@@ -159,8 +159,7 @@ export const FirebaseDataContextProvider = (props) => {
 
       const collectionSnapshot = await getDocs(collections);
 
-      const collectionList = collectionSnapshot.docs.map((doc) => doc.data());
-
+      const collectionList = collectionSnapshot.docs.map((doc) => doc.data()); 
       setCollections(collectionList);
     } catch (error) {
       console.log(error);
@@ -325,73 +324,53 @@ export const FirebaseDataContextProvider = (props) => {
     // });
   }
 
+
   async function getNFTCollections() {
-    const arryb = [];
-    const arryc = [];
     const add = window.localStorage.getItem("address");
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (fire) => {
-      const qr = query(
-        collection(db, "Collections"),
-        where("userId", "==", fire.id)
-      );
+  
+    const badgesData = [];
+    const certificates = [];
+  
+    for (const fire of querySnapshot.docs) {
+      const qr = query(collection(db, "Collections"), where("userId", "==", fire.id));
       const snap = await getDocs(qr);
-
-      snap.forEach(async (e) => {
-        // let meta = await axios.get(
-        //   `https://nftstorage.link/ipfs/${e.data().image}/metadata.json`
-        // );
-        var date = new Date(e.data().issueDate.seconds * 1000);
-        var dd = String(date.getDate()).padStart(2, "0");
-        var mm = String(date.getMonth() + 1).padStart(2, "0"); //January is 0!
-        var yyyy = date.getFullYear();
-
-        date = mm + "/" + dd + "/" + yyyy;
-        if (e.data().type == "badge") {
-          let meta = await axios.get(
-            `https://nftstorage.link/ipfs/${e.data().image}/metadata.json`
-          );
-
-          arryb.push(
-            createDataCollection(
-              e.data().collectionContract,
-              e.data().name,
-              e.data().description,
-              date,
-              e.data().expireDate,
-              e.data().type,
-              e.data().eventId,
-              meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              ),
-              e.data().chain
-            )
-          );
+  
+      for (const e of snap.docs) {
+        const date = new Date(e.data().issueDate.seconds * 1000);
+        const dd = String(date.getDate()).padStart(2, "0");
+        const mm = String(date.getMonth() + 1).padStart(2, "0");  
+        const yyyy = date.getFullYear();
+        const formattedDate = `${mm}/${dd}/${yyyy}`;  
+        const imageUrl = e.data().type === "badge"
+          ? `https://nftstorage.link/ipfs/${e.data().image}/metadata.json`
+          : `${e.data().image}`;
+  
+        const meta = e.data().type === "badge" ? await axios.get(imageUrl) : null; 
+        const data = createDataCollection(
+          e.data().collectionContract,
+          e.data().name,
+          e.data().description,
+          formattedDate,
+          e.data().expireDate,
+          e.data().type,
+          e.data().eventId,
+          e.data().type === "badge" ? meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/") : imageUrl,
+          e.data().chain
+        );
+  
+        if (e.data().type === "badge") {
+          badgesData.push(data);
         } else {
-          arryc.push(
-            createDataCollection(
-              e.data().collectionContract,
-              e.data().name,
-              e.data().description,
-              date,
-              e.data().expireDate,
-              e.data().type,
-              e.data().eventId,
-              e
-                .data()
-                .image.replace("ipfs://", "https://nftstorage.link/ipfs/"),
-              e.data().chain
-            )
-          );
+          certificates.push(data);
         }
-
-        setBadgesData(arryb);
-        setCertificates(arryc);
-      });
-    });
+      }
+    } 
+    setBadgesData(badgesData);
+    setCertificates(certificates);
   }
+   
 
   async function getMyCollection(address) {
     if (address) {

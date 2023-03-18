@@ -5,8 +5,7 @@ import { Paper, Chip, CircularProgress } from "@mui/material";
 import { firebaseDataContext } from "../context/FirebaseDataContext";
 import Iconify from "../components/utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
-import { Button } from "@mui/material";
-import Divider from '@mui/material/Divider';
+import { Button } from "@mui/material"; 
 
 const Badges = () => {
   const navigate = useNavigate();
@@ -24,30 +23,31 @@ const Badges = () => {
   };
 
   useEffect(() => {
-    getNFTCollections();
+    getNFTCollections(); 
   }, []);
+
 
   useEffect(() => {
     setBadges(badgesData);
-  }, [badgesData]); 
+  }, [badgesData]);  
 
   return (
     <div className="container">
       <div className="row">
-        {badges.map((item, index) => { 
+        {badges && badges.map((item, index) => {
           return (
             <div key={index} className='col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4'>
               <div className='badge-root'>
-              <div className="fact-one__single">
-                <div className="fact-one__inner">
-                <img onClick={() => navigateTo(item.eventId)} style={{ cursor: 'pointer' }} src={item?.ipfsUrl ? item?.ipfsUrl : '/images/placeholder.jpg'} width="100%" />
-              </div>
-              </div>
+                <div className="fact-one__single">
+                  <div className="fact-one__inner">
+                    <img onClick={() => navigateTo(item.eventId)} style={{ cursor: 'pointer' }} src={item?.ipfsUrl ? item?.ipfsUrl : '/images/placeholder.jpg'} width="100%" />
+                  </div>
+                </div>
                 <div className='badge-body mb-0'>
                   <h4>{item.name}</h4>
                   <p className="m-0">{item.description}</p>
-                </div> 
-                <Chip label={item.issueDate} color="primary" variant="outlined" /> 
+                </div>
+                <Chip label={item.issueDate} color="primary" variant="outlined" />
                 <div className='badge-footer'>
                   {loadingStates[index] ? (
                     <CircularProgress />

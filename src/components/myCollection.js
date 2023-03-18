@@ -83,6 +83,8 @@ export default function MyCollection({ show }) {
     setcertificatesData(certificates);
   }, [myCollection]);
 
+  console.log(myCollection,"myCollection");
+
   return (
     <div 
       className={

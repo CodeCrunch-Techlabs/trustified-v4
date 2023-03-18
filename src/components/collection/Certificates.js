@@ -34,7 +34,7 @@ export default function Certificates() {
 
   const navigateTo = (id) => {
     navigate(`/dashboard/collectors/${id}`);
-  };
+  }; 
 
   return (
     <>
