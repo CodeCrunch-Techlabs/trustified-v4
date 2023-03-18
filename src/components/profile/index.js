@@ -48,14 +48,7 @@ function User() {
 
   const firebaseContext = React.useContext(firebaseDataContext);
   const { getMyCollection } = firebaseContext;
-
-  // useEffect(() => {
-  //   let add = localStorage.getItem("address");
-  //   console.log(web3.utils.toChecksumAddress(add));
-
-  //   getMyCollection(web3.utils.toChecksumAddress(add));
-  // }, []);
-
+ 
   const handleEditProfile = () => {
     setOpen(!open);
   };

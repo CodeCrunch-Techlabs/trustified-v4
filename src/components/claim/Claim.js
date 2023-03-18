@@ -31,6 +31,8 @@ export default function Claim() {
 
   const [add, setAddress] = useState("");
 
+
+
   useEffect(() => {
     getClaimer(token);
   }, [token]);
@@ -41,10 +43,10 @@ export default function Claim() {
       params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
     });
     document.location.reload();
-  } 
+  }
 
   return (
-    <section className="footer-position" id="banner">
+    <section className="footer-position" id="banner" >
       <div className="bannercontainer container">
         <div className="row">
           <div className="col-xl-12 col-lg-8">
@@ -59,7 +61,7 @@ export default function Claim() {
                   ) : (
                     <>
                       {claimer?.position != "" &&
-                      claimer?.position != undefined ? (
+                        claimer?.position != undefined ? (
                         <UploadPreview claimer={claimer} />
                       ) : (
                         <TemplatePreview
@@ -186,7 +188,7 @@ export default function Claim() {
             </div>
           </div>
         </div>
-      </div> 
+      </div>
       {show && <MyCollection show={show}></MyCollection>}
     </section>
   );

@@ -1,53 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { Button, Paper } from "@mui/material";
-import BadgeStepperForm from "./stepform/Index";
+import React from "react"; 
+import Box from "@mui/material/Box"; 
 import Badges from "./Badges";
 import { useNavigate } from "react-router-dom";
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-const Index = () => {
-  const [value, setValue] = React.useState(0);
-
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+ 
+ 
+const Index = () => {  
   const navigate = useNavigate();
   const handleNavigate = () => {
     navigate("/dashboard/badges");
@@ -61,8 +18,7 @@ const Index = () => {
             <div className="d-flex justify-content-between  mb-3">
               <h2 className="block-title__title">
                 <span>Badges</span>
-              </h2>
-              {/* <BadgeStepperForm /> */}
+              </h2> 
               <a className="thm-btn header__cta-btn" onClick={handleNavigate}>
                 <span>Create Badge</span>
               </a>

@@ -31,15 +31,21 @@ const steps = [
 
 const NewTemplates = () => {
     const formdatavalue = React.useContext(NFTStorageContext);
-    const formdata = formdatavalue.labelInfo.formData; 
-    const [activeStep, setActiveStep] = React.useState(0); 
+    const formdata = formdatavalue.labelInfo.formData;
+    const [activeStep, setActiveStep] = React.useState(0);
     const handleNext = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
     };
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    }; 
+    };
+
+    const btnDisbaled =
+        formdata.title.length > 0 &&
+        formdata.chain.length > 0 &&
+        formdata.description.length > 0 &&
+        formdatavalue.csvData.length > 0;
 
     return (
         <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" >
@@ -66,6 +72,7 @@ const NewTemplates = () => {
                                         {index === steps.length - 1 ?
                                             <a onClick={formdatavalue.createCertificateNFT}
                                                 className="thm-btn header__cta-btn"
+                                                style={{ pointerEvents: !btnDisbaled && "none" }}
                                             >
                                                 {formdatavalue.uploading ? (
                                                     <CircularProgress />

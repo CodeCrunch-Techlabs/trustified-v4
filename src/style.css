@@ -4,6 +4,7 @@ body {
   font-size: 18px;
   line-height: 34px;
   background: #f8f9fc !important;
+  scroll-behavior: smooth;
 }
 
 a:active,
@@ -3025,11 +3026,27 @@ img.claimBadge {
   justify-content: center;
   display: flex;
 }
+#banner{
+  background-image: url("/public/assets/images/background/banner-bg-1-1.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;  
+  background-attachment: fixed;
+}
+
+#myCollection{
+  background-image: url("/public/assets/images/background/video-one-bg.png");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;  
+  background-attachment: fixed;
+}
 
 .bannercontainer {
   padding-top: 150px !important;
   padding-bottom: 50px;
   position: relative;
+ 
 }
 
 .banner-one__claimcontent {

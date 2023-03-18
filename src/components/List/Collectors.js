@@ -79,12 +79,7 @@ function Collectors() {
       ]);
     }
   }, [type]);
-
-  // const getUserSMetadata = async (url) => {
-  //   let d = await axios.get(url);
-  //   console.log(d, "d");
-  // };
-
+ 
   return (
     <div className="footer-position">
       {/* <div className="container">

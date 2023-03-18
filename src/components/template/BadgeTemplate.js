@@ -45,6 +45,12 @@ const BadgeTemplate = () => {
         setActiveStep(0);
     };
 
+    const btnDisbaled =
+    formdata.title.length > 0 &&
+    formdata.chain.length > 0 &&
+    formdata.description.length > 0 &&
+    formdata.quantity > 0 ;
+
 
 
     return (
@@ -72,6 +78,7 @@ const BadgeTemplate = () => {
                                         {index === steps.length - 1 ?
                                             <a onClick={formdatavalue.createBadge}
                                                 className="thm-btn header__cta-btn"
+                                                style={{ pointerEvents: !btnDisbaled && "none" }}
                                             >
                                                 {formdatavalue.loading ? (
                                                     <CircularProgress />

@@ -55,9 +55,7 @@ export default function MyCollection({ show }) {
   const [value, setValue] = React.useState(0);
 
   useEffect(() => {
-    let add = localStorage.getItem("address");
-    console.log(web3.utils.toChecksumAddress(add));
-
+    let add = localStorage.getItem("address");  
     getMyCollection(web3.utils.toChecksumAddress(add));
   }, []);
 
@@ -86,7 +84,7 @@ export default function MyCollection({ show }) {
   }, [myCollection]);
 
   return (
-    <div
+    <div 
       className={
         location.pathname == "/my-collection"
           ? "bannercontainer container footer-position"
@@ -107,7 +105,7 @@ export default function MyCollection({ show }) {
               >
                 Your Collection
               </Typography>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <Box sx={{ borderBottom: 1, borderColor: 'divider', width:'fit-content' }}>
                 <Tabs
                   value={value}
                   onChange={handleChange}
