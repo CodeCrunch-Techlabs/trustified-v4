@@ -451,9 +451,7 @@ export const Web3ContextProvider = (props) => {
       useCORS: true,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/jpeg", 1.0);
-      // pdf.addImage(imgData, 'JPEG', 0, 0, canvas.width, canvas.height);
-      // pdf.save('my-pdf.pdf');
-      // const imgData = canvas.toDataURL("image/png");
+  
       const imageData = await fetch(imgData).then((r) => r.blob());
       var pdf;
       if (canvas.width > canvas.height) {
@@ -510,6 +508,8 @@ export const Web3ContextProvider = (props) => {
       pdf: pdfFile,
       claimer: claimer?.claimer,
     });
+
+    console.log(metadata,"metadata");
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
