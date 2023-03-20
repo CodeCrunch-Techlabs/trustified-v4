@@ -12,6 +12,10 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import web3 from "web3";
 import { Link, useLocation } from "react-router-dom";
+import Iconify from "./utils/Iconify";
+import Tooltip from "@mui/material/Tooltip";
+import { IconButton } from "@mui/material";
+import jsPDF from "jspdf";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -55,7 +59,7 @@ export default function MyCollection({ show }) {
   const [value, setValue] = React.useState(0);
 
   useEffect(() => {
-    let add = localStorage.getItem("address");  
+    let add = localStorage.getItem("address");
     getMyCollection(web3.utils.toChecksumAddress(add));
   }, []);
 
@@ -83,10 +87,58 @@ export default function MyCollection({ show }) {
     setcertificatesData(certificates);
   }, [myCollection]);
 
-  console.log(myCollection,"myCollection");
+  function toDataURL(url) {
+    return fetch(url)
+      .then((response) => {
+        return response.blob();
+      })
+      .then((blob) => {
+        return URL.createObjectURL(blob);
+      });
+  }
+
+  const downloadImage = async (url) => {
+    const a = document.createElement("a");
+    a.href = await toDataURL(url);
+    a.download = "Certificate" + "." + "png";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+
+  const handleDownloadPDF = (url) => {
+    const img = new Image();
+    img.src = url;
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+
+      const imgData = canvas.toDataURL('image/jpeg', 1.0);
+
+      const doc = new jsPDF({
+        orientation: 'landscape'
+      });
+
+      const imgWidth = 300; // Width of A4 page in mm
+      const imgHeight = (img.height * imgWidth) / img.width;
+      const xPos = (doc.internal.pageSize.width - imgWidth) / 2;
+      const yPos = (doc.internal.pageSize.height - imgHeight) / 2;
+
+      doc.addImage(imgData, 'JPEG', xPos, yPos, imgWidth, imgHeight);
+      doc.save('image.pdf');
+
+    };
+  }
+
 
   return (
-    <div 
+    <div
       className={
         location.pathname == "/my-collection"
           ? "bannercontainer container footer-position"
@@ -95,31 +147,31 @@ export default function MyCollection({ show }) {
     >
       <div className="row">
         <div className="col">
-           
-              <Typography
-                variant="h5"
-                component="h6"
-                sx={{
-                  fontWeight: 600,
-                  margin: "10px",
-                }}
-              >
-                Your Collection
-              </Typography>
-              <Box sx={{ borderBottom: 1, borderColor: 'divider', width:'fit-content' }}>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  aria-label="basic tabs example"
-                >
-                  <Tab label="My Badges" {...a11yProps(0)} />
-                  <Tab label="My Certificates" {...a11yProps(1)} />
-                </Tabs>
-              </Box> 
+
+          <Typography
+            variant="h5"
+            component="h6"
+            sx={{
+              fontWeight: 600,
+              margin: "10px",
+            }}
+          >
+            Your Collection
+          </Typography>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', width: 'fit-content' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="basic tabs example"
+            >
+              <Tab label="My Badges" {...a11yProps(0)} />
+              <Tab label="My Certificates" {...a11yProps(1)} />
+            </Tabs>
+          </Box>
           <TabPanel value={value} index={0}>
             <div className="row">
               {badgesData.length != 0 &&
-                badgesData.map((e, i) => { 
+                badgesData.map((e, i) => {
                   return (
                     <div
                       key={i}
@@ -130,7 +182,7 @@ export default function MyCollection({ show }) {
                         style={{ display: "grid" }}
                       >
 
-                        <Link to={e.ipfsurl} target="_blank" style={{width:'50%'}}>
+                        <Link to={e.ipfsurl} target="_blank" style={{ width: '50%' }}>
                           <img
                             height="auto"
                             width="100%"
@@ -138,13 +190,11 @@ export default function MyCollection({ show }) {
                             src={e.ipfsurl}
                             alt={e.title}
                           />
-                        </Link> 
+                        </Link>
 
                         <Typography
                           variant="body"
                           component="a"
-                          href={e.pdf}
-                          target="_blank"
                           sx={{
                             textTransform: "uppercase",
                             fontWeight: 600,
@@ -170,49 +220,78 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={1}>
             <div className="row">
               {certificatesData.length != 0 &&
-                certificatesData.map((e, i) => {
+                certificatesData.map((item, i) => {
                   return (
-                    <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
-                      <div
-                        className="mt-2 template-card mb-2"
-                        style={{ display: "grid" }}
-                      >
-                        <Typography
-                          variant="body"
-                          component="a"
-                          href={e.pdf}
-                          target="_blank"
-                          sx={{
-                            textTransform: "uppercase",
-                            fontWeight: 600,
-                            color: "#84a8fb",
-                            textDecoration: "none",
-                          }}
-                        >
-                          {e.title}
-                        </Typography>
-                        <Typography
-                          variant="body"
-                          component="p"
-                          sx={{
-                            color: "#74727a",
-                            marginBottom: '20px',
-                            textDecoration: "none",
-                          }}
-                        >
-                          {e.description}
-                        </Typography>
-
-
-                        <Link to={e.ipfsurl} target="_blank">
-                          <img
-                            height="auto"
-                            width="100%"
-                            className="claimCertificate"
-                            src={e.ipfsurl}
-                            alt={e.title}
-                          />
+                    <div
+                      className='col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4'
+                      key={i}
+                    >
+                      <div className='card-root'>
+                        <Link to={item.ipfsurl} target="_blank">
+                          <img style={{ cursor: 'pointer' }} src={item?.ipfsurl ? item?.ipfsurl : '/images/placeholder.jpg'} width="100%" />
                         </Link>
+                        <div className='card-body-cert'>
+                          <div className="d-flex justify-content-between">
+                            <Typography
+                              variant="body"
+                              component="a"
+                              href={item.pdf}
+                              target="_blank"
+                              sx={{
+                                textTransform: "uppercase",
+                                fontWeight: 600,
+                                color: "#84a8fb",
+                                textDecoration: "none",
+                              }}
+                            >
+                              {item.title}
+                            </Typography>
+                            <div>
+                              <Tooltip title="Download Image" arrow> 
+                                <IconButton color="primary" aria-label="add to shopping cart"
+                                  onClick={() => downloadImage(item?.ipfsurl)}
+                                >
+                                  <Iconify
+                                    icon="bx:images"
+                                    width={30}
+                                    height={30}
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                </IconButton>
+                              </Tooltip>
+
+                              <Tooltip title="Download PDF" arrow> 
+                                <IconButton color="primary" aria-label="add to shopping cart"
+                                  onClick={() => handleDownloadPDF(item?.ipfsurl)}
+                                >
+                                  <Iconify
+                                    icon="material-symbols:sim-card-download-outline-rounded"
+                                    width={30}
+                                    height={30}
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                </IconButton>
+                              </Tooltip>
+                            </div>
+
+                          </div>
+
+                          <Typography
+                            variant="body"
+                            component="p"
+                            sx={{
+                              color: "#74727a",
+                              margin: '10px 0',
+                              textDecoration: "none",
+                              height: '120px',
+                              overflow: 'scroll'
+                            }}
+                          >
+                            {item.description}
+                          </Typography>
+                        </div>
+
+
                       </div>
                     </div>
                   );

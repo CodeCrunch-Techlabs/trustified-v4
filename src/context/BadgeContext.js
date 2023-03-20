@@ -57,37 +57,16 @@ export const BadgeContextProvider = (props) => {
       setLoading(true);
       var array = [];
 
-      if (previewUrl) {
-        const input = document.getElementById("badgeId");
-        const badgeImg = document.getElementById("badge-img");
-        const pdfWidth = 290;
-        const pdfHeight = 290;
-
+      if (previewUrl) { 
+        const badgeImg = document.getElementById("badge-img");  
         var pdfBlob = await html2canvas(badgeImg, {
-          allowTaint: true,
+          allowTaint: true, 
           scale: 2,
           useCORS: true,
-        }).then(async (canvas) => {
+        }).then(async (canvas) => { 
           const imgData = canvas.toDataURL("image/jpeg", 1.0);
-          const imageData = await fetch(imgData).then((r) => r.blob());
-          var pdf;
-          if (canvas.width > canvas.height) {
-            pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
-          } else {
-            pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
-          }
-          pdf.roundedRect(10, 60, 190, 220, 5, 5, "S");
-          pdf.addImage(
-            imgData,
-            "JPEG",
-            0,
-            0,
-            pdf.internal.pageSize.getWidth(),
-            pdf.internal.pageSize.getHeight()
-          );
-
-          const pdfBlob = pdf.output("blob");
-          return { imageData, pdfBlob };
+          const imageData = await fetch(imgData).then((r) => r.blob()); 
+          return { imageData };
         });
         const imageFile = new File(
           [pdfBlob.imageData],
@@ -96,53 +75,25 @@ export const BadgeContextProvider = (props) => {
             type: "image/png",
           }
         );
-        const pdfFile = new File(
-          [pdfBlob.pdfBlob],
-          `${labelInfo.formData.title}.pdf`,
-          {
-            type: "application/pdf",
-          }
-        );
+        
         const metadata = await client.store({
           name: labelInfo.formData.title,
           description: labelInfo.formData.description,
           image: imageFile,
-          pdf: pdfFile,
           claimer: "",
         });
-        array.push(metadata.ipnft);
+        array.push(metadata.ipnft); 
       } else {
         const idd = `badgeToprint${labelInfo.formData.template}`;
         const input = document.getElementById(idd);
-        const pdfWidth = 290;
-        const pdfHeight = 290;
-
-        var pdfBlob = await html2canvas(input, {
+        var pdfBlob = await html2canvas(input, { 
           allowTaint: true,
-          scale: 6,
+          scale: 2,
           useCORS: true,
-        }).then(async (canvas) => {
-          const imgData = canvas.toDataURL("image/jpeg", 1.0);
-          // const img = new Image(); // create a new image element
-          // img.src = imgData; // set the source of the image to the data URL
-          const imageData = await fetch(imgData).then((r) => r.blob()); //
-          var pdf;
-          if (canvas.width > canvas.height) {
-            pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
-          } else {
-            pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
-          }
-          pdf.addImage(
-            imgData,
-            "JPEG",
-            0,
-            0,
-            pdf.internal.pageSize.getWidth(),
-            pdf.internal.pageSize.getHeight()
-          );
-
-          const pdfBlob = pdf.output("blob");
-          return { imageData, pdfBlob };
+        }).then(async (canvas) => { 
+          const imgData = canvas.toDataURL("image/jpeg", 1.0); 
+          const imageData = await fetch(imgData).then((r) => r.blob());
+          return { imageData };
         });
         const imageFile = new File(
           [pdfBlob.imageData],
@@ -150,22 +101,15 @@ export const BadgeContextProvider = (props) => {
           {
             type: "image/png",
           }
-        );
-        const pdfFile = new File(
-          [pdfBlob.pdfBlob],
-          `${labelInfo.formData.title}.pdf`,
-          {
-            type: "application/pdf",
-          }
-        );
+        ); 
         const metadata = await client.store({
           name: labelInfo.formData.title,
           description: labelInfo.formData.description,
           image: imageFile,
-          pdf: pdfFile,
           claimer: "",
         });
         array.push(metadata.ipnft);
+        console.log(metadata, "metadata");
       }
 
       if (array.length > 0) {

@@ -15,10 +15,10 @@ const Index = () => {
       <div className="row gy-5">
         <div className="col-12">
           <Box sx={{ width: "100%" }}>
-            <div className="d-flex justify-content-between  mb-3">
+            <div className="d-flex justify-content-between  mb-2">
               <div className='cert-coll'>
                 <span>Trustified</span>
-                <p >Badges</p>
+                 <p >Badges</p>
               </div>
 
               {/* <h2 className="block-title__title">

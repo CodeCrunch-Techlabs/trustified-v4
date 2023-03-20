@@ -47,7 +47,7 @@ function Collectors() {
         },
         {
           id: "ipfsurl",
-          label: "Certificate",
+          label: "Badge",
         },
         {
           id: "claimed",
@@ -109,8 +109,7 @@ function Collectors() {
               <TableBody>
                 {collectors
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {
-                    
+                  .map((row, index) => {  
                     return (
                       <TableRow
                         hover
