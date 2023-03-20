@@ -507,6 +507,7 @@ export const Web3ContextProvider = (props) => {
       image: imageFile,
       pdf: pdfFile,
       claimer: claimer?.claimer,
+      eventId: claimer?.eventId
     });
 
     console.log(metadata,"metadata");
@@ -674,6 +675,7 @@ export const Web3ContextProvider = (props) => {
       image: imageFile,
       pdf: pdfFile,
       claimer: claimer?.claimer,
+      eventId: claimer?.eventId
     });
 
     let meta = await axios.get(

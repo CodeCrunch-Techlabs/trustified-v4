@@ -57,15 +57,15 @@ export const BadgeContextProvider = (props) => {
       setLoading(true);
       var array = [];
 
-      if (previewUrl) { 
-        const badgeImg = document.getElementById("badge-img");  
+      if (previewUrl) {
+        const badgeImg = document.getElementById("badge-img");
         var pdfBlob = await html2canvas(badgeImg, {
-          allowTaint: true, 
+          allowTaint: true,
           scale: 2,
           useCORS: true,
-        }).then(async (canvas) => { 
+        }).then(async (canvas) => {
           const imgData = canvas.toDataURL("image/jpeg", 1.0);
-          const imageData = await fetch(imgData).then((r) => r.blob()); 
+          const imageData = await fetch(imgData).then((r) => r.blob());
           return { imageData };
         });
         const imageFile = new File(
@@ -75,23 +75,23 @@ export const BadgeContextProvider = (props) => {
             type: "image/png",
           }
         );
-        
+
         const metadata = await client.store({
           name: labelInfo.formData.title,
           description: labelInfo.formData.description,
           image: imageFile,
           claimer: "",
         });
-        array.push(metadata.ipnft); 
+        array.push(metadata.ipnft);
       } else {
         const idd = `badgeToprint${labelInfo.formData.template}`;
         const input = document.getElementById(idd);
-        var pdfBlob = await html2canvas(input, { 
+        var pdfBlob = await html2canvas(input, {
           allowTaint: true,
           scale: 2,
           useCORS: true,
-        }).then(async (canvas) => { 
-          const imgData = canvas.toDataURL("image/jpeg", 1.0); 
+        }).then(async (canvas) => {
+          const imgData = canvas.toDataURL("image/jpeg", 1.0);
           const imageData = await fetch(imgData).then((r) => r.blob());
           return { imageData };
         });
@@ -101,7 +101,7 @@ export const BadgeContextProvider = (props) => {
           {
             type: "image/png",
           }
-        ); 
+        );
         const metadata = await client.store({
           name: labelInfo.formData.title,
           description: labelInfo.formData.description,
