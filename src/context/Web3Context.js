@@ -229,6 +229,7 @@ export const Web3ContextProvider = (props) => {
       let txm = await transactionMint.wait();
       if (txm) {
         var event;
+        
         if (type == "badge") {
           console.log(txm.events, "events");
           event = await txm.events[parseInt(firebasedata.quantity)];
@@ -373,7 +374,7 @@ export const Web3ContextProvider = (props) => {
 
         for (let i = 0; i < tokenIds.length; i++) {
           let obj = {};
-          let claimToken = generateClaimToken();
+          let claimToken = generateClaimToken(20);
 
           if (type == "badge") {
             array.push({

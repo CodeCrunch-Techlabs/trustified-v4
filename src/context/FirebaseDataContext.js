@@ -398,10 +398,10 @@ export const FirebaseDataContextProvider = (props) => {
             "ipfs://",
             "https://nftstorage.link/ipfs/"
           );
-          obj.pdf = d.data.pdf.replace(
-            "ipfs://",
-            "https://nftstorage.link/ipfs/"
-          );
+          // obj.pdf = d.data.pdf.replace(
+          //   "ipfs://",
+          //   "https://nftstorage.link/ipfs/"
+          // );
 
           array.push(obj);
         }

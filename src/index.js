@@ -27,8 +27,11 @@ let darkTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#ff64a2", 
+      main: "#ff64a2",
     }, 
+    action: {
+      focus: '#ff64a2',
+    },
   },
   components: {
     MuiTypography: {
