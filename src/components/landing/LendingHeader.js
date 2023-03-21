@@ -131,7 +131,7 @@ export default function LendingHeader() {
               <MenuItem onClick={() => handleNavigate("/dashboard/profile")}>
                 <Typography textAlign="center">Profile</Typography>
               </MenuItem>
-              <MenuItem onClick={() => handleNavigate("/dashboard/templates")}>
+              <MenuItem onClick={() => handleNavigate("/dashboard/certificates")}>
                 <Typography textAlign="center">Dashboard</Typography>
               </MenuItem>
               <MenuItem onClick={disconnectWallet}>

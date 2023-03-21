@@ -7,7 +7,7 @@ function CreateTemplate() {
   const navigate = useNavigate();
 
   const handleClickNavigate = () => {
-    navigate("/dashboard/temp");
+    navigate("/dashboard/certificate");
   }
 
   return (

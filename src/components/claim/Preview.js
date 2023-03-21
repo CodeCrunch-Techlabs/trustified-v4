@@ -1,7 +1,17 @@
 import React from "react";
 
-const TemplatePreview = ({ data, name }) => {
-  
+const TemplatePreview = ({ data, name, issueDate }) => {
+  function formatDate(date) {
+    var d = new Date(date),
+      month = "" + (d.getMonth() + 1),
+      day = "" + d.getDate(),
+      year = d.getFullYear();
+
+    if (month.length < 2) month = "0" + month;
+    if (day.length < 2) day = "0" + day;
+
+    return [year, month, day].join("-");
+  }
   return (
     <>
       {data && (
@@ -14,23 +24,16 @@ const TemplatePreview = ({ data, name }) => {
           }}
         >
           <img src={data.bgImage} width={data.width} height={data.height} />
-          <div style={data.title.style}>
-            {data.title.text}
-          </div>
-          <div style={data.subTitle.style}>
-            {data.subTitle.text}
-          </div>
-          <div style={data.certName.style}>
-            {data.certName.text}
-          </div>
+          <div style={data.title.style}>{data.title.text}</div>
+          <div style={data.subTitle.style}>{data.subTitle.text}</div>
+          <div style={data.certName.style}>{data.certName.text}</div>
           <div id="certName" style={data.name.style}>
             {name}
           </div>
-          <div style={data.description.style}>
-            {data.description.text}
-          </div>
+          <div style={data.description.style}>{data.description.text}</div>
+
           <div id="validity" style={data.date.style}>
-            {data.date.text}
+            {formatDate(new Date(issueDate?.seconds * 1000))}
           </div>
 
           <label htmlFor="upload-button" style={data.logo.style}>

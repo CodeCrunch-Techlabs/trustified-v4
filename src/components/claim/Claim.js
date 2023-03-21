@@ -31,8 +31,6 @@ export default function Claim() {
 
   const [add, setAddress] = useState("");
 
-
-
   useEffect(() => {
     getClaimer(token);
   }, [token]);
@@ -46,7 +44,7 @@ export default function Claim() {
   }
 
   return (
-    <section className="footer-position" id="banner" >
+    <section className="footer-position" id="banner">
       <div className="bannercontainer container">
         <div className="row">
           <div className="col-xl-12 col-lg-8">
@@ -61,12 +59,13 @@ export default function Claim() {
                   ) : (
                     <>
                       {claimer?.position != "" &&
-                        claimer?.position != undefined ? (
+                      claimer?.position != undefined ? (
                         <UploadPreview claimer={claimer} />
                       ) : (
                         <TemplatePreview
                           data={claimer?.template}
                           name={claimer?.claimer}
+                          issueDate={claimer?.issueDate}
                         />
                       )}
                     </>

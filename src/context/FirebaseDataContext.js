@@ -96,7 +96,7 @@ export const FirebaseDataContextProvider = (props) => {
       description: data.description,
       collectionContract: data.contract,
       chain: data.chain,
-      issueDate: new Date(),
+      issueDate: data.issueDate,
       eventId: data.eventId,
       type: data.type,
       Nontransferable: data.Nontransferable,
@@ -126,6 +126,7 @@ export const FirebaseDataContextProvider = (props) => {
       title: data.title,
       description: data.description,
       expireDate: data.expireDate,
+      issueDate: data.issueDate,
       position: data.position,
       uploadObj: data.uploadCertData,
     });
@@ -159,7 +160,7 @@ export const FirebaseDataContextProvider = (props) => {
 
       const collectionSnapshot = await getDocs(collections);
 
-      const collectionList = collectionSnapshot.docs.map((doc) => doc.data()); 
+      const collectionList = collectionSnapshot.docs.map((doc) => doc.data());
       setCollections(collectionList);
     } catch (error) {
       console.log(error);
@@ -257,8 +258,6 @@ export const FirebaseDataContextProvider = (props) => {
       querySnapshot.forEach(async (fire) => {
         var obj = {};
 
-    
-
         const template =
           fire.data().type == "badge"
             ? ""
@@ -277,6 +276,7 @@ export const FirebaseDataContextProvider = (props) => {
         obj.tokenId = fire.data().tokenId;
         obj.status = fire.data().claimed;
         obj.nfttype = fire.data().Nontransferable;
+        obj.expireDate = fire.data().expireDate;
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);
@@ -324,30 +324,34 @@ export const FirebaseDataContextProvider = (props) => {
     // });
   }
 
-
   async function getNFTCollections() {
     const add = window.localStorage.getItem("address");
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
     const querySnapshot = await getDocs(q);
-  
+
     const badgesData = [];
     const certificates = [];
-  
+
     for (const fire of querySnapshot.docs) {
-      const qr = query(collection(db, "Collections"), where("userId", "==", fire.id));
+      const qr = query(
+        collection(db, "Collections"),
+        where("userId", "==", fire.id)
+      );
       const snap = await getDocs(qr);
-  
+
       for (const e of snap.docs) {
         const date = new Date(e.data().issueDate.seconds * 1000);
         const dd = String(date.getDate()).padStart(2, "0");
-        const mm = String(date.getMonth() + 1).padStart(2, "0");  
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
         const yyyy = date.getFullYear();
-        const formattedDate = `${mm}/${dd}/${yyyy}`;  
-        const imageUrl = e.data().type === "badge"
-          ? `https://nftstorage.link/ipfs/${e.data().image}/metadata.json`
-          : `${e.data().image}`;
-  
-        const meta = e.data().type === "badge" ? await axios.get(imageUrl) : null; 
+        const formattedDate = `${mm}/${dd}/${yyyy}`;
+        const imageUrl =
+          e.data().type === "badge"
+            ? `https://nftstorage.link/ipfs/${e.data().image}/metadata.json`
+            : `${e.data().image}`;
+
+        const meta =
+          e.data().type === "badge" ? await axios.get(imageUrl) : null;
         const data = createDataCollection(
           e.data().collectionContract,
           e.data().name,
@@ -356,21 +360,25 @@ export const FirebaseDataContextProvider = (props) => {
           e.data().expireDate,
           e.data().type,
           e.data().eventId,
-          e.data().type === "badge" ? meta.data.image.replace("ipfs://", "https://nftstorage.link/ipfs/") : imageUrl,
+          e.data().type === "badge"
+            ? meta.data.image.replace(
+                "ipfs://",
+                "https://nftstorage.link/ipfs/"
+              )
+            : imageUrl,
           e.data().chain
         );
-  
+
         if (e.data().type === "badge") {
           badgesData.push(data);
         } else {
           certificates.push(data);
         }
       }
-    } 
+    }
     setBadgesData(badgesData);
     setCertificates(certificates);
   }
-   
 
   async function getMyCollection(address) {
     if (address) {

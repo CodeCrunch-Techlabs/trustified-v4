@@ -21,7 +21,7 @@ export default function Router() {
       element: <DashboardLayout />,
       children: [
         {
-          path: "collection",
+          path: "certificates",
           element: <Collections />,
         },
         {
@@ -37,25 +37,25 @@ export default function Router() {
           element: <CreateTemplate />,
         },
         {
-          path: "badge",
+          path: "badges",
           element: <Index />,
         },
         {
-          path: "temp",
+          path: "certificate",
           element: <NewTemplates />,
         },
         {
-          path: "badges",
+          path: "badge",
           element: <BadgeTemplate />,
         },
-        {
-          path: "test",
-          element: <DemoTemplate />,
-        },
-        {
-          path: "preview",
-          element: <Preview />,
-        },
+        // {
+        //   path: "test",
+        //   element: <DemoTemplate />,
+        // },
+        // {
+        //   path: "preview",
+        //   element: <Preview />,
+        // },
       ],
     },
     {
