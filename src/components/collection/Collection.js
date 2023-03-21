@@ -6,12 +6,23 @@ import { useNavigate } from "react-router-dom";
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { IconButton, InputBase, Paper } from '@mui/material';
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase";
+import { toast } from "react-toastify";
 
 function Collections() { 
   const navigate = useNavigate();
 
-  const handleClickNavigate=()=>{
-    navigate("/dashboard/temp");
+  const handleClickNavigate= async()=>{
+    const add = window.localStorage.getItem("address");
+      const q = query(collection(db, "UserProfile"), where("Address", "==", add)); 
+      const querySnapshot = await getDocs(q);
+      if(querySnapshot.empty){
+        toast.info("Please create profile first!");
+        navigate("/dashboard/profile");
+      } else{
+        navigate("/dashboard/temp");
+      }  
   }
   return (
     <div className="container">

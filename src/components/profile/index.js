@@ -29,7 +29,7 @@ import { db } from "../../firebase";
 import { toast } from "react-toastify";
 import { Web3Context } from "../../context/Web3Context";
 import MyCollection from "../myCollection";
-
+import Chip from '@mui/material/Chip';
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 
 import { Card, Container, Row, Col } from "react-bootstrap";
@@ -42,13 +42,19 @@ function User() {
   const [avatar, setAvatar] = useState(data ? data.Photo : "");
   const [loading, setLoading] = useState(false);
   const storage = getStorage();
-  const [name, setName] = useState(data ? data.Name : "");
+  const [name, setName] = useState(data ? data.Name : ""); 
   const [userName, setUsername] = useState(data ? data.UserName : "");
   const [bio, setBio] = useState(data ? data.Bio : "");
+  const [purpose, setPurpose] = useState(data ? data.Purpose : "");
 
   const firebaseContext = React.useContext(firebaseDataContext);
   const { getMyCollection } = firebaseContext;
- 
+
+  useEffect(() => {
+    let add = localStorage.getItem("address");  
+    getMyCollection(web3.utils.toChecksumAddress(add));
+  }, []);
+
   const handleEditProfile = () => {
     setOpen(!open);
   };
@@ -73,6 +79,7 @@ function User() {
       Bio: bio,
       Photo: avatar,
       Address: add,
+      verified:0,
       CreatedAt: new Date(),
     };
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
@@ -102,7 +109,7 @@ function User() {
     <>
       <Container fluid>
         <Row>
-          <Col md="8">
+          <Col md="7">
             <Card>
               <Card.Header>
                 <Card.Title as="h4">Edit Profile</Card.Title>
@@ -173,9 +180,8 @@ function User() {
                       marginTop: "20px",
                     }}
                   >
-                    {data && shortAddress(data.Address)}
-                  </Typography>
-
+                    {data ? shortAddress(data.Address) : shortAddress(window.localStorage.getItem("address"))}
+                  </Typography> 
                   <TextField
                     sx={{ m: 2 }}
                     id="outlined-multiline-flexible"
@@ -205,6 +211,22 @@ function User() {
                     onChange={(e) => setBio(e.target.value)}
                     defaultValue={data?.Bio ? data?.Bio : "Bio"}
                     fullWidth
+                    multiline
+                    maxRows={4}
+                    minRows={3}
+                  />
+                   <TextField
+                    sx={{ m: 2 }}
+                    id="outlined-multiline-flexible"
+                    label="Purpose of Issue"
+                    name="purpose"
+                    type="text"
+                    onChange={(e) => setPurpose(e.target.value)}
+                    defaultValue={data?.Purpose ? data?.Purpose : "Purpose of Issue"}
+                    fullWidth
+                    multiline
+                    maxRows={4}
+                    minRows={3}
                   />
                 </Box>
               </Card.Body>
@@ -215,7 +237,7 @@ function User() {
               </Card.Footer>
             </Card>
           </Col>
-          <Col md="4">
+          <Col md="5">
             <Card sx={{ border: "1px solid #eee" }}>
               <CardContent>
                 <Box
@@ -246,17 +268,17 @@ function User() {
                       marginTop: "20px",
                     }}
                   >
-                    {data && shortAddress(data.Address)}
+                    {data ? shortAddress(data.Address) : shortAddress(window.localStorage.getItem("address"))}
                   </Typography>
 
                   <div
                     style={{
-                      margin: "20px",
+                      margin: "10px",
                       textAlign: "center",
                     }}
                   >
                     <h3>
-                      <a href="#none">{data ? data.UserName : "username"}</a>
+                      <a href="#none">@{data ? data.UserName : "username"}</a>
                     </h3>
                     <p>{data ? data.Bio : "Bio"}</p>
                   </div>
@@ -265,7 +287,7 @@ function User() {
             </Card>
           </Col>
         </Row>
-        <Row>
+        <Row className="mt-5">
           <MyCollection show={true}></MyCollection>
         </Row>
       </Container>

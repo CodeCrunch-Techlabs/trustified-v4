@@ -80,7 +80,7 @@ export const Web3ContextProvider = (props) => {
       });
       // await issueCredId(issuerName, accounts[0]);
       setAddress(accounts[0]);
-      window.localStorage.setItem("address", accounts[0]);
+      window.localStorage.setItem("address", accounts[0]); 
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {
@@ -93,7 +93,7 @@ export const Web3ContextProvider = (props) => {
           });
           // await issueCredId(issuerName, accounts[0]);
           setAddress(accounts[0]);
-          window.localStorage.setItem("address", accounts[0]);
+          window.localStorage.setItem("address", accounts[0]); 
           setUpdate(!update);
           setaLoading(false);
         } catch (err) {
@@ -182,7 +182,7 @@ export const Web3ContextProvider = (props) => {
     const add = window.localStorage.getItem("address");
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((fire) => {
+    querySnapshot.forEach((fire) => { 
       setData(fire.data());
       setUserId(fire.id);
     });
@@ -248,7 +248,7 @@ export const Web3ContextProvider = (props) => {
         var array = [];
         for (let i = 0; i < tokenIds.length; i++) {
           let obj = {};
-          let claimToken = generateClaimToken(5);
+          let claimToken = generateClaimToken(20);
           const tokenCID = await trustifiedContract.tokenURI(
             Number(tokenIds[i])
           );
@@ -366,7 +366,7 @@ export const Web3ContextProvider = (props) => {
 
         for (let i = 0; i < tokenIds.length; i++) {
           let obj = {};
-          let claimToken = generateClaimToken(5);
+          let claimToken = generateClaimToken();
 
           if (type == "badge") {
             array.push({
@@ -451,7 +451,7 @@ export const Web3ContextProvider = (props) => {
       useCORS: true,
     }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/jpeg", 1.0);
-  
+
       const imageData = await fetch(imgData).then((r) => r.blob());
       var pdf;
       if (canvas.width > canvas.height) {
@@ -478,8 +478,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -510,7 +510,7 @@ export const Web3ContextProvider = (props) => {
       eventId: claimer?.eventId
     });
 
-    console.log(metadata,"metadata");
+    console.log(metadata, "metadata");
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
@@ -645,8 +645,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }

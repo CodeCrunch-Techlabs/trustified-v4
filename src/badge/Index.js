@@ -1,14 +1,31 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Badges from "./Badges";
 import { useNavigate } from "react-router-dom";
-import AddIcon from '@mui/icons-material/Add';
+import AddIcon from '@mui/icons-material/Add'; 
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../firebase";
+import { toast } from "react-toastify";
 
-const Index = () => {
+const Index = () => { 
+
   const navigate = useNavigate();
-  const handleNavigate = () => {
-    navigate("/dashboard/badges");
+
+  const handleNavigate = async() => {   
+      const add = window.localStorage.getItem("address");
+      const q = query(collection(db, "UserProfile"), where("Address", "==", add)); 
+      const querySnapshot = await getDocs(q);
+      if(querySnapshot.empty){
+       await toast.info("Please create profile first!");
+        navigate("/dashboard/profile");
+      } else{
+        navigate("/dashboard/badges");
+      } 
+    // navigate("/dashboard/badges");
   }
+
+ 
+  
 
   return (
     <div className="container">
