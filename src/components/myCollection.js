@@ -267,9 +267,9 @@ export default function MyCollection({ show }) {
                                 >
                                   <Iconify
                                     icon="bx:images"
-                                    width={30}
-                                    height={30}
-                                    style={{ cursor: "pointer" }}
+                                    width={20}
+                                    height={20}
+                                    style={{ cursor: 'pointer' }}
                                   />
                                 </IconButton>
                               </Tooltip>
@@ -284,9 +284,9 @@ export default function MyCollection({ show }) {
                                 >
                                   <Iconify
                                     icon="material-symbols:sim-card-download-outline-rounded"
-                                    width={30}
-                                    height={30}
-                                    style={{ cursor: "pointer" }}
+                                    width={20}
+                                    height={20}
+                                    style={{ cursor: 'pointer' }}
                                   />
                                 </IconButton>
                               </Tooltip>
