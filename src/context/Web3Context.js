@@ -229,8 +229,7 @@ export const Web3ContextProvider = (props) => {
       if (txm) {
         var event;
         
-        if (type == "badge") {
-          console.log(txm.events,"event")
+        if (type == "badge") { 
           event = await txm.events[parseInt(firebasedata.quantity)];
         }
 
@@ -242,6 +241,7 @@ export const Web3ContextProvider = (props) => {
         firebasedata.image = data.tokenUris[0];
         firebasedata.templateId = "";
         firebasedata.Nontransferable = checked == true ? "on" : "off";
+        
         await addCollection(firebasedata);
 
         let tokenIds = await trustifiedContract.getTokenIds(
@@ -264,20 +264,14 @@ export const Web3ContextProvider = (props) => {
             array.push({
               ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
             });
-          } else {
-            array.push({
-              Name: d.data.claimer,
-              ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-            });
-          }
-
+          }   
           obj.token = claimToken;
           obj.tokenContract = trustifiedContract.address;
           obj.tokenId = parseInt(Number(tokenIds[i]));
           obj.claimerAddress = "";
           obj.ipfsurl = `https://nftstorage.link/ipfs/${tokenCID}/metadata.json`;
           obj.chain = firebasedata.chain;
-          obj.name = d.data.claimer;
+          obj.name = "";
           obj.type = type;
           obj.claimed = "No";
           obj.eventId = parseInt(Number(eventId));
