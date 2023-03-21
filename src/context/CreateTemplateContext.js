@@ -126,7 +126,7 @@ export const TemplateContextProvider = (props) => {
       }
     },
     subTitle: {
-      text: 'for Participant',
+      text: 'of Achievement',
       position: subTitle,
       style: {
         position: 'absolute',
@@ -143,7 +143,7 @@ export const TemplateContextProvider = (props) => {
     },
     certName: {
       position: certName,
-      text: 'This certificate is proudly presented to',
+      text: 'This certificate is awarded to :',
       style: {
         position: 'absolute',
         textAlign: 'center',
@@ -158,7 +158,7 @@ export const TemplateContextProvider = (props) => {
       }
     },
     name: {
-      text: 'Jaydip patel',
+      text: 'Your Name',
       id: 'name',
       position: name,
       style: {
@@ -175,7 +175,7 @@ export const TemplateContextProvider = (props) => {
     },
     description: {
       position: description,
-      text: 'for participating in the Digital Marketing Seminar held by Keithston and Partner on Feb 20th, 2023.',
+      text: 'This award is given for outstanding achievement for having dedicated a good job for 1 years',
       style: {
         textAlign: 'center',
         position: 'absolute',
