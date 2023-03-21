@@ -12,6 +12,7 @@ import { NFTStorage, File } from "nft.storage";
 
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { async } from "@firebase/util";
 
 export const Web3Context = createContext(undefined);
 
@@ -81,7 +82,7 @@ export const Web3ContextProvider = (props) => {
       });
       // await issueCredId(issuerName, accounts[0]);
       setAddress(accounts[0]);
-      window.localStorage.setItem("address", accounts[0]); 
+      window.localStorage.setItem("address", accounts[0]);
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {
@@ -94,7 +95,7 @@ export const Web3ContextProvider = (props) => {
           });
           // await issueCredId(issuerName, accounts[0]);
           setAddress(accounts[0]);
-          window.localStorage.setItem("address", accounts[0]); 
+          window.localStorage.setItem("address", accounts[0]);
           setUpdate(!update);
           setaLoading(false);
         } catch (err) {
@@ -183,7 +184,7 @@ export const Web3ContextProvider = (props) => {
     const add = window.localStorage.getItem("address");
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach((fire) => { 
+    querySnapshot.forEach((fire) => {
       setData(fire.data());
       setUserId(fire.id);
     });
@@ -229,10 +230,12 @@ export const Web3ContextProvider = (props) => {
       if (txm) {
         var event;
         if (type == "badge") {
+          console.log(txm.events, "events");
           event = await txm.events[parseInt(firebasedata.quantity)];
         }
 
         var eventId = event?.args[1];
+
         firebasedata.contract = trustifiedContract.address;
         firebasedata.userId = userId;
         firebasedata.eventId = parseInt(Number(eventId));
@@ -241,82 +244,84 @@ export const Web3ContextProvider = (props) => {
         firebasedata.templateId = "";
         firebasedata.Nontransferable = checked == true ? "on" : "off";
         await addCollection(firebasedata);
+        console.log(parseInt(Number(eventId)), "eventId");
 
-        let tokenIds = await trustifiedContract.getTokenIds(
-          parseInt(Number(eventId))
-        );
-
-        var array = [];
-        for (let i = 0; i < tokenIds.length; i++) {
-          let obj = {};
-          let claimToken = generateClaimToken(20);
-          const tokenCID = await trustifiedContract.tokenURI(
-            Number(tokenIds[i])
+        setTimeout(async () => {
+          let tokenIds = await trustifiedContract.getTokenIds(
+            parseInt(Number(eventId))
           );
 
-          let d = await axios.get(
-            `https://nftstorage.link/ipfs/${tokenCID}/metadata.json`
-          );
-          // https://trustified.xyz/
-          if (type == "badge") {
-            array.push({
-              ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-            });
-          } else {
-            array.push({
-              Name: d.data.claimer,
-              ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-            });
-          }
+          console.log(tokenIds, "tokenIds");
 
-          obj.token = claimToken;
-          obj.tokenContract = trustifiedContract.address;
-          obj.tokenId = parseInt(Number(tokenIds[i]));
-          obj.claimerAddress = "";
-          obj.ipfsurl = `https://nftstorage.link/ipfs/${tokenCID}/metadata.json`;
-          obj.chain = firebasedata.chain;
-          obj.name = d.data.claimer;
-          obj.type = type;
-          obj.claimed = "No";
-          obj.eventId = parseInt(Number(eventId));
-          obj.templateId = "";
-          obj.Nontransferable = checked == true ? "on" : "off";
-          obj.templateId = "";
-          obj.title = firebasedata.title;
-          obj.description = firebasedata.description;
-          obj.expireDate = firebasedata.expireDate;
-          obj.issueDate = firebasedata.issueDate;
-          obj.position = "";
-          obj.uploadCertData = "";
+          var array = [];
+          for (let i = 0; i < tokenIds.length; i++) {
+            let obj = {};
+            let claimToken = generateClaimToken(20);
+            console.log(Number(tokenIds[i]), "tokenIds-arr");
+            // const tokenCID = await trustifiedContract.tokenURI(
+            //   Number(tokenIds[i])
+            // );
 
-          await addCollectors(obj);
-        } // Generating CSV file with unique link and storing data in firebase.
+            // console.log(tokenCID, "tokenCID");
+            // let d = await axios.get(
+            //   `https://nftstorage.link/ipfs/${tokenCID}/metadata.json`
+            // );
+            // https://trustified.xyz/
+            if (type == "badge") {
+              array.push({
+                ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+              });
+            }
 
-        let obj = {
-          type: type,
-          data: array,
-        };
+            obj.token = claimToken;
+            obj.tokenContract = trustifiedContract.address;
+            obj.tokenId = parseInt(Number(tokenIds[i]));
+            obj.claimerAddress = "";
+            obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
+            obj.chain = firebasedata.chain;
+            obj.name = "";
+            obj.type = type;
+            obj.claimed = "No";
+            obj.eventId = parseInt(Number(eventId));
+            obj.templateId = "";
+            obj.Nontransferable = checked == true ? "on" : "off";
+            obj.templateId = "";
+            obj.title = firebasedata.title;
+            obj.description = firebasedata.description;
+            obj.expireDate = firebasedata.expireDate;
+            obj.issueDate = firebasedata.issueDate;
+            obj.position = "";
+            obj.uploadCertData = "";
 
-        const api = await axios.create({
-          baseURL: "https://trustified-backend.onrender.com/trustified/api",
-        });
-        let response = await api
-          .post("/export/csv", obj)
-          .then((res) => {
-            return res;
-          })
-          .catch((error) => {
-            console.log(error);
+            await addCollectors(obj);
+          } // Generating CSV file with unique link and storing data in firebase.
+
+          let obj = {
+            type: type,
+            data: array,
+          };
+
+          const api = await axios.create({
+            baseURL: "https://trustified-backend.onrender.com/trustified/api",
           });
+          let response = await api
+            .post("/export/csv", obj)
+            .then((res) => {
+              return res;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
 
-        const blob = new Blob([response.data], { type: "text/csv" });
+          const blob = new Blob([response.data], { type: "text/csv" });
 
-        const downloadLink = document.createElement("a");
-        downloadLink.href = URL.createObjectURL(blob);
-        downloadLink.download = `${firebasedata.title}.csv`;
-        downloadLink.click();
+          const downloadLink = document.createElement("a");
+          downloadLink.href = URL.createObjectURL(blob);
+          downloadLink.download = `${firebasedata.title}.csv`;
+          downloadLink.click();
 
-        toast.success("Successfully created NFT collection!!");
+          toast.success("Successfully created NFT collection!!");
+        }, 7000);
       }
     } catch (err) {
       console.log(err);
@@ -481,8 +486,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -650,8 +655,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
