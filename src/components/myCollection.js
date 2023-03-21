@@ -16,6 +16,7 @@ import Iconify from "./utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { IconButton } from "@mui/material";
 import jsPDF from "jspdf";
+import { toast } from "react-toastify";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -60,7 +61,11 @@ export default function MyCollection({ show }) {
 
   useEffect(() => {
     let add = localStorage.getItem("address");
-    getMyCollection(web3.utils.toChecksumAddress(add));
+    if(add){
+      getMyCollection(web3.utils.toChecksumAddress(add));
+    } else{
+      toast.error("Please connect wallet!");
+    }
   }, []);
 
   const handleChange = (event, newValue) => {

@@ -92,12 +92,14 @@ const NavOne = () => {
   };
 
   const handleNavigate = (e) => {
-    if (user != null) {
+    if (user != null || e === "/") {
       navigate(`${e}`);
     } else {
       toast.error("Please Login!");
     }
   };
+
+
 
   return (
     <header className="site-header site-header__header-one">
