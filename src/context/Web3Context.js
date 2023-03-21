@@ -368,7 +368,7 @@ export const Web3ContextProvider = (props) => {
 
         for (let i = 0; i < tokenIds.length; i++) {
           let obj = {};
-          let claimToken = generateClaimToken();
+          let claimToken = generateClaimToken(20);
 
           if (type == "badge") {
             array.push({
