@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 const Index = () => {
   const navigate = useNavigate();
   const handleNavigate = () => {
-    navigate("/dashboard/badges");
+    navigate("/dashboard/badge");
   }
 
   return (

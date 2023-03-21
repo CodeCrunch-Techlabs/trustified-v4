@@ -46,6 +46,8 @@ export const Web3ContextProvider = (props) => {
     getFirestoreData();
   }, [update]);
 
+  let add = localStorage.getItem("address");
+
   useEffect(() => {
     const initialize = async () => {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -60,12 +62,11 @@ export const Web3ContextProvider = (props) => {
 
       setAddress(accounts[0]);
     };
-    let add = localStorage.getItem("address");
 
     if (add) {
       initialize();
     }
-  }, []);
+  }, [add]);
 
   const connectWallet = async (issuerName) => {
     const { ethereum } = window;
@@ -283,7 +284,8 @@ export const Web3ContextProvider = (props) => {
           obj.templateId = "";
           obj.title = firebasedata.title;
           obj.description = firebasedata.description;
-          obj.expireDate = "";
+          obj.expireDate = firebasedata.expireDate;
+          obj.issueDate = firebasedata.issueDate;
           obj.position = "";
           obj.uploadCertData = "";
 
@@ -394,6 +396,7 @@ export const Web3ContextProvider = (props) => {
           obj.title = formData.title;
           obj.description = formData.description;
           obj.expireDate = formData.expireDate;
+          obj.issueDate = formData.issueDate;
           obj.position = previewUrl ? position : "";
           obj.uploadCertData = previewUrl ? uploadObj.name : "";
           await addCollectors(obj);
@@ -509,7 +512,9 @@ export const Web3ContextProvider = (props) => {
       image: imageFile,
       pdf: pdfFile,
       claimer: claimer?.claimer,
-      eventId: claimer?.eventId
+      eventId: claimer?.eventId,
+      expireDate: claimer?.expireDate,
+      issueDate: claimer?.issueDate,
     });
 
     let meta = await axios.get(
@@ -675,7 +680,9 @@ export const Web3ContextProvider = (props) => {
       image: imageFile,
       pdf: pdfFile,
       claimer: claimer?.claimer,
-      eventId: claimer?.eventId
+      eventId: claimer?.eventId,
+      expireDate: claimer?.expireDate,
+      issueDate: claimer?.issueDate,
     });
 
     let meta = await axios.get(

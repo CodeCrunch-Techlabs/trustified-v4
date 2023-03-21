@@ -30,6 +30,7 @@ export const NFTStorageContextProvider = (props) => {
       description: "",
       chain: "fevm",
       expireDate: "",
+      issueDate: new Date(),
       Nontransferable: "on",
     },
   });

@@ -10,12 +10,12 @@ const sidebarConfig = [
   // },
   {
     title: "Badges",
-    path: "/dashboard/badge",
+    path: "/dashboard/badges",
     icon: getIcon("mdi:police-badge-outline"),
   },
   {
     title: "Certificates",
-    path: "/dashboard/collection",
+    path: "/dashboard/certificates",
     icon: getIcon("material-symbols:collections-bookmark-outline"),
   }, 
   // {

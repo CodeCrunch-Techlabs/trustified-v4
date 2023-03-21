@@ -28,6 +28,8 @@ export const BadgeContextProvider = (props) => {
       badgeName: "",
       Nontransferable: true,
       quantity: 0,
+      expireDate: "",
+      issueDate: new Date(),
     },
   });
   const handleChangeLogo = (e) => {
@@ -81,6 +83,8 @@ export const BadgeContextProvider = (props) => {
           description: labelInfo.formData.description,
           image: imageFile,
           claimer: "",
+          expireDate: labelInfo.formData.expireDate,
+          issueDate: labelInfo.formData.issueDate,
         });
         array.push(metadata.ipnft);
       } else {
@@ -107,9 +111,11 @@ export const BadgeContextProvider = (props) => {
           description: labelInfo.formData.description,
           image: imageFile,
           claimer: "",
+          expireDate: labelInfo.formData.expireDate,
+          issueDate: labelInfo.formData.issueDate,
         });
+
         array.push(metadata.ipnft);
-        console.log(metadata, "metadata");
       }
 
       if (array.length > 0) {
@@ -124,7 +130,6 @@ export const BadgeContextProvider = (props) => {
       }
       setLoading(false);
     } catch (error) {
-      console.log(error);
       setLoading(false);
     }
   };

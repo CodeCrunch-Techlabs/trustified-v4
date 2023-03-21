@@ -137,7 +137,7 @@ const NavOne = () => {
             &nbsp;&nbsp;
             <a
               className="thm-btn header__cta-btn"
-              onClick={() => handleNavigate("/dashboard/collection")}
+              onClick={() => handleNavigate("/dashboard/certificates")}
             >
               <span>Create</span>
             </a>

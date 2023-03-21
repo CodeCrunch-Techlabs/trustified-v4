@@ -11,7 +11,7 @@ function Collections() {
   const navigate = useNavigate();
 
   const handleClickNavigate=()=>{
-    navigate("/dashboard/temp");
+    navigate("/dashboard/certificate");
   }
   return (
     <div className="container">
