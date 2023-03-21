@@ -228,7 +228,9 @@ export const Web3ContextProvider = (props) => {
       let txm = await transactionMint.wait();
       if (txm) {
         var event;
+        
         if (type == "badge") {
+          console.log(txm.events,"event")
           event = await txm.events[parseInt(firebasedata.quantity)];
         }
 

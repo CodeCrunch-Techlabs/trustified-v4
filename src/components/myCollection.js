@@ -81,11 +81,11 @@ export default function MyCollection({ show }) {
           certificates.push(myCollection[i]);
         }
       }
-    }
-
+    } 
     setbadgesData(badges);
     setcertificatesData(certificates);
   }, [myCollection]);
+ 
 
   function toDataURL(url) {
     return fetch(url)
@@ -172,8 +172,8 @@ export default function MyCollection({ show }) {
           </Box>
           <TabPanel value={value} index={0}>
             <div className="row">
-              {badgesData.length != 0 &&
-                badgesData.map((e, i) => {
+              {myCollection.length != 0 &&
+                myCollection.map((e, i) => {
                   return (
                     <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
                       <div
@@ -212,7 +212,7 @@ export default function MyCollection({ show }) {
                   );
                 })}
               {certLoad && <CircularProgress />}
-              {badgesData.length === 0 && show == true && !certLoad && (
+              {myCollection.length === 0 && show == true && !certLoad && (
                 <div className="col">
                   <h4>No Collection!</h4>
                 </div>
