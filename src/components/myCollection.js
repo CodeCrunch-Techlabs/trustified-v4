@@ -177,18 +177,18 @@ export default function MyCollection({ show }) {
           </Box>
           <TabPanel value={value} index={0}>
             <div className="row">
-              {myCollection.length != 0 &&
-                myCollection.map((e, i) => {
+              {badgesData.length != 0 &&
+                badgesData.map((e, i) => {
                   return (
-                    <div key={i} className="col-12 col-lg-4 col-sm-6 col-md-4">
+                    <div key={i} className="col-12 col-lg-3 col-sm-4 col-md-3">
                       <div
-                        className="mt-2 template-card mb-2"
+                        className="mt-2 template-card mb-2 text-center"
                         style={{ display: "grid" }}
                       >
                         <Link
                           to={e.ipfsurl}
                           target="_blank"
-                          style={{ width: "50%" }}
+                          // style={{ width: "50%" }}
                         >
                           <img
                             height="auto"
@@ -217,7 +217,7 @@ export default function MyCollection({ show }) {
                   );
                 })}
               {certLoad && <CircularProgress />}
-              {myCollection.length === 0 && show == true && !certLoad && (
+              {badgesData.length === 0 && show == true && !certLoad && (
                 <div className="col">
                   <h4>No Collection!</h4>
                 </div>
