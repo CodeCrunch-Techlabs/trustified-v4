@@ -125,7 +125,12 @@ export default function Claim() {
                         className="thm-btn header__cta-btn claimBtn"
                         onClick={async () => {
                           const { chainId } = await provider.getNetwork();
-                          if (claimer.chain == "fevm" && chainId !== 3141) {
+                          if (claimer.chain == "filecoin" && chainId !== 314) {
+                            await switchNetwork(ethers.utils.hexValue(314));
+                          } else if (
+                            claimer.chain == "fevm" &&
+                            chainId !== 3141
+                          ) {
                             await switchNetwork(ethers.utils.hexValue(3141));
                           } else if (
                             claimer.chain == "mumbai" &&

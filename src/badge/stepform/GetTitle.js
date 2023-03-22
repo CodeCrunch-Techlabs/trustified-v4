@@ -10,7 +10,7 @@ import {
   FormControlLabel,
   Box,
 } from "@mui/material";
-import { ethers } from "ethers"; 
+import { ethers } from "ethers";
 import { BadgeContext } from "../../context/BadgeContext";
 
 function GetTitle() {
@@ -63,7 +63,9 @@ function GetTitle() {
             value={formdata.chain}
             onChange={async (e) => {
               const { chainId } = await provider.getNetwork();
-              if (e.target.value == "fevm" && chainId !== 3141) {
+              if (e.target.value == "filecoin" && chainId !== 314) {
+                await switchNetwork(ethers.utils.hexValue(314));
+              } else if (e.target.value == "fevm" && chainId !== 3141) {
                 await switchNetwork(ethers.utils.hexValue(3141));
               } else if (e.target.value == "mumbai" && chainId !== 80001) {
                 await switchNetwork(ethers.utils.hexValue(80001));
@@ -81,6 +83,12 @@ function GetTitle() {
               alignItems="center"
               spacing={2}
             >
+              <FormControlLabel
+                value="filecoin"
+                control={<Radio />}
+                label="Filecoin(Mainnet)"
+                onChange={value.setFormdata("chain")}
+              />
               <FormControlLabel
                 value="fevm"
                 control={<Radio />}

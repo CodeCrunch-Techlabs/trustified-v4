@@ -12,12 +12,14 @@ contract Trustified is ERC721URIStorage {
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
+    bool public allTokenMinted;
+
     mapping(uint256 => uint256[]) public tokenIds; // Every event Id will have list of tokenIds.
     mapping(uint256 => address) public issuers; // To get the issuer address from the event Id.
 
     event TokenMinted(address, uint256);
 
-    constructor() ERC721("Trustified", "TFN") {}
+    constructor() ERC721URIStorage("Trustified", "TFN", false) {}
 
     /**
      * @dev value == 0 is for to check the nft we are minting is for certificate or badges. For badges we set tokenURI in mint.
@@ -54,8 +56,16 @@ contract Trustified is ERC721URIStorage {
             uint256 tokenId = safeMint(tokenUri, value);
             tokenIds[eventId].push(tokenId);
             issuers[eventId] = msg.sender;
+            uint256 totalMinted = tokenId + 1;
+            if (totalMinted == quantity) {
+                allTokenMinted = true;
+            }
         }
         emit TokenMinted(msg.sender, eventId);
+    }
+
+    function getMintStatus() external view returns (bool) {
+        return allTokenMinted;
     }
 
     /**
