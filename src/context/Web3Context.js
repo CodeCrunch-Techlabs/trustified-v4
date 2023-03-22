@@ -229,7 +229,9 @@ export const Web3ContextProvider = (props) => {
       let txm = await transactionMint.wait();
       if (txm) {
         var event;
-        
+        const status = await trustifiedContract.getMintStatus();
+        console.log(status,"status");
+        if(status == true){  
         if (type == "badge") {
           console.log(txm.events, "events");
           event = await txm.events[parseInt(firebasedata.quantity)];
@@ -248,7 +250,7 @@ export const Web3ContextProvider = (props) => {
         await addCollection(firebasedata);
         console.log(parseInt(Number(eventId)), "eventId");
 
-        setTimeout(async () => {
+        
           let tokenIds = await trustifiedContract.getTokenIds(
             parseInt(Number(eventId))
           );
@@ -322,8 +324,8 @@ export const Web3ContextProvider = (props) => {
           downloadLink.download = `${firebasedata.title}.csv`;
           downloadLink.click();
 
-          toast.success("Successfully created NFT collection!!");
-        }, 7000);
+          toast.success("Successfully created NFT collection!!"); 
+       }
       }
     } catch (err) {
       console.log(err);

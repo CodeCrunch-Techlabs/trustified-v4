@@ -5,7 +5,7 @@ export const trustifiedContracts = {
   // }, // Testnet
   fevm: {
     transferable: "0xb0DB3346cA78B21EB86869815B653e3Ee3Bb75af",
-    nonTransferable: "0xa238488eC0E0Bb3075B5967C0D4738ED2ee915cF",
+    nonTransferable: "0xBF0DDa6f16F7f86e763AD537748632cb41E0Fa3F",
   }, // Mainnet
   mumbai: {
     transferable: "0x5765248ec7070519538d0F764B41f5c4e46f7004",

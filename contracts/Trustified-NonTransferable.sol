@@ -12,6 +12,8 @@ contract TrustifiedNonTransferable is ERC721URIStorage {
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
+    bool public allTokenMinted;
+
     mapping(uint256 => uint256[]) public tokenIds; // Every event Id will have list of tokenIds.
     mapping(uint256 => address) public issuers; // To get the issuer address from the event Id.
 
@@ -56,8 +58,16 @@ contract TrustifiedNonTransferable is ERC721URIStorage {
             uint256 tokenId = safeMint(tokenUri, value);
             tokenIds[eventId].push(tokenId);
             issuers[eventId] = msg.sender;
+            if(tokenId + 1 == quantity){
+allTokenMinted = true;
+            }
+            
         }
         emit TokenMinted(msg.sender, eventId);
+    }
+
+    function getMintStatus() public view returns(bool){
+       return allTokenMinted;
     }
 
     /**
