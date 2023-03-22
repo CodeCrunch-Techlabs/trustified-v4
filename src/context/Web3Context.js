@@ -512,9 +512,7 @@ export const Web3ContextProvider = (props) => {
       eventId: claimer?.eventId,
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
-    });
-
-    console.log(metadata, "metadata");
+    }); 
 
     let meta = await axios.get(
       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
@@ -527,7 +525,7 @@ export const Web3ContextProvider = (props) => {
 
     const querySnapshot = await getDocs(q);
 
-    querySnapshot.forEach(async (fire) => {
+    querySnapshot.forEach(async (fire) => { 
       try {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
@@ -546,7 +544,7 @@ export const Web3ContextProvider = (props) => {
             1
           );
 
-          const txt = await transferTokenTransaction.wait();
+          const txt = await transferTokenTransaction.wait(); 
 
           if (txt) {
             setClaimer(fire.data());
@@ -565,7 +563,7 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             trustifiedContractAbi.abi,
             signer
-          );
+          ); 
 
           let transferTokenTransaction = await trustifiedContract.transferToken(
             address,
