@@ -313,7 +313,7 @@ export const Web3ContextProvider = (props) => {
 
             toast.success("Successfully created NFT collection!!");
           }
-        }, 10000);
+        }, 7000);
       }
     } catch (err) {
       console.log(err);
