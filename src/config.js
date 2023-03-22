@@ -4,8 +4,8 @@ export const trustifiedContracts = {
     nonTransferable: "0x1FB2EeFb0e204c2e23a6Dd99007e30907171693B",
   }, // Testnet
   filecoin: {
-    transferable: "0x8298ffc3e351f5d58257611f44bde2bd60e0f052",
-    nonTransferable: "0x41b3a62c3D076B3fE2e5C06dBD67fB47b7D30af7",
+    transferable: "0xca54f41be0b77436b972e61746943cc9f24737a8",
+    nonTransferable: "0xee6800b4c43084ace7233dcf98ec27243fb959e8",
   }, // Mainnet
   mumbai: {
     transferable: "0x5765248ec7070519538d0F764B41f5c4e46f7004",
