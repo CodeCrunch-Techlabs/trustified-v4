@@ -49,6 +49,7 @@ const NewTemplates = () => {
 
     return (
         <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" >
+          
             <div className='text-center '>
                 <h4 className=' text-dark'>Create certificate</h4>
                 <p className=''>Please fill out the form with as much information as possible.</p>
@@ -75,7 +76,11 @@ const NewTemplates = () => {
                                                 style={{ pointerEvents: !btnDisbaled && "none" }}
                                             >
                                                 {formdatavalue.uploading ? (
-                                                    <CircularProgress />
+                                                    <>
+                                                        <CircularProgress />
+                                                        <div id="cover-spin"></div>
+                                                        <p id="cover-spin-text">Please don't refresh! Certificates are being minted! 😎 </p>
+                                                    </>
                                                 ) : (
                                                     <span>Create NFT</span>
                                                 )}

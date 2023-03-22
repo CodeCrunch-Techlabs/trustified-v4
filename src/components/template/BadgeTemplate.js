@@ -1,5 +1,5 @@
-import React from 'react'; 
-import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material'; 
+import React from 'react';
+import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepContent from '@mui/material/StepContent';
@@ -29,7 +29,7 @@ const steps = [
 
 const BadgeTemplate = () => {
     const formdatavalue = React.useContext(BadgeContext);
-    const formdata = formdatavalue.labelInfo.formData; 
+    const formdata = formdatavalue.labelInfo.formData;
 
     const [activeStep, setActiveStep] = React.useState(0);
 
@@ -46,15 +46,15 @@ const BadgeTemplate = () => {
     };
 
     const btnDisbaled =
-    formdata.title.length > 0 &&
-    formdata.chain.length > 0 &&
-    formdata.description.length > 0 &&
-    formdata.quantity > 0 ;
+        formdata.title.length > 0 &&
+        formdata.chain.length > 0 &&
+        formdata.description.length > 0 &&
+        formdata.quantity > 0;
 
 
 
     return (
-        <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" >
+        <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" > 
             <div className='text-center '>
                 <h4 className=' text-dark'>Create Badge</h4>
                 <p className=''>Please fill out the form with as much information as possible.</p>
@@ -81,7 +81,11 @@ const BadgeTemplate = () => {
                                                 style={{ pointerEvents: !btnDisbaled && "none" }}
                                             >
                                                 {formdatavalue.loading ? (
-                                                    <CircularProgress />
+                                                    <>
+                                                        <CircularProgress />
+                                                        <div id="cover-spin"></div>
+                                                        <p id="cover-spin-text">Please don't refresh!  Badges are being minted! 😎 </p>
+                                                    </>
                                                 ) : (
                                                     <span>Create NFT</span>
                                                 )}
