@@ -21,7 +21,7 @@ contract TrustifiedNonTransferable is ERC721URIStorage {
 
     event TokenMinted(address, uint256);
 
-    constructor() ERC721("Trustified", "TFN") {}
+    constructor() ERC721URIStorage("Trustified", "TFN", true) {}
 
     /**
      * @dev value == 0 is for to check the nft we are minting is for certificate or badges. For badges we set tokenURI in mint.
@@ -58,16 +58,16 @@ contract TrustifiedNonTransferable is ERC721URIStorage {
             uint256 tokenId = safeMint(tokenUri, value);
             tokenIds[eventId].push(tokenId);
             issuers[eventId] = msg.sender;
-            if(tokenId + 1 == quantity){
-allTokenMinted = true;
+            uint256 totalMinted = tokenId + 1;
+            if (totalMinted == quantity) {
+                allTokenMinted = true;
             }
-            
         }
         emit TokenMinted(msg.sender, eventId);
     }
 
-    function getMintStatus() public view returns(bool){
-       return allTokenMinted;
+    function getMintStatus() external view returns (bool) {
+        return allTokenMinted;
     }
 
     /**

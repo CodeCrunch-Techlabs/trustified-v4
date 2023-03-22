@@ -227,33 +227,31 @@ export const Web3ContextProvider = (props) => {
       }
 
       let txm = await transactionMint.wait();
+      console.log(txm, "txm");
       if (txm) {
         var event;
-        const status = await trustifiedContract.getMintStatus();
-        console.log(status,"status");
-        if(status == true){  
-        if (type == "badge") {
-          console.log(txm.events, "events");
-          event = await txm.events[parseInt(firebasedata.quantity)];
-        }
 
-        var eventId = event?.args[1];
+        const mintStaus = await trustifiedContract.getMintStatus();
+        console.log(mintStaus, "mintStaus");
+        if (mintStaus == true) {
+          if (type == "badge") {
+            console.log(txm.events, "events");
+            event = await txm.events[parseInt(firebasedata.quantity)];
+          }
 
-        firebasedata.contract = trustifiedContract.address;
-        firebasedata.userId = userId;
-        firebasedata.eventId = parseInt(Number(eventId));
-        firebasedata.type = type;
-        firebasedata.image = data.tokenUris[0];
-        firebasedata.templateId = "";
-        firebasedata.Nontransferable = checked == true ? "on" : "off";
-        
-        await addCollection(firebasedata);
-        console.log(parseInt(Number(eventId)), "eventId");
+          var eventId = event?.args[1];
 
-        
-          let tokenIds = await trustifiedContract.getTokenIds(
-            parseInt(Number(eventId))
-          );
+          firebasedata.contract = trustifiedContract.address;
+          firebasedata.userId = userId;
+          firebasedata.eventId = parseInt(Number(eventId));
+          firebasedata.type = type;
+          firebasedata.image = data.tokenUris[0];
+          firebasedata.templateId = "";
+          firebasedata.Nontransferable = checked == true ? "on" : "off";
+          await addCollection(firebasedata);
+          console.log(Number(eventId), "eventId");
+
+          let tokenIds = await trustifiedContract.getTokenIds(Number(eventId));
 
           console.log(tokenIds, "tokenIds");
 
@@ -262,15 +260,7 @@ export const Web3ContextProvider = (props) => {
             let obj = {};
             let claimToken = generateClaimToken(20);
             console.log(Number(tokenIds[i]), "tokenIds-arr");
-            // const tokenCID = await trustifiedContract.tokenURI(
-            //   Number(tokenIds[i])
-            // );
 
-            // console.log(tokenCID, "tokenCID");
-            // let d = await axios.get(
-            //   `https://nftstorage.link/ipfs/${tokenCID}/metadata.json`
-            // );
-            // https://trustified.xyz/
             if (type == "badge") {
               array.push({
                 ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
@@ -324,8 +314,8 @@ export const Web3ContextProvider = (props) => {
           downloadLink.download = `${firebasedata.title}.csv`;
           downloadLink.click();
 
-          toast.success("Successfully created NFT collection!!"); 
-       }
+          toast.success("Successfully created NFT collection!!");
+        }
       }
     } catch (err) {
       console.log(err);
