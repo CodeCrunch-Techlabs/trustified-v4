@@ -2,7 +2,7 @@
   "_format": "hh-sol-artifact-1",
   "contractName": "Trustified",
   "sourceName": "contracts/Trustified.sol",
-  "abi": [
+  "abi":  [
     {
       "inputs": [],
       "stateMutability": "nonpayable",

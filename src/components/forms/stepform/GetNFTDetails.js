@@ -66,7 +66,7 @@ function GetNFTDetails() {
                     await switchNetwork(ethers.utils.hexValue(314));
                   } else if (e.target.value == "fevm" && chainId !== 3141) {
                     await switchNetwork(ethers.utils.hexValue(3141));
-                  } else if (e.target.value == "mumbai" && chainId !== 80001) {
+                  } else if (e.target.value == "mumbai" && chainId !== 137) {
                     await switchNetwork(ethers.utils.hexValue(80001));
                   } else if (e.target.value == "goerli" && chainId !== 5) {
                     await switchNetwork(ethers.utils.hexValue(5));

@@ -333,6 +333,7 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log("transactionMint");
         const trustifiedContract = new ethers.Contract(
           formData.Nontransferable == "on"
             ? trustifiedContracts[formData.chain].nonTransferable
@@ -347,7 +348,9 @@ export const Web3ContextProvider = (props) => {
           parseInt(csvdata.length),
           1
         );
+        console.log(transactionMint, "transactionMint");
         let txm = await transactionMint.wait();
+        console.log(txm,"txm");
         if (txm) {
           let event = await txm.events[parseInt(csvdata?.length)];
           var eventId = event?.args[1];
@@ -357,6 +360,8 @@ export const Web3ContextProvider = (props) => {
           formData.type = type;
           formData.image = previewUrl ? previewUrl : template.preview;
           formData.templateId = templateId;
+          formData.txHash= txm.transactionHash;
+          formData.createdBy= txm.from;
           await addCollection(formData);
 
           let tokenIds = await trustifiedContract.getTokenIds(
@@ -398,6 +403,8 @@ export const Web3ContextProvider = (props) => {
             obj.issueDate = formData.issueDate;
             obj.position = previewUrl ? position : "";
             obj.uploadCertData = previewUrl ? uploadObj.name : "";
+            obj.txHash= txm.transactionHash;
+            obj.createdBy= txm.from;
             await addCollectors(obj);
           } // Generating CSV file with unique link and storing data in firebase.
           let obj = {
@@ -426,13 +433,13 @@ export const Web3ContextProvider = (props) => {
           toast.success("Successfully created NFT collection!!");
           resolve({ isResolved: true })
         }
-      } catch (err) {
+      } catch (err) { 
         console.log(err);
         toast.error("Something want wrong!!", err);
       }
     })
-  } 
- 
+  }
+
   const claimCertificate = async (
     claimToken,
     claimerAddress,
@@ -441,6 +448,7 @@ export const Web3ContextProvider = (props) => {
     textFamily
   ) => {
     setClaimLoading(true);
+    console.log("claimCertificate");
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
@@ -515,10 +523,11 @@ export const Web3ContextProvider = (props) => {
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
+    console.log(metadata, "metadata");
 
-    let meta = await axios.get(
-      `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    );
+    // let meta = await axios.get(
+    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+    // );
 
     const q = query(
       collection(db, "Collectors"),
@@ -528,6 +537,7 @@ export const Web3ContextProvider = (props) => {
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach(async (fire) => {
+      console.log(fire.data(), "data");
       try {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
@@ -538,6 +548,8 @@ export const Web3ContextProvider = (props) => {
             signer
           );
 
+          console.log(trustifiedContract, "trustifiedContract");
+
           let transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
             claimerAddress,
@@ -546,8 +558,10 @@ export const Web3ContextProvider = (props) => {
             1
           );
 
-          const txt = await transferTokenTransaction.wait();
+          console.log(transferTokenTransaction, "transferTokenTransaction");
 
+          const txt = await transferTokenTransaction.wait();
+          console.log(txt, "txt");
           if (txt) {
             setClaimer(fire.data());
             await updateCollectors({
@@ -557,6 +571,7 @@ export const Web3ContextProvider = (props) => {
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
 
+            console.log("done");
             toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
           }
@@ -566,6 +581,8 @@ export const Web3ContextProvider = (props) => {
             trustifiedContractAbi.abi,
             signer
           );
+
+          console.log("call else", trustifiedContract);
 
           let transferTokenTransaction = await trustifiedContract.transferToken(
             address,
@@ -683,10 +700,9 @@ export const Web3ContextProvider = (props) => {
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
-
-    let meta = await axios.get(
-      `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    );
+    // let meta = await axios.get(
+    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+    // );
 
     const q = query(
       collection(db, "Collectors"),
@@ -724,7 +740,7 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            toast.success("Claimed Certificate Successfully!"); 
+            toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
           }
         } else {

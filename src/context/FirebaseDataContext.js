@@ -102,6 +102,8 @@ export const FirebaseDataContextProvider = (props) => {
       Nontransferable: data.Nontransferable,
       image: data.image,
       templateId: data.templateId,
+      txHash:data.txHash,
+      createdBy: data.createdBy,
     });
 
     setLoading(false);
@@ -129,6 +131,8 @@ export const FirebaseDataContextProvider = (props) => {
       issueDate: data.issueDate,
       position: data.position,
       uploadObj: data.uploadCertData,
+      txHash:data.txHash,
+      createdBy: data.createdBy,
     });
     setLoading(false);
     setUpdated(!updated);
