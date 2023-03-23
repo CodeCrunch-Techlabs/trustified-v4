@@ -59,7 +59,7 @@ export default function Claim() {
                   ) : (
                     <>
                       {claimer?.position != "" &&
-                      claimer?.position != undefined ? (
+                        claimer?.position != undefined ? (
                         <UploadPreview claimer={claimer} />
                       ) : (
                         <TemplatePreview
@@ -171,7 +171,13 @@ export default function Claim() {
                           }
                         }}
                       >
-                        <span>{claimLoading ? "Claiming..." : " Claim"}</span>
+                        <span>{claimLoading ?
+                          <>
+                           <CircularProgress/>
+                            <div id="cover-spin"></div>
+                            <p id="cover-spin-text">Please don't refresh! {claimer?.type} is being minted! 😎 </p>
+                          </>
+                          : " Claim"}</span>
                       </a>
                     </div>
                   </div>

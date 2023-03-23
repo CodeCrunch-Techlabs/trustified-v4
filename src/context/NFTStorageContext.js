@@ -36,7 +36,7 @@ export const NFTStorageContextProvider = (props) => {
   });
 
   const web3Context = React.useContext(Web3Context);
-  const { createNFTCollection } = web3Context;
+  const { createNftFunction } = web3Context;
 
   const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
@@ -81,11 +81,11 @@ export const NFTStorageContextProvider = (props) => {
     setUploading(false);
   };
 
-  const createCertificateNFT = async () => { 
+  const createCertificateNFT = async () => {
     try {
       setUploading(true);
-      if (ipfsurl) { 
-        await createNFTCollection(
+      if (ipfsurl) {
+        createNftFunction(
           csvData,
           labelInfo.formData,
           "certificate",
@@ -93,10 +93,13 @@ export const NFTStorageContextProvider = (props) => {
           usernamePos,
           ipfsurl,
           uploadObj
-        );
-        setUploadObj("")
+        ).then((e) => {
+          console.log(e, "response");
+          setUploading(false);
+          setUploadObj("")
+        }); 
       } else {
-        await createNFTCollection(
+        createNftFunction(
           csvData,
           labelInfo.formData,
           "certificate",
@@ -104,17 +107,17 @@ export const NFTStorageContextProvider = (props) => {
           usernamePos,
           ipfsurl,
           uploadObj
-        );
-      }
-
-      setUploading(false);
-      setUploadObj("")
+        ).then((res) => {
+          setUploading(false);
+          setUploadObj("")
+        });
+      }  
     } catch (error) {
       console.log(error);
       setUploading(false);
     }
   };
- 
+
 
   return (
     <NFTStorageContext.Provider

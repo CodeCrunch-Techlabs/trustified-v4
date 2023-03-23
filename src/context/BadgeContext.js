@@ -10,7 +10,7 @@ export const BadgeContextProvider = (props) => {
   const [csvData, setCsvData] = React.useState([]);
   const [loading, setLoading] = useState(false);
   const web3Context = React.useContext(Web3Context);
-  const { createBadgesNFTCollecion } = web3Context;
+  const { myFunction } = web3Context;
   const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
   const [checked, setChecked] = useState(true);
@@ -119,16 +119,16 @@ export const BadgeContextProvider = (props) => {
       }
 
       if (array.length > 0) {
-        await createBadgesNFTCollecion(
-          {
-            tokenUris: array,
-          },
+        myFunction({
+          tokenUris: array,
+        },
           labelInfo.formData,
           checked,
-          "badge"
-        );
+          "badge").then((response) => { 
+            setLoading(false); 
+          }) 
       }
-      setLoading(false);
+
     } catch (error) {
       setLoading(false);
     }
