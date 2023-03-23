@@ -43,6 +43,54 @@ export default function Claim() {
     document.location.reload();
   }
 
+  const handleClaimCertificate=async(claimer)=>{
+    const { chainId } = await provider.getNetwork();
+    if (claimer.chain == "filecoin" && chainId !== 314) {
+      await switchNetwork(ethers.utils.hexValue(314));
+    } else if (
+      claimer.chain == "fevm" &&
+      chainId !== 3141
+    ) {
+      await switchNetwork(ethers.utils.hexValue(3141));
+    } else if (
+      claimer.chain == "mumbai" &&
+      chainId !== 80001
+    ) {
+      await switchNetwork(ethers.utils.hexValue(80001));
+    } else if (
+      claimer.chain == "goerli" &&
+      chainId !== 5
+    ) {
+      await switchNetwork(ethers.utils.hexValue(5));
+    } else if (claimer.chain == "bsc" && chainId !== 97) {
+      await switchNetwork(ethers.utils.hexValue(97));
+    }
+
+    if (claimer?.type == "badge") {
+      await claimBadges(token, add);
+    } else {
+      if (
+        claimer?.position != "" &&
+        claimer?.position != undefined
+      ) {
+        await claimUploadedCertificate(
+          token,
+          add,
+          claimer,
+          claimer?.uploadObj.style.color
+        );
+      } else {
+        await claimCertificate(
+          token,
+          add,
+          claimer,
+          claimer?.template.name.style.color,
+          claimer?.template.name.style.fontFamily
+        );
+      }
+    } 
+  }
+
   return (
     <section className="footer-position" id="banner">
       <div className="bannercontainer container">
@@ -123,54 +171,7 @@ export default function Claim() {
                     <div className="col-2 mx-auto text-center">
                       <a
                         className="thm-btn header__cta-btn claimBtn"
-                        onClick={async () => {
-                          const { chainId } = await provider.getNetwork();
-                          if (claimer.chain == "filecoin" && chainId !== 314) {
-                            await switchNetwork(ethers.utils.hexValue(314));
-                          } else if (
-                            claimer.chain == "fevm" &&
-                            chainId !== 3141
-                          ) {
-                            await switchNetwork(ethers.utils.hexValue(3141));
-                          } else if (
-                            claimer.chain == "mumbai" &&
-                            chainId !== 80001
-                          ) {
-                            await switchNetwork(ethers.utils.hexValue(80001));
-                          } else if (
-                            claimer.chain == "goerli" &&
-                            chainId !== 5
-                          ) {
-                            await switchNetwork(ethers.utils.hexValue(5));
-                          } else if (claimer.chain == "bsc" && chainId !== 97) {
-                            await switchNetwork(ethers.utils.hexValue(97));
-                          }
-
-                          if (claimer?.type == "badge") {
-                            await claimBadges(token, add);
-                          } else {
-                            if (
-                              claimer?.position != "" &&
-                              claimer?.position != undefined
-                            ) {
-                              await claimUploadedCertificate(
-                                token,
-                                add,
-                                claimer,
-                                claimer?.uploadObj.style.color
-                              );
-                            } else {
-                              await claimCertificate(
-                                token,
-                                add,
-                                claimer,
-                                claimer?.template.name.style.color,
-                                claimer?.template.name.style.fontFamily
-                              );
-                            }
-                          }
-                        }}
-                      >
+                        onClick={()=>handleClaimCertificate(claimer)}>
                         <span>{claimLoading ?
                           <>
                            <CircularProgress/>

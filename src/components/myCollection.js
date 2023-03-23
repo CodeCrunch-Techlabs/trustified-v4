@@ -259,7 +259,7 @@ export default function MyCollection({ show }) {
                                 textDecoration: "none",
                               }}
                             >
-                              {item.title}
+                              {item.title} 
                             </Typography>
                             <div>
                               <Tooltip title="Download Image" arrow>
@@ -309,7 +309,7 @@ export default function MyCollection({ show }) {
                               overflow: "scroll",
                             }}
                           >
-                            {item.description}
+                            {item.description} 
                           </Typography>
                         </div>
                       </div>

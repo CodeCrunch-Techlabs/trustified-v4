@@ -12,7 +12,9 @@ const fontList =['Roboto',
 'Lobster', 'Pacifico', 'Caveat',
 'Satisfy', 'Great Vibes', 'Ole', 'Coiny', 'Kenia', 'Rubik Beastly', 'Londrina Sketch', 'Neonderthaw',
 'Kumar One','Ribeye', 'Emblema One', 'Ewert', 'Kavoon', 'Moul', 'Rubik Moonrocks', 'Rubik Iso',
-'Unifraktur Cook', 'Germania One', 'Monoton', 'Orbitron', 'Rampart One'
+'Unifraktur Cook', 'Germania One', 'Monoton', 'Orbitron', 'Rampart One','Black Ops One',
+'Aldrich','Schoolbell','UnifrakturMaguntia','Montez','DotGothic16','Lexend Zetta','UnifrakturCook',
+'Iceland',
 ];
 const SelectFonts = () => {
     const templateConext = React.useContext(TemplateConext);

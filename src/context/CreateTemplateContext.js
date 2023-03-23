@@ -16,7 +16,7 @@ import axios from 'axios';
 
 const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
 const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
- 
+
 
 export const TemplateConext = createContext(undefined);
 
@@ -60,7 +60,7 @@ export const TemplateContextProvider = (props) => {
   const [bgurl, setBgurl] = useState("");
   const [logoUrl, setLogoUrl] = useState("");
   const [signUrl, setSignUrl] = useState("");
- 
+
 
   const imageRef = React.useRef();
 
@@ -230,12 +230,14 @@ export const TemplateContextProvider = (props) => {
       google: {
         families: ['Roboto',
           'Borsok', 'Open Sans',
-          'Lato ', 'Poppins', 'Zeyada',
+          'Lato', 'Poppins', 'Zeyada',
           'Babylonica', 'Dancing Script',
           'Lobster', 'Pacifico', 'Caveat',
           'Satisfy', 'Great Vibes', 'Ole', 'Coiny', 'Kenia', 'Rubik Beastly', 'Londrina Sketch', 'Neonderthaw',
           'Kumar One', 'Ribeye', 'Emblema One', 'Ewert', 'Kavoon', 'Moul', 'Rubik Moonrocks', 'Rubik Iso',
-          'Unifraktur Cook', 'Germania One', 'Monoton', 'Orbitron', 'Rampart One'
+          'Unifraktur Cook', 'Germania One', 'Monoton', 'Orbitron', 'Rampart One', 'Black Ops One',
+          'Aldrich', 'Schoolbell','UnifrakturMaguntia', 'Montez', 'DotGothic16', 'Lexend Zetta', 'UnifrakturCook',
+          'Iceland'
         ],
       },
       active: () => setSelectedFont('Roboto'),
@@ -257,13 +259,13 @@ export const TemplateContextProvider = (props) => {
     await html2canvas(imageRef.current, {
       useCORS: true,
       allowTaint: true,
-    }).then(async (canvas) => { 
+    }).then(async (canvas) => {
       const imgData = canvas.toDataURL("image/png");
       const name = generateClaimToken(10);
       const imageData = await fetch(imgData).then(r => r.blob());
       const canvasRef = ref(storage, `Templates/${name}.png`);
       await uploadBytes(canvasRef, imageData);
-      const downloadURL = await getDownloadURL(canvasRef); 
+      const downloadURL = await getDownloadURL(canvasRef);
       template.preview = downloadURL;
       await addDoc(collection(db, "Templates"), template);
       toast.success("Save Successfully!")
@@ -282,7 +284,7 @@ export const TemplateContextProvider = (props) => {
     setBold(e.target.value)
   }, []);
 
-  useEffect(() => { 
+  useEffect(() => {
     if (selectedElement === "title") {
       setTitle({ ...title, font: selectedFont, color: colors, size: fontSize, bold: bold });
     } else if (selectedElement === "sub-title") {
@@ -356,7 +358,7 @@ export const TemplateContextProvider = (props) => {
         setSubTitle,
         bgurl,
         logoUrl,
-        signUrl, 
+        signUrl,
       }}
       {...props}
     >

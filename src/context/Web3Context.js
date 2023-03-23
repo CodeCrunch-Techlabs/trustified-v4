@@ -682,10 +682,11 @@ export const Web3ContextProvider = (props) => {
       eventId: claimer?.eventId,
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
-    }); 
-    // let meta = await axios.get(
-    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    // );
+    });
+
+    let meta = await axios.get(
+      `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+    );
 
     const q = query(
       collection(db, "Collectors"),

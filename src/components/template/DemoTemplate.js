@@ -207,7 +207,7 @@ const DemoTemplate = () => {
                             onStop={(e, data) => setSign({ x: data.x, y: data.y })}
                         >
                             <img id='uploadSign' src={uploadSign ? uploadSign : "/templates/signature.png"} style={template.sign.style} />
-                            <p style={template.uploadSign.style} > {template.uploadSign.text}</p>
+                            {/* <p style={template.uploadSign.style} > {template.uploadSign.text}</p> */}
                         </Draggable>
                     </div>
                 </div>
