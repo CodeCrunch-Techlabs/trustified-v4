@@ -3,7 +3,6 @@ import { collection, db, getDocs, query, where } from "../firebase";
 import { ethers } from "ethers";
 import { chain, trustifiedContracts } from "../config";
 import trustifiedContractAbi from "../abi/Trustified.json";
-import trustifiedNonTransferableContractAbi from "../abi/TrustifiedNonTransferable.json";
 import { toast } from "react-toastify";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import axios from "axios";
@@ -200,27 +199,22 @@ export const Web3ContextProvider = (props) => {
     return result;
   }
 
-  const myFunction = function (data,
-    firebasedata,
-    checked,
-    type) {
+  const createBadges = function (data, firebasedata, checked, type) {
     return new Promise(async (resolve, reject) => {
       try {
         const trustifiedContract = new ethers.Contract(
-          checked == true
-            ? trustifiedContracts[firebasedata.chain].nonTransferable
-            : trustifiedContracts[firebasedata.chain].transferable,
-          checked == true
-            ? trustifiedNonTransferableContractAbi.abi
-            : trustifiedContractAbi.abi,
+          trustifiedContracts[firebasedata.chain].trustified,
+          trustifiedContractAbi.abi,
           signer
         );
         var transactionMint;
+
         if (type == "badge") {
           transactionMint = await trustifiedContract.bulkMintERC721(
             data.tokenUris[0],
             parseInt(firebasedata.quantity),
-            0
+            0,
+            checked
           ); // Bulk Mint NFT collection.
         }
 
@@ -228,16 +222,14 @@ export const Web3ContextProvider = (props) => {
 
         if (txm) {
           var event;
+          if (type == "badge") {
+            event = await txm.events[parseInt(firebasedata.quantity)];
+          }
 
+          var eventId = event?.args[1];
           await setTimeout(async () => {
             const mintStaus = await trustifiedContract.getMintStatus();
             if (mintStaus == true) {
-              if (type == "badge") {
-                event = await txm.events[parseInt(firebasedata.quantity)];
-              }
-
-              var eventId = event?.args[1];
-
               firebasedata.contract = trustifiedContract.address;
               firebasedata.userId = userId;
               firebasedata.eventId = parseInt(Number(eventId));
@@ -291,7 +283,8 @@ export const Web3ContextProvider = (props) => {
               };
 
               const api = await axios.create({
-                baseURL: "https://trustified-backend.onrender.com/trustified/api",
+                baseURL:
+                  "https://trustified-backend.onrender.com/trustified/api",
               });
               let response = await api
                 .post("/export/csv", obj)
@@ -310,7 +303,7 @@ export const Web3ContextProvider = (props) => {
               downloadLink.click();
 
               toast.success("Successfully created NFT collection!!");
-              resolve({ isResolved: true })
+              resolve({ isResolved: true });
             }
           }, 7000);
         }
@@ -319,8 +312,8 @@ export const Web3ContextProvider = (props) => {
         toast.error("Something want wrong!!", err);
         return false;
       }
-    })
-  }
+    });
+  };
 
   const createNftFunction = function (
     csvdata,
@@ -334,105 +327,105 @@ export const Web3ContextProvider = (props) => {
     return new Promise(async (resolve, reject) => {
       try {
         const trustifiedContract = new ethers.Contract(
-          formData.Nontransferable == "on"
-            ? trustifiedContracts[formData.chain].nonTransferable
-            : trustifiedContracts[formData.chain].transferable,
-          formData.Nontransferable == "on"
-            ? trustifiedNonTransferableContractAbi.abi
-            : trustifiedContractAbi.abi,
+          trustifiedContracts[formData.chain].trustified,
+          trustifiedContractAbi.abi,
           signer
         );
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
-          1
+          1,
+          formData.Nontransferable == "on" ? true : false
         );
         let txm = await transactionMint.wait();
         if (txm) {
           let event = await txm.events[parseInt(csvdata?.length)];
           var eventId = event?.args[1];
-          formData.contract = trustifiedContract.address;
-          formData.userId = userId;
-          formData.eventId = parseInt(Number(eventId));
-          formData.type = type;
-          formData.image = previewUrl ? previewUrl : template.preview;
-          formData.templateId = templateId;
-          await addCollection(formData);
+          const mintStaus = await trustifiedContract.getMintStatus();
+          if (mintStaus == true) {
+            formData.contract = trustifiedContract.address;
+            formData.userId = userId;
+            formData.eventId = parseInt(Number(eventId));
+            formData.type = type;
+            formData.image = previewUrl ? previewUrl : template.preview;
+            formData.templateId = templateId;
+            await addCollection(formData);
 
-          let tokenIds = await trustifiedContract.getTokenIds(
-            parseInt(Number(eventId))
-          );
+            let tokenIds = await trustifiedContract.getTokenIds(
+              parseInt(Number(eventId))
+            );
 
-          var array = [];
+            var array = [];
 
-          for (let i = 0; i < tokenIds.length; i++) {
-            let obj = {};
-            let claimToken = generateClaimToken(20);
+            for (let i = 0; i < tokenIds.length; i++) {
+              let obj = {};
+              let claimToken = generateClaimToken(20);
 
-            if (type == "badge") {
-              array.push({
-                ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-              });
-            } else {
-              array.push({
-                Name: csvdata[i].name,
-                ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-              });
-            }
+              if (type == "badge") {
+                array.push({
+                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+                });
+              } else {
+                array.push({
+                  Name: csvdata[i].name,
+                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+                });
+              }
 
-            obj.token = claimToken;
-            obj.tokenContract = trustifiedContract.address;
-            obj.tokenId = parseInt(Number(tokenIds[i]));
-            obj.claimerAddress = "";
-            obj.ipfsurl = previewUrl ? previewUrl : "";
-            obj.chain = formData.chain;
-            obj.name = csvdata[i].name;
-            obj.type = type;
-            obj.claimed = "No";
-            obj.eventId = parseInt(Number(eventId));
-            obj.Nontransferable = formData.Nontransferable;
-            obj.templateId = previewUrl ? "" : templateId;
-            obj.title = formData.title;
-            obj.description = formData.description;
-            obj.expireDate = formData.expireDate;
-            obj.issueDate = formData.issueDate;
-            obj.position = previewUrl ? position : "";
-            obj.uploadCertData = previewUrl ? uploadObj.name : "";
-            await addCollectors(obj);
-          } // Generating CSV file with unique link and storing data in firebase.
-          let obj = {
-            type: type,
-            data: array,
-          };
+              obj.token = claimToken;
+              obj.tokenContract = trustifiedContract.address;
+              obj.tokenId = parseInt(Number(tokenIds[i]));
+              obj.claimerAddress = "";
+              obj.ipfsurl = previewUrl ? previewUrl : "";
+              obj.chain = formData.chain;
+              obj.name = csvdata[i].name;
+              obj.type = type;
+              obj.claimed = "No";
+              obj.eventId = parseInt(Number(eventId));
+              obj.Nontransferable = formData.Nontransferable;
+              obj.templateId = previewUrl ? "" : templateId;
+              obj.title = formData.title;
+              obj.description = formData.description;
+              obj.expireDate = formData.expireDate;
+              obj.issueDate = formData.issueDate;
+              obj.position = previewUrl ? position : "";
+              obj.uploadCertData = previewUrl ? uploadObj.name : "";
+              await addCollectors(obj);
+            } // Generating CSV file with unique link and storing data in firebase.
+            let obj = {
+              type: type,
+              data: array,
+            };
 
-          const api = await axios.create({
-            baseURL: "https://trustified-backend.onrender.com/trustified/api",
-          });
-          let response = await api
-            .post("/export/csv", obj)
-            .then((res) => {
-              return res;
-            })
-            .catch((error) => {
-              console.log(error);
+            const api = await axios.create({
+              baseURL: "https://trustified-backend.onrender.com/trustified/api",
             });
+            let response = await api
+              .post("/export/csv", obj)
+              .then((res) => {
+                return res;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
 
-          const blob = new Blob([response.data], { type: "text/csv" });
+            const blob = new Blob([response.data], { type: "text/csv" });
 
-          const downloadLink = document.createElement("a");
-          downloadLink.href = URL.createObjectURL(blob);
-          downloadLink.download = `${formData.title}.csv`;
-          downloadLink.click();
-          toast.success("Successfully created NFT collection!!");
-          resolve({ isResolved: true })
+            const downloadLink = document.createElement("a");
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${formData.title}.csv`;
+            downloadLink.click();
+            toast.success("Successfully created NFT collection!!");
+            resolve({ isResolved: true });
+          }
         }
       } catch (err) {
         console.log(err);
         toast.error("Something want wrong!!", err);
       }
-    })
-  } 
- 
+    });
+  };
+
   const claimCertificate = async (
     claimToken,
     claimerAddress,
@@ -482,8 +475,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -532,9 +525,7 @@ export const Web3ContextProvider = (props) => {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
             fire.data().tokenContract,
-            fire.data().Nontransferable == "on"
-              ? trustifiedNonTransferableContractAbi.abi
-              : trustifiedContractAbi.abi,
+            trustifiedContractAbi.abi,
             signer
           );
 
@@ -649,8 +640,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -700,9 +691,7 @@ export const Web3ContextProvider = (props) => {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
             fire.data().tokenContract,
-            fire.data().Nontransferable == "on"
-              ? trustifiedNonTransferableContractAbi.abi
-              : trustifiedContractAbi.abi,
+            trustifiedContractAbi.abi,
             signer
           );
 
@@ -724,7 +713,7 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-            toast.success("Claimed Certificate Successfully!"); 
+            toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
           }
         } else {
@@ -780,9 +769,7 @@ export const Web3ContextProvider = (props) => {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
             fire.data().tokenContract,
-            fire.data().Nontransferable == "on"
-              ? trustifiedNonTransferableContractAbi.abi
-              : trustifiedContractAbi.abi,
+            trustifiedContractAbi.abi,
             signer
           );
 
@@ -849,7 +836,7 @@ export const Web3ContextProvider = (props) => {
       value={{
         connectWallet,
         createNftFunction,
-        myFunction,
+        createBadges,
         shortAddress,
         disconnectWallet,
         claimCertificate,

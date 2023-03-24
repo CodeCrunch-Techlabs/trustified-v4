@@ -6,17 +6,7 @@ async function main() {
   const TrustifiedContract = await hre.ethers.getContractFactory("Trustified");
   const trustifiedContract = await TrustifiedContract.deploy();
 
-  const TrustifiedNonTranferableContract = await hre.ethers.getContractFactory(
-    "TrustifiedNonTransferable"
-  );
-  const trustifiedNonTranferableContract =
-    await TrustifiedNonTranferableContract.deploy();
-
   console.log("Trustified nft contract address:", trustifiedContract.address);
-  console.log(
-    "Trustified Non Transferable nft contract address:",
-    trustifiedNonTranferableContract.address
-  );
 }
 
 main()

@@ -11,48 +11,9 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 abstract contract ERC721URIStorage is ERC721 {
     using Strings for uint256;
 
-    // Token nonTransferable
-    bool private _nonTransferable;
-
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
     mapping(uint256 => bool) private _transferred;
-
-    /**
-     * @dev Initializes the contract by setting a `name` and a `symbol` to the token collection.
-     */
-    constructor(
-        string memory name_,
-        string memory symbol_,
-        bool nonTransferable_
-    ) ERC721(name_, symbol_) {
-        _nonTransferable = nonTransferable_;
-    }
-
-    /**
-     * @dev See {IERC721-transferFrom}.
-     */
-    function transferFrom(
-        address from,
-        address to,
-        uint256 tokenId
-    ) public virtual override {
-        //solhint-disable-next-line max-line-length
-
-        if (_nonTransferable == true) {
-            require(
-                _transferred[tokenId] != true,
-                "This token can not be transferred!"
-            );
-        }
-        require(
-            _isApprovedOrOwner(from, tokenId),
-            "ERC721: transfer caller is not owner nor approved"
-        );
-
-        _transfer(from, to, tokenId);
-        _transferred[tokenId] = true;
-    }
 
     /**
      * @dev See {IERC721Metadata-tokenURI}.

@@ -15,6 +15,7 @@ import Iconify from "../components/utils/Iconify";
 
 import axios from "axios";
 import { toast } from "react-toastify";
+import Web3 from "web3";
 
 export const firebaseDataContext = createContext(undefined);
 
@@ -381,12 +382,17 @@ export const FirebaseDataContextProvider = (props) => {
   }
 
   async function getMyCollection(address) {
-    if (address) {
+    let add =
+      address == ""
+        ? Web3.utils.toChecksumAddress(localStorage.getItem("address"))
+        : address;
+
+    if (add) {
       setCertLoad(true);
       var array = [];
       const q = query(
         collection(db, "Collectors"),
-        where("claimerAddress", "==", address)
+        where("claimerAddress", "==", add)
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (fire) => {
@@ -412,8 +418,6 @@ export const FirebaseDataContextProvider = (props) => {
         setMyCollection(arr);
       });
       setCertLoad(false);
-    } else {
-      toast.error("Please provide address!");
     }
   }
 

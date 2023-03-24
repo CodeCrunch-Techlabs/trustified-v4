@@ -6,8 +6,6 @@ const fa = require("@glif/filecoin-address");
 const util = require("util");
 const request = util.promisify(require("request"));
 
-
-
 const DEPLOYER_PRIVATE_KEY = network.config.accounts[0];
 
 async function callRpc(method, params) {
@@ -36,20 +34,8 @@ module.exports = async ({ deployments }) => {
 
   const priorityFee = await callRpc("eth_maxPriorityFeePerGas");
 
-
   try {
     await deploy("Trustified", {
-      from: deployer.address,
-
-      // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
-      // a large gasLimit. This should be addressed in the following releases.
-      // since Ethereum's legacy transaction format is not supported on FVM, we need to specify
-      // maxPriorityFeePerGas to instruct hardhat to use EIP-1559 tx format
-
-      maxPriorityFeePerGas: priorityFee,
-      log: true,
-    });
-    await deploy("TrustifiedNonTransferable", {
       from: deployer.address,
 
       // since it's difficult to estimate the gas before f4 address is launched, it's safer to manually set
@@ -65,9 +51,4 @@ module.exports = async ({ deployments }) => {
   }
 };
 
-module.exports.tags = [
-  "Trustified",
-  "TrustifiedNonTransferable",
-  "MinerAPI",
-  "MarketAPI",
-];
+module.exports.tags = ["Trustified", "MinerAPI", "MarketAPI"];

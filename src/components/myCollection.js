@@ -59,21 +59,23 @@ export default function MyCollection({ show }) {
 
   const [value, setValue] = React.useState(0);
 
-  useEffect(() => {
-    let add = localStorage.getItem("address");
-    if(add){
-      getMyCollection(web3.utils.toChecksumAddress(add));
-    } else{
-      toast.error("Please connect wallet!");
-    }
-  }, []);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const [badgesData, setbadgesData] = useState([]);
   const [certificatesData, setcertificatesData] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let add = localStorage.getItem("address");
+    if (location.pathname == "/my-collection") {
+      if (add) {
+        getMyCollection(web3.utils.toChecksumAddress(add));
+      } else {
+        toast.error("Please connect wallet!");
+      }
+    }
+  }, []);
 
   useEffect(() => {
     let badges = [];
@@ -86,11 +88,10 @@ export default function MyCollection({ show }) {
           certificates.push(myCollection[i]);
         }
       }
-    } 
+    }
     setbadgesData(badges);
     setcertificatesData(certificates);
   }, [myCollection]);
- 
 
   function toDataURL(url) {
     return fetch(url)
@@ -259,7 +260,7 @@ export default function MyCollection({ show }) {
                                 textDecoration: "none",
                               }}
                             >
-                              {item.title} 
+                              {item.title}
                             </Typography>
                             <div>
                               <Tooltip title="Download Image" arrow>
@@ -274,7 +275,7 @@ export default function MyCollection({ show }) {
                                     icon="bx:images"
                                     width={20}
                                     height={20}
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                   />
                                 </IconButton>
                               </Tooltip>
@@ -291,7 +292,7 @@ export default function MyCollection({ show }) {
                                     icon="material-symbols:sim-card-download-outline-rounded"
                                     width={20}
                                     height={20}
-                                    style={{ cursor: 'pointer' }}
+                                    style={{ cursor: "pointer" }}
                                   />
                                 </IconButton>
                               </Tooltip>
@@ -309,7 +310,7 @@ export default function MyCollection({ show }) {
                               overflow: "scroll",
                             }}
                           >
-                            {item.description} 
+                            {item.description}
                           </Typography>
                         </div>
                       </div>

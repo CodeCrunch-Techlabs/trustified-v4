@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-import "./comman/FERC721URIStorage.sol";
+import "./comman/ERC721URIStorage.sol";
 
 contract Trustified is ERC721URIStorage {
     using Counters for Counters.Counter;
@@ -16,10 +16,11 @@ contract Trustified is ERC721URIStorage {
 
     mapping(uint256 => uint256[]) public tokenIds; // Every event Id will have list of tokenIds.
     mapping(uint256 => address) public issuers; // To get the issuer address from the event Id.
+    mapping(uint256 => bool) private _nonTransferable; // TokenId with the bool value which defines if token is tranferable or non-tranferable.
 
     event TokenMinted(address, uint256);
 
-    constructor() ERC721URIStorage("Trustified", "TFN", false) {}
+    constructor() ERC721("ItsTrustified", "ITF") {}
 
     /**
      * @dev value == 0 is for to check the nft we are minting is for certificate or badges. For badges we set tokenURI in mint.
@@ -29,12 +30,12 @@ contract Trustified is ERC721URIStorage {
     function safeMint(
         string calldata tokenURI,
         uint256 value
-    ) public returns (uint256) {
-        require(value >= 0 && value <= 1, "Invalid value");
+    ) internal returns (uint256) {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _mint(address(this), tokenId);
         if (value == 0) {
+            require(bytes(tokenURI).length > 0, "Token URI must not be empty");
             _setTokenURI(tokenId, tokenURI);
         }
         return tokenId;
@@ -48,14 +49,19 @@ contract Trustified is ERC721URIStorage {
     function bulkMintERC721(
         string calldata tokenUri,
         uint256 quantity,
-        uint256 value
+        uint256 value,
+        bool nonTransferable
     ) external {
+        require(quantity > 0, "Invalid quantity"); // validate quantity is a non-zero positive integer
+        require(value >= 0 && value <= 1, "Invalid value");
         uint256 eventId = _eventIdCounter.current();
         _eventIdCounter.increment();
+        allTokenMinted = false;
         for (uint256 i = 0; i < quantity; i++) {
             uint256 tokenId = safeMint(tokenUri, value);
             tokenIds[eventId].push(tokenId);
             issuers[eventId] = msg.sender;
+            _nonTransferable[tokenId] = nonTransferable;
             uint256 totalMinted = tokenId + 1;
             if (totalMinted == quantity) {
                 allTokenMinted = true;
@@ -75,7 +81,25 @@ contract Trustified is ERC721URIStorage {
     function getTokenIds(
         uint256 eventId
     ) external view returns (uint256[] memory) {
+        require(
+            issuers[eventId] == msg.sender,
+            "Only issuer of this event can be access the tokenIds!"
+        );
         return tokenIds[eventId];
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 firstTokenId,
+        uint256 batchSize
+    ) internal virtual override {
+        if (from != address(this)) {
+            require(
+                _nonTransferable[firstTokenId] != true,
+                "Not allowed to transfer token"
+            );
+        }
     }
 
     /**
@@ -97,6 +121,14 @@ contract Trustified is ERC721URIStorage {
         if (value == 1) {
             _setTokenURI(tokenId, tokenURI);
         }
-        IERC721(address(this)).transferFrom(from, to, tokenId);
+        if (from != address(this)) {
+            require(
+                _isApprovedOrOwner(msg.sender, tokenId),
+                "ERC721: transfer caller is not owner nor approved"
+            );
+            _transfer(_msgSender(), to, tokenId);
+        } else {
+            _transfer(from, to, tokenId);
+        }
     }
 }

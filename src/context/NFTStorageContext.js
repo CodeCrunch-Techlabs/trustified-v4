@@ -94,7 +94,6 @@ export const NFTStorageContextProvider = (props) => {
           ipfsurl,
           uploadObj
         ).then((e) => {
-          console.log(e, "response");
           setUploading(false);
           setUploadObj("")
         }); 

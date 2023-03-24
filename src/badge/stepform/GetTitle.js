@@ -92,7 +92,7 @@ function GetTitle() {
               <FormControlLabel
                 value="fevm"
                 control={<Radio />}
-                label="FEVM"
+                label="FVM Testnet(Hyperspace)"
                 onChange={value.setFormdata("chain")}
               />
               <FormControlLabel
