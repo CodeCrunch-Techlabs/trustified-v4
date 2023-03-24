@@ -68,7 +68,9 @@ export const FirebaseDataContextProvider = (props) => {
     type,
     eventId,
     ipfsUrl,
-    chain
+    chain,
+    txHash,
+   createdBy, 
   ) {
     return {
       id,
@@ -80,6 +82,8 @@ export const FirebaseDataContextProvider = (props) => {
       eventId,
       ipfsUrl,
       chain,
+      txHash,
+      createdBy, 
     };
   }
 
@@ -281,6 +285,8 @@ export const FirebaseDataContextProvider = (props) => {
         obj.status = fire.data().claimed;
         obj.nfttype = fire.data().Nontransferable;
         obj.expireDate = fire.data().expireDate;
+        obj.createdBy= fire.data().createdBy;
+        obj.txHash= fire.data().txHash;
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);
@@ -370,7 +376,9 @@ export const FirebaseDataContextProvider = (props) => {
                 "https://nftstorage.link/ipfs/"
               )
             : imageUrl,
-          e.data().chain
+          e.data().chain,
+          e.data().txHash,
+          e.data().createdBy, 
         );
 
         if (e.data().type === "badge") {

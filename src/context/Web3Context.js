@@ -245,6 +245,8 @@ export const Web3ContextProvider = (props) => {
               firebasedata.image = data.tokenUris[0];
               firebasedata.templateId = "";
               firebasedata.Nontransferable = checked == true ? "on" : "off";
+              firebasedata.txHash= txm.transactionHash;
+              firebasedata.createdBy= txm.from;
               await addCollection(firebasedata);
 
               let tokenIds = await trustifiedContract.getTokenIds(
@@ -281,7 +283,8 @@ export const Web3ContextProvider = (props) => {
                 obj.issueDate = firebasedata.issueDate;
                 obj.position = "";
                 obj.uploadCertData = "";
-
+                obj.txHash= txm.transactionHash;
+                obj.createdBy= txm.from;
                 await addCollectors(obj);
               } // Generating CSV file with unique link and storing data in firebase.
 
@@ -556,12 +559,8 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenId,
             `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             1
-          );
-
-          console.log(transferTokenTransaction, "transferTokenTransaction");
-
-          const txt = await transferTokenTransaction.wait();
-          console.log(txt, "txt");
+          ); 
+          const txt = await transferTokenTransaction.wait(); 
           if (txt) {
             setClaimer(fire.data());
             await updateCollectors({
@@ -570,8 +569,7 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
-
-            console.log("done");
+ 
             toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
           }
@@ -580,9 +578,7 @@ export const Web3ContextProvider = (props) => {
             fire.data().tokenContract,
             trustifiedContractAbi.abi,
             signer
-          );
-
-          console.log("call else", trustifiedContract);
+          ); 
 
           let transferTokenTransaction = await trustifiedContract.transferToken(
             address,

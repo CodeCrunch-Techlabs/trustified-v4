@@ -65,10 +65,10 @@ function GetTitle() {
               const { chainId } = await provider.getNetwork();
               if (e.target.value == "filecoin" && chainId !== 314) {
                 await switchNetwork(ethers.utils.hexValue(314));
-              } else if (e.target.value == "fevm" && chainId !== 3141) {
-                await switchNetwork(ethers.utils.hexValue(3141));
+              // } else if (e.target.value == "fevm" && chainId !== 3141) {
+              //   await switchNetwork(ethers.utils.hexValue(3141));
               } else if (e.target.value == "mumbai" && chainId !== 137) {
-                await switchNetwork(ethers.utils.hexValue(80001));
+                await switchNetwork(ethers.utils.hexValue(137));
               } else if (e.target.value == "goerli" && chainId !== 5) {
                 await switchNetwork(ethers.utils.hexValue(5));
               } else if (e.target.value == "bsc" && chainId !== 97) {
@@ -89,12 +89,12 @@ function GetTitle() {
                 label="Filecoin(Mainnet)"
                 onChange={value.setFormdata("chain")}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 value="fevm"
                 control={<Radio />}
                 label="FEVM"
                 onChange={value.setFormdata("chain")}
-              />
+              /> */}
               <FormControlLabel
                 value="mumbai"
                 control={<Radio />}

@@ -23,6 +23,7 @@ export const NFTStorageContextProvider = (props) => {
   const [ipfsurl, setIpfsurl] = useState("");
   const [uploadObj, setUploadObj] = useState({});
   const [checked, setChecked] = useState(true);
+  const [uploadCert, setUploadCert] = useState(false);
 
   const [labelInfo, setlabelInfo] = useState({
     formData: {
@@ -66,7 +67,7 @@ export const NFTStorageContextProvider = (props) => {
   };
 
   const uploadCertificate = async (file) => {
-    setUploading(true);
+    setUploadCert(true);
     const metadata = await client.store({
       name: "certificate",
       description: "certificate preview",
@@ -78,7 +79,7 @@ export const NFTStorageContextProvider = (props) => {
         "https://nftstorage.link/ipfs/"
       )
     );
-    setUploading(false);
+    setUploadCert(false);
   };
 
   const createCertificateNFT = async () => {
@@ -124,6 +125,7 @@ export const NFTStorageContextProvider = (props) => {
       value={{
         createCertificateNFT,
         uploading,
+        uploadCert,
         labelInfo,
         csvData,
         setCsvData,

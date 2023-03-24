@@ -17,6 +17,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { IconButton } from "@mui/material";
 import jsPDF from "jspdf";
 import { toast } from "react-toastify";
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -61,9 +62,9 @@ export default function MyCollection({ show }) {
 
   useEffect(() => {
     let add = localStorage.getItem("address");
-    if(add){
+    if (add) {
       getMyCollection(web3.utils.toChecksumAddress(add));
-    } else{
+    } else {
       toast.error("Please connect wallet!");
     }
   }, []);
@@ -86,11 +87,11 @@ export default function MyCollection({ show }) {
           certificates.push(myCollection[i]);
         }
       }
-    } 
+    }
     setbadgesData(badges);
     setcertificatesData(certificates);
   }, [myCollection]);
- 
+
 
   function toDataURL(url) {
     return fetch(url)
@@ -138,6 +139,8 @@ export default function MyCollection({ show }) {
       doc.save(`${item.name.replace(/ +/g, "")}-${item.title}`);
     };
   };
+
+
 
   return (
     <div
@@ -188,7 +191,7 @@ export default function MyCollection({ show }) {
                         <Link
                           to={e.ipfsurl}
                           target="_blank"
-                          // style={{ width: "50%" }}
+                        // style={{ width: "50%" }}
                         >
                           <img
                             height="auto"
@@ -228,6 +231,10 @@ export default function MyCollection({ show }) {
             <div className="row">
               {certificatesData.length != 0 &&
                 certificatesData.map((item, i) => {
+                  const url = item.chain === 'filecoin' && "https://filfox.info/en/message" ||
+                    item.chain === 'mumbai' && "https://polygonscan.com/tx" ||
+                    item.chain === 'goerli' && "https://goerli.etherscan.io/tx" ||
+                    item.chain === 'bsc' && "https://bscscan.com/tx";
                   return (
                     <div
                       className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
@@ -259,7 +266,7 @@ export default function MyCollection({ show }) {
                                 textDecoration: "none",
                               }}
                             >
-                              {item.title} 
+                              {item.title}
                             </Typography>
                             <div>
                               <Tooltip title="Download Image" arrow>
@@ -305,12 +312,14 @@ export default function MyCollection({ show }) {
                               color: "#74727a",
                               margin: "10px 0",
                               textDecoration: "none",
-                              height: "120px",
+                              maxHeight: "120px",
                               overflow: "scroll",
                             }}
                           >
-                            {item.description} 
+                            {item.description}
                           </Typography>
+
+                          <a href={`${url}/${item.txHash}`} target="_blank"  >View Transaction <OpenInNewIcon /></a>
                         </div>
                       </div>
                     </div>
