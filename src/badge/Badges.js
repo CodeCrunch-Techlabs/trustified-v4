@@ -6,6 +6,7 @@ import { firebaseDataContext } from "../context/FirebaseDataContext";
 import Iconify from "../components/utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { Button } from "@mui/material"; 
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const Badges = () => {
   const navigate = useNavigate();
@@ -35,6 +36,10 @@ const Badges = () => {
     <div className="container">
       <div className="row">
         {badges.length != 0 ? badges.map((item, index) => {
+           const url = item.chain === 'filecoin' && "https://filfox.info/en/message" ||
+           item.chain === 'mumbai' && "https://polygonscan.com/tx" ||
+           item.chain === 'goerli' && "https://goerli.etherscan.io/tx" ||
+           item.chain === 'bsc' && "https://bscscan.com/tx";
           return (
             <div key={index} className='col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4'>
               <div className='badge-root'>
@@ -79,6 +84,7 @@ const Badges = () => {
                     </Tooltip>
                   )}
                 </div>
+                <a href={`${url}/${item.txHash}`} target="_blank"  >View Transaction <OpenInNewIcon/></a>
               </div>
             </div>
           );

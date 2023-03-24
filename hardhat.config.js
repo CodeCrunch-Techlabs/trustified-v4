@@ -8,6 +8,9 @@ const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
 
 module.exports = {
   solidity: "0.8.4",
+  etherscan: {
+    apiKey: process.env.REACT_APPA_POLYGONSCAN_API_KEY
+  },
   settings: {
     optimizer: {
       enabled: true,
@@ -28,7 +31,7 @@ module.exports = {
       accounts: [PRIVATE_KEY],
     },
     polygon: {
-      url: `https://polygon-rpc.com`,
+      url: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.ALCHEMY_KEY}`,
       accounts: [PRIVATE_KEY],
     }, 
     mumbai: {

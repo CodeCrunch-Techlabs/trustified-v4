@@ -3408,7 +3408,7 @@ right: 5%; */
 }
 
 .card-body-cert {
-  margin: 20px 10px -10px 10px;
+  margin: 20px 0 0 0;
 }
 
 .card-h4 {
@@ -3420,11 +3420,12 @@ right: 5%; */
 
 
 .card-p {
-  margin: 0 10px;
-  line-height: 20px;
-  white-space: nowrap;
+  margin-top: 10px;
+  line-height: 20px; 
   overflow: hidden;
   text-overflow: ellipsis;
+  height: 50px;
+  overflow: scroll;
 }
 
 .card-root h4 {
@@ -3432,13 +3433,14 @@ right: 5%; */
   margin-bottom: 0;
   text-transform: capitalize;
   font-size: 16px;
-  font-weight: bold;
+  /* font-weight: bold; */
   color: #2a2833;
 }
 
 .card-root p {
   font-size: 14px;
   color: #74727a;
+  margin-bottom: 0;
 }
 
 .badge-root {

@@ -237,6 +237,8 @@ export const Web3ContextProvider = (props) => {
               firebasedata.image = data.tokenUris[0];
               firebasedata.templateId = "";
               firebasedata.Nontransferable = checked == true ? "on" : "off";
+              firebasedata.txHash = txm.transactionHash;
+              firebasedata.createdBy = txm.from;
               await addCollection(firebasedata);
 
               let tokenIds = await trustifiedContract.getTokenIds(
@@ -273,7 +275,8 @@ export const Web3ContextProvider = (props) => {
                 obj.issueDate = firebasedata.issueDate;
                 obj.position = "";
                 obj.uploadCertData = "";
-
+                obj.txHash = txm.transactionHash;
+                obj.createdBy = txm.from;
                 await addCollectors(obj);
               } // Generating CSV file with unique link and storing data in firebase.
 
@@ -326,6 +329,7 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log("transactionMint");
         const trustifiedContract = new ethers.Contract(
           trustifiedContracts[formData.chain].trustified,
           trustifiedContractAbi.abi,
@@ -337,7 +341,9 @@ export const Web3ContextProvider = (props) => {
           1,
           formData.Nontransferable == "on" ? true : false
         );
+        console.log(transactionMint, "transactionMint");
         let txm = await transactionMint.wait();
+        console.log(txm, "txm");
         if (txm) {
           let event = await txm.events[parseInt(csvdata?.length)];
           var eventId = event?.args[1];
@@ -349,6 +355,8 @@ export const Web3ContextProvider = (props) => {
             formData.type = type;
             formData.image = previewUrl ? previewUrl : template.preview;
             formData.templateId = templateId;
+            formData.txHash = txm.transactionHash;
+            formData.createdBy = txm.from;
             await addCollection(formData);
 
             let tokenIds = await trustifiedContract.getTokenIds(
@@ -390,6 +398,8 @@ export const Web3ContextProvider = (props) => {
               obj.issueDate = formData.issueDate;
               obj.position = previewUrl ? position : "";
               obj.uploadCertData = previewUrl ? uploadObj.name : "";
+              obj.txHash = txm.transactionHash;
+              obj.createdBy = txm.from;
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {
@@ -434,6 +444,7 @@ export const Web3ContextProvider = (props) => {
     textFamily
   ) => {
     setClaimLoading(true);
+    console.log("claimCertificate");
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
@@ -508,10 +519,11 @@ export const Web3ContextProvider = (props) => {
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
+    console.log(metadata, "metadata");
 
-    let meta = await axios.get(
-      `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    );
+    // let meta = await axios.get(
+    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+    // );
 
     const q = query(
       collection(db, "Collectors"),
@@ -521,6 +533,7 @@ export const Web3ContextProvider = (props) => {
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach(async (fire) => {
+      console.log(fire.data(), "data");
       try {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
@@ -529,6 +542,8 @@ export const Web3ContextProvider = (props) => {
             signer
           );
 
+          console.log(trustifiedContract, "trustifiedContract");
+
           let transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
             claimerAddress,
@@ -536,9 +551,7 @@ export const Web3ContextProvider = (props) => {
             `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             1
           );
-
           const txt = await transferTokenTransaction.wait();
-
           if (txt) {
             setClaimer(fire.data());
             await updateCollectors({
@@ -674,10 +687,9 @@ export const Web3ContextProvider = (props) => {
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
-
-    let meta = await axios.get(
-      `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    );
+    // let meta = await axios.get(
+    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+    // );
 
     const q = query(
       collection(db, "Collectors"),

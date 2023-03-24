@@ -4,6 +4,7 @@ import {
   Button,
   Chip,
   Divider,
+  CircularProgress,
   Stack,
 } from "@mui/material";
 import WebFont from 'webfontloader';
@@ -198,7 +199,7 @@ function GetTemplate() {
                   variant="contained"
                   component="label"
                 >
-                  Upload Your Certificate
+                {value.uploadCert ? <CircularProgress  sx={{color:'#fff'}}/> : 'Upload Your Certificate' }  
                   <input
                     onChange={(e) => handleImageChange(e)}
                     hidden
