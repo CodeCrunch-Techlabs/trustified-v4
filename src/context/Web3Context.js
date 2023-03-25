@@ -219,7 +219,7 @@ export const Web3ContextProvider = (props) => {
         }
 
         let txm = await transactionMint.wait();
-
+console.log(txm,"txm");
         if (txm) {
           var event;
           if (type == "badge") {
@@ -229,6 +229,7 @@ export const Web3ContextProvider = (props) => {
           var eventId = event?.args[1];
           await setTimeout(async () => {
             const mintStaus = await trustifiedContract.getMintStatus();
+            console.log(mintStaus,"mintStaus");
             if (mintStaus == true) {
               firebasedata.contract = trustifiedContract.address;
               firebasedata.userId = userId;
@@ -239,6 +240,8 @@ export const Web3ContextProvider = (props) => {
               firebasedata.Nontransferable = checked == true ? "on" : "off";
               firebasedata.txHash = txm.transactionHash;
               firebasedata.createdBy = txm.from;
+
+              console.log(firebasedata,"firebasedata");
               await addCollection(firebasedata);
 
               let tokenIds = await trustifiedContract.getTokenIds(
@@ -312,8 +315,8 @@ export const Web3ContextProvider = (props) => {
         }
       } catch (err) {
         console.log(err);
-        toast.error("Something want wrong!!", err);
-        return false;
+        toast.error("Something want wrong!!", err); 
+        resolve({ isResolved: true });
       }
     });
   };
