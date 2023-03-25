@@ -55,7 +55,7 @@ contract Trustified is ERC721URIStorage {
         require(quantity > 0, "Invalid quantity"); // validate quantity is a non-zero positive integer
         require(value >= 0 && value <= 1, "Invalid value");
         uint256 eventId = _eventIdCounter.current();
-        _eventIdCounter.increment(); 
+        _eventIdCounter.increment();
         for (uint256 i = 0; i < quantity; i++) {
             uint256 tokenId = safeMint(tokenUri, value);
             tokenIds[eventId].push(tokenId);
