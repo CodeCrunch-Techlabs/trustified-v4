@@ -227,88 +227,86 @@ export const Web3ContextProvider = (props) => {
           }
 
           var eventId = event?.args[1];
-          await setTimeout(async () => {
-            const mintStaus = await trustifiedContract.getMintStatus();
-            if (mintStaus == true) {
-              firebasedata.contract = trustifiedContract.address;
-              firebasedata.userId = userId;
-              firebasedata.eventId = parseInt(Number(eventId));
-              firebasedata.type = type;
-              firebasedata.image = data.tokenUris[0];
-              firebasedata.templateId = "";
-              firebasedata.Nontransferable = checked == true ? "on" : "off";
-              firebasedata.txHash = txm.transactionHash;
-              firebasedata.createdBy = txm.from;
-              await addCollection(firebasedata);
 
-              let tokenIds = await trustifiedContract.getTokenIds(
-                Number(eventId)
-              );
+          const mintStaus = await trustifiedContract.getMintStatus();
+          if (mintStaus == true) {
+            firebasedata.contract = trustifiedContract.address;
+            firebasedata.userId = userId;
+            firebasedata.eventId = parseInt(Number(eventId));
+            firebasedata.type = type;
+            firebasedata.image = data.tokenUris[0];
+            firebasedata.templateId = "";
+            firebasedata.Nontransferable = checked == true ? "on" : "off";
+            firebasedata.txHash = txm.transactionHash;
+            firebasedata.createdBy = txm.from;
+            await addCollection(firebasedata);
 
-              var array = [];
-              for (let i = 0; i < tokenIds.length; i++) {
-                let obj = {};
-                let claimToken = generateClaimToken(20);
+            let tokenIds = await trustifiedContract.getTokenIds(
+              Number(eventId)
+            );
 
-                if (type == "badge") {
-                  array.push({
-                    ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                  });
-                }
+            var array = [];
+            for (let i = 0; i < tokenIds.length; i++) {
+              let obj = {};
+              let claimToken = generateClaimToken(20);
 
-                obj.token = claimToken;
-                obj.tokenContract = trustifiedContract.address;
-                obj.tokenId = parseInt(Number(tokenIds[i]));
-                obj.claimerAddress = "";
-                obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
-                obj.chain = firebasedata.chain;
-                obj.name = "";
-                obj.type = type;
-                obj.claimed = "No";
-                obj.eventId = parseInt(Number(eventId));
-                obj.templateId = "";
-                obj.Nontransferable = checked == true ? "on" : "off";
-                obj.templateId = "";
-                obj.title = firebasedata.title;
-                obj.description = firebasedata.description;
-                obj.expireDate = firebasedata.expireDate;
-                obj.issueDate = firebasedata.issueDate;
-                obj.position = "";
-                obj.uploadCertData = "";
-                obj.txHash = txm.transactionHash;
-                obj.createdBy = txm.from;
-                await addCollectors(obj);
-              } // Generating CSV file with unique link and storing data in firebase.
-
-              let obj = {
-                type: type,
-                data: array,
-              };
-
-              const api = await axios.create({
-                baseURL:
-                  "https://trustified-backend.onrender.com/trustified/api",
-              });
-              let response = await api
-                .post("/export/csv", obj)
-                .then((res) => {
-                  return res;
-                })
-                .catch((error) => {
-                  console.log(error);
+              if (type == "badge") {
+                array.push({
+                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
                 });
+              }
 
-              const blob = new Blob([response.data], { type: "text/csv" });
+              obj.token = claimToken;
+              obj.tokenContract = trustifiedContract.address;
+              obj.tokenId = parseInt(Number(tokenIds[i]));
+              obj.claimerAddress = "";
+              obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
+              obj.chain = firebasedata.chain;
+              obj.name = "";
+              obj.type = type;
+              obj.claimed = "No";
+              obj.eventId = parseInt(Number(eventId));
+              obj.templateId = "";
+              obj.Nontransferable = checked == true ? "on" : "off";
+              obj.templateId = "";
+              obj.title = firebasedata.title;
+              obj.description = firebasedata.description;
+              obj.expireDate = firebasedata.expireDate;
+              obj.issueDate = firebasedata.issueDate;
+              obj.position = "";
+              obj.uploadCertData = "";
+              obj.txHash = txm.transactionHash;
+              obj.createdBy = txm.from;
+              await addCollectors(obj);
+            } // Generating CSV file with unique link and storing data in firebase.
 
-              const downloadLink = document.createElement("a");
-              downloadLink.href = URL.createObjectURL(blob);
-              downloadLink.download = `${firebasedata.title}.csv`;
-              downloadLink.click();
+            let obj = {
+              type: type,
+              data: array,
+            };
 
-              toast.success("Successfully created NFT collection!!");
-              resolve({ isResolved: true });
-            }
-          }, 7000);
+            const api = await axios.create({
+              baseURL: "https://trustified-backend.onrender.com/trustified/api",
+            });
+            let response = await api
+              .post("/export/csv", obj)
+              .then((res) => {
+                return res;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+
+            const blob = new Blob([response.data], { type: "text/csv" });
+
+            const downloadLink = document.createElement("a");
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${firebasedata.title}.csv`;
+            downloadLink.click();
+
+            toast.success("Successfully created NFT collection!!");
+            resolve({ isResolved: true });
+          }
         }
       } catch (err) {
         console.log(err);
