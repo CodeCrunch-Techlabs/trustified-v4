@@ -7,7 +7,7 @@ export const trustifiedContracts = {
   }, // Mainnet
   mumbai: {
     trustified: "0x8ea885E7505F8Bdf49850e0a29317554894f404d",
-  },
+  }, // Mainnet Polygon
   bsc: {
     trustified: "0x23f2933945ad729A404B1a632E0E07C06fF84512",
   },

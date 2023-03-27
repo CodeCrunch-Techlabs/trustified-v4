@@ -78,7 +78,7 @@ function GetNFTDetails() {
               >
                 <Stack
                   direction="row"
-                  justifyContent="start"
+                  justifyContent="start" 
                   alignItems="center"
                   spacing={2}
                 >
