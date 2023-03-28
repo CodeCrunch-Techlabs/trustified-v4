@@ -36,7 +36,7 @@ export default function Claim() {
   useEffect(() => {
     getClaimer(token);
     getUrl();
-  }, [token, claimer]);
+  }, [token]);
 
   async function switchNetwork(chainId) {
     await window.ethereum.request({
@@ -47,11 +47,15 @@ export default function Claim() {
   }
 
   const getUrl = () => {
-    const url = claimer?.chain === 'filecoin' && "https://filfox.info/en/message" ||
-      claimer?.chain === 'mumbai' && "https://polygonscan.com/tx" ||
-      claimer?.chain === 'goerli' && "https://goerli.etherscan.io/tx" ||
-      claimer?.chain === 'bsc' && "https://bscscan.com/tx";
-    setUrl(url);
+    // console.log(claimer,"claimer");
+    // const url = claimer.chain === 'filecoin' && "https://filfox.info/en/message" ||
+    //   claimer.chain === 'mumbai' && "https://polygonscan.com/tx" ||
+    //   claimer.chain === 'goerli' && "https://goerli.etherscan.io/tx" ||
+    //   claimer.chain === "fevm"  && "https://bscscan.com/tx" ||
+    //   claimer.chain === 'bsc' && "https://bscscan.com/tx";
+
+    //   console.log(url,"url");
+    // setUrl(url);
   }
 
   return (

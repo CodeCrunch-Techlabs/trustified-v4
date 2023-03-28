@@ -219,7 +219,7 @@ export const Web3ContextProvider = (props) => {
         }
 
         let txm = await transactionMint.wait();
-
+console.log(txm,"txm");
         if (txm) {
           var event;
           if (type == "badge") {
@@ -310,8 +310,8 @@ export const Web3ContextProvider = (props) => {
         }
       } catch (err) {
         console.log(err);
-        toast.error("Something want wrong!!", err);
-        return false;
+        toast.error("Something want wrong!!", err); 
+        resolve({ isResolved: true });
       }
     });
   };
