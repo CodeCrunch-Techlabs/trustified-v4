@@ -6,7 +6,7 @@ export const trustifiedContracts = {
     trustified: "0x4fa7ACf6bCa32F91A7CC51110f755472e51c85e3",
   }, // Mainnet
   mumbai: {
-    trustified: "0x8ea885E7505F8Bdf49850e0a29317554894f404d",
+    trustified: "0x5956122E1d0dE03C1b371F952c9B41341b48fB0b",
   },
   bsc: {
     trustified: "0x23f2933945ad729A404B1a632E0E07C06fF84512",
@@ -16,7 +16,7 @@ export const trustifiedContracts = {
 export const chain = {
   3141: "fevm",
   314: "filecoin",
-  137: "mumbai",
+  80001: "mumbai",
   5: "goerli",
   97: "bsc",
 };

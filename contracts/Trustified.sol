@@ -4,23 +4,48 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./comman/ERC721URIStorage.sol";
 
-contract Trustified is ERC721URIStorage {
+contract Trustified is ERC721URIStorage, ReentrancyGuard {
+    using SafeMath for uint256;
+    address payable public owner;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
-    bool public allTokenMinted;
+    uint256 public creationFees = 0.001 ether;
+    uint256 public claimFees = 20;
 
-    mapping(uint256 => uint256[]) public tokenIds; // Every event Id will have list of tokenIds.
-    mapping(uint256 => address) public issuers; // To get the issuer address from the event Id.
-    mapping(uint256 => bool) private _nonTransferable; // TokenId with the bool value which defines if token is tranferable or non-tranferable.
+    event TokensMinted(uint256 indexed eventId, uint256[] tokenIds, address indexed issuer);
 
-    event TokenMinted(address, uint256);
+    constructor() ERC721("Trustified1", "TF1") {
+       owner = payable(msg.sender);
+    }
 
-    constructor() ERC721("ItsTrustified", "ITF") {}
+    struct token {
+    uint256 tokenId;
+    address payable creator;
+    uint256 price;
+    bool nonTransferable;
+  }
+
+    mapping(uint256 => token) private tokens;
+
+    modifier onlyOwner() {
+       require(msg.sender == owner, "Only the contract owner can call this function.");
+       _;
+    }
+
+    function setCreationFees(uint256 _creationFees) public onlyOwner {
+        creationFees = _creationFees;
+    }
+    
+    function setClaimFees(uint256 _claimFees) public onlyOwner {
+        require(_claimFees <= 100, "Invalid claim amount");
+        claimFees = _claimFees;
+    }
 
     /**
      * @dev value == 0 is for to check the nft we are minting is for certificate or badges. For badges we set tokenURI in mint.
@@ -45,42 +70,33 @@ contract Trustified is ERC721URIStorage {
      * @param tokenUri Metadata of nft.
      * @param quantity Number of nft needs to be minted for particular event Id.
      * @param value 0 means it's Badges and 1 means it's certificates.
+    * @param price Price of nft.
      */
     function bulkMintERC721(
         string calldata tokenUri,
         uint256 quantity,
         uint256 value,
-        bool nonTransferable
-    ) external {
+        bool nonTransferable,
+        uint256 price
+    ) external payable nonReentrant {
         require(quantity > 0, "Invalid quantity"); // validate quantity is a non-zero positive integer
         require(value >= 0 && value <= 1, "Invalid value");
+        require(msg.value == creationFees, "Amount must be equal to creation fees");
         uint256 eventId = _eventIdCounter.current();
         _eventIdCounter.increment();
+        uint256[] memory tokenIds = new uint256[](quantity);
         for (uint256 i = 0; i < quantity; i++) {
             uint256 tokenId = safeMint(tokenUri, value);
-            tokenIds[eventId].push(tokenId);
-            issuers[eventId] = msg.sender;
-            _nonTransferable[tokenId] = nonTransferable;
-            uint256 totalMinted = tokenId + 1;
-            if (totalMinted == quantity) {
-                allTokenMinted = true;
-            }
+             tokens[tokenId] =  token (
+                           tokenId,
+                           payable(msg.sender),
+                           price,
+                           nonTransferable
+                    );
+            tokenIds[i] = tokenId;
         }
-        emit TokenMinted(msg.sender, eventId);
-    }
-
-    function getMintStatus() external view returns (bool) {
-        return allTokenMinted;
-    }
-
-    /**
-     * @dev Function to get tokenIds minted for particular event Id.
-     * @param eventId event Id created during mint.
-     */
-    function getTokenIds(
-        uint256 eventId
-    ) external view returns (uint256[] memory) {
-        return tokenIds[eventId];
+        owner.transfer(msg.value);
+        emit TokensMinted(eventId, tokenIds, msg.sender);
     }
 
     function _beforeTokenTransfer(
@@ -91,7 +107,7 @@ contract Trustified is ERC721URIStorage {
     ) internal virtual override {
         if (from != address(this)) {
             require(
-                _nonTransferable[firstTokenId] != true,
+                tokens[firstTokenId].nonTransferable != true,
                 "Not allowed to transfer token"
             );
         }
@@ -111,8 +127,9 @@ contract Trustified is ERC721URIStorage {
         uint256 tokenId,
         string calldata tokenURI,
         uint256 value
-    ) external {
+    ) external payable nonReentrant{
         require(value >= 0 && value <= 1, "Invalid value");
+        // require(msg.value == tokens[tokenId].price, "Amount must be equal to price of token");
         if (value == 1) {
             _setTokenURI(tokenId, tokenURI);
         }
@@ -122,8 +139,20 @@ contract Trustified is ERC721URIStorage {
                 "ERC721: transfer caller is not owner nor approved"
             );
             _transfer(_msgSender(), to, tokenId);
+            claimRoyality(tokenId);
         } else {
             _transfer(from, to, tokenId);
+             claimRoyality(tokenId);
         }
     }
+
+    function claimRoyality(uint256 tokenId) public payable{
+            uint256 price = msg.value;
+             uint256 claimFee = price.mul(claimFees).div(100);
+             owner.transfer(claimFee);
+             uint256 creatorFees  = price.sub(claimFee);
+             payable(tokens[tokenId].creator).transfer(creatorFees); 
+     }
+
+ 
 }

@@ -85,6 +85,7 @@ export const BadgeContextProvider = (props) => {
           claimer: "",
           expireDate: labelInfo.formData.expireDate,
           issueDate: labelInfo.formData.issueDate,
+          price: "0.001",
         });
         array.push(metadata.ipnft);
       } else {
@@ -113,6 +114,7 @@ export const BadgeContextProvider = (props) => {
           claimer: "",
           expireDate: labelInfo.formData.expireDate,
           issueDate: labelInfo.formData.issueDate,
+           price: "0.001",
         });
 
         array.push(metadata.ipnft);
