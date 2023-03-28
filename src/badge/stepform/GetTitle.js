@@ -67,13 +67,14 @@ function GetTitle() {
                 await switchNetwork(ethers.utils.hexValue(314));
               } else if (e.target.value == "fevm" && chainId !== 3141) {
                 await switchNetwork(ethers.utils.hexValue(3141));
-              } else if (e.target.value == "mumbai" && chainId !== 137) {
+              } else if (e.target.value == "mumbai" && chainId !== 80001) {
                 await switchNetwork(ethers.utils.hexValue(137));
               } else if (e.target.value == "goerli" && chainId !== 5) {
                 await switchNetwork(ethers.utils.hexValue(5));
               } else if (e.target.value == "bsc" && chainId !== 97) {
                 await switchNetwork(ethers.utils.hexValue(97));
               }
+              // setChain(e.target.value)
             }}
           >
             <Stack

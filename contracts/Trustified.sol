@@ -80,10 +80,6 @@ contract Trustified is ERC721URIStorage {
     function getTokenIds(
         uint256 eventId
     ) external view returns (uint256[] memory) {
-        require(
-            issuers[eventId] == msg.sender,
-            "Only issuer of this event can be access the tokenIds!"
-        );
         return tokenIds[eventId];
     }
 

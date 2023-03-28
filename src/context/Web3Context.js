@@ -434,6 +434,21 @@ console.log(txm,"txm");
     });
   };
 
+  const getNetworkToken = (network) => {
+    var token;
+    if (network == "fevm") {
+      token = "fevm";
+    } else if (network == "filecoin") {
+      token = "filecoin";
+    } else if (network == "mumbai") {
+      token = "mumbai";
+    } else if (network == "goerli") {
+      token = "goerli";
+    } else {
+      token = "bsc";
+    }
+  };
+
   const claimCertificate = async (
     claimToken,
     claimerAddress,
@@ -467,7 +482,10 @@ console.log(txm,"txm");
       }
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
-      var text = `Certificate Id: #${claimer?.tokenId}`;
+      let network = await getNetworkToken(claimer?.chain);
+
+      console.log(claimer, "claimer");
+      var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
 
       // Set the font size and style for the footer text
 
@@ -492,6 +510,8 @@ console.log(txm,"txm");
       const pdfBlob = pdf.output("blob");
       return { imageData, pdfBlob };
     });
+
+    pdf.save();
 
     const imageFile = new File(
       [pdfBlob.imageData],
@@ -635,7 +655,9 @@ console.log(txm,"txm");
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
-      var text = `Certificate Id: #${claimer?.tokenId}`;
+      let network = await getNetworkToken(claimer?.chain);
+
+      var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
 
       // Set the font size and style for the footer text
       pdf.setFontSize(17);
@@ -801,7 +823,7 @@ console.log(txm,"txm");
               claimed: "Yes",
             });
             toast.success("Claimed Certificate Successfully!");
-            window.open(fire.data().ipfsurl, "_blank");
+
             setClaimLoading(false);
           }
         } else {
@@ -829,7 +851,6 @@ console.log(txm,"txm");
               claimed: "Yes",
             });
             toast.success("Claimed Certificate Successfully!");
-            window.open(fire.data().ipfsurl, "_blank");
             setClaimLoading(false);
           }
         }
