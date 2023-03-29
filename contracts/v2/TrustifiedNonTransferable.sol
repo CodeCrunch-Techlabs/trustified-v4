@@ -6,17 +6,17 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
-import "./comman/ERC721URIStorage.sol";
+import "../comman/ERC721URIStorage.sol";
 
-contract Trustified is ERC721URIStorage, ReentrancyGuard {
+contract TrustifiedNonTransferable is ERC721URIStorage, ReentrancyGuard {
     using SafeMath for uint256;
     address payable public owner;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
-    uint256 public creationFees = 0 ether;
-    uint256 public claimFees = 0;
+    uint256 public creationFees = 0.001 ether;
+    uint256 public claimFees = 20;
 
     event TokensMinted(uint256 indexed eventId, uint256[] tokenIds, address indexed issuer);
 
@@ -28,7 +28,6 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
     uint256 tokenId;
     address payable creator;
     uint256 price;
-    bool nonTransferable;
   }
 
     mapping(uint256 => token) private tokens;
@@ -76,7 +75,6 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         string calldata tokenUri,
         uint256 quantity,
         uint256 value,
-        bool nonTransferable,
         uint256 price
     ) external payable nonReentrant {
         require(quantity > 0, "Invalid quantity"); // validate quantity is a non-zero positive integer
@@ -90,8 +88,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
              tokens[tokenId] =  token (
                            tokenId,
                            payable(msg.sender),
-                           price,
-                           nonTransferable
+                           price
                     );
             tokenIds[i] = tokenId;
         }
@@ -105,12 +102,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint256 firstTokenId,
         uint256 batchSize
     ) internal virtual override {
-        if (from != address(this)) {
-            require(
-                tokens[firstTokenId].nonTransferable != true,
-                "Not allowed to transfer token"
-            );
-        }
+        require(from == address(this), "Not allowed to transfer token");
     }
 
     /**

@@ -215,15 +215,16 @@ export const Web3ContextProvider = (props) => {
             parseInt(firebasedata.quantity),
             0,
             checked,
-            ethers.utils.parseEther("0.001"),
-            { value: ethers.utils.parseEther("0.001") }
+            ethers.utils.parseEther("0"),
+            { value: ethers.utils.parseEther("0") }
           ); // Bulk Mint NFT collection.
         }
 
         let txm = await transactionMint.wait();
 
         if (txm) {
-          var event = await txm.events[parseInt(firebasedata.quantity) + 2];
+          console.log(txm);
+          var event = await txm.events[parseInt(firebasedata.quantity)];
 
           var eventId = await event?.args[0];
           var tokenIds = await event?.args[1];
