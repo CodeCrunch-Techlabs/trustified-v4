@@ -207,93 +207,85 @@ export const Web3ContextProvider = (props) => {
           trustifiedContractAbi.abi,
           signer
         );
-        var transactionMint;
-        if (type == "badge") {
-          transactionMint = await trustifiedContract.bulkMintERC721(
-            data.tokenUris[0],
-            parseInt(firebasedata.quantity),
-            0,
-            checked,
-            ethers.utils.parseEther("0.001"),
-            { value: ethers.utils.parseEther("0.001") }
-          ); // Bulk Mint NFT collection.
-        }
 
-        let txm = await transactionMint.wait(); 
-        if (txm) {
-          // var event = await txm.events[parseInt(firebasedata.quantity)];
-           var event= await txm.events.map(async (e) => {
-            if (e.event === "TokensMinted") {  
-              var eventId = await e?.args[0];
-              var tokenIds = await e?.args[1];
-              firebasedata.contract = trustifiedContract.address;
-              firebasedata.userId = userId;
-              firebasedata.eventId = parseInt(Number(eventId));
-              firebasedata.type = type;
-              firebasedata.image = data.tokenUris[0];
-              firebasedata.templateId = "";
-              firebasedata.Nontransferable = checked == true ? "on" : "off";
-              firebasedata.txHash = txm.transactionHash;
-              firebasedata.createdBy = txm.from; 
-              await addCollection(firebasedata);
+        var transactionMint = await trustifiedContract.bulkMintERC721(
+          data.tokenUris[0],
+          parseInt(firebasedata.quantity),
+          0,
+          checked
+        ); // Bulk Mint NFT collection.
 
-              var array = [];
-              for (let i = 0; i < tokenIds.length; i++) {
-                let obj = {};
-                let claimToken = generateClaimToken(20);
-                if (type == "badge") {
-                  array.push({
-                    ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                  });
-                }
-                obj.token = claimToken;
-                obj.tokenContract = trustifiedContract.address;
-                obj.tokenId = parseInt(Number(tokenIds[i]));
-                obj.claimerAddress = "";
-                obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
-                obj.chain = firebasedata.chain;
-                obj.name = "";
-                obj.type = type;
-                obj.claimed = "No";
-                obj.eventId = parseInt(Number(eventId));
-                obj.templateId = "";
-                obj.Nontransferable = checked == true ? "on" : "off";
-                obj.templateId = "";
-                obj.title = firebasedata.title;
-                obj.description = firebasedata.description;
-                obj.expireDate = firebasedata.expireDate;
-                obj.issueDate = firebasedata.issueDate;
-                obj.position = "";
-                obj.uploadCertData = "";
-                obj.txHash = txm.transactionHash;
-                obj.createdBy = txm.from; 
-                await addCollectors(obj);
-              } // Generating CSV file with unique link and storing data in firebase.
-              let obj = {
-                type: type,
-                data: array,
-              };
-              const api = await axios.create({
-                baseURL: "https://trustified-backend.onrender.com/trustified/api",
-              });
-              let response = await api
-                .post("/export/csv", obj)
-                .then((res) => {
-                  return res;
-                })
-                .catch((error) => {
-                  console.log(error);
+        await trustifiedContract.on(
+          "TokensMinted",
+          async (eventId, tokenIds, issuer) => {
+            let txm = await transactionMint.wait();
+            firebasedata.contract = trustifiedContract.address;
+            firebasedata.userId = userId;
+            firebasedata.eventId = parseInt(Number(eventId));
+            firebasedata.type = type;
+            firebasedata.image = data.tokenUris[0];
+            firebasedata.templateId = "";
+            firebasedata.Nontransferable = checked == true ? "on" : "off";
+            firebasedata.txHash = txm.transactionHash;
+            firebasedata.createdBy = txm.from;
+            await addCollection(firebasedata);
+
+            var array = [];
+            for (let i = 0; i < tokenIds.length; i++) {
+              let obj = {};
+              let claimToken = generateClaimToken(20);
+              if (type == "badge") {
+                array.push({
+                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
                 });
-              const blob = new Blob([response.data], { type: "text/csv" });
-              const downloadLink = document.createElement("a");
-              downloadLink.href = URL.createObjectURL(blob);
-              downloadLink.download = `${firebasedata.title}.csv`;
-              downloadLink.click();
-              toast.success("Successfully created NFT collection!!");
-              resolve({ isResolved: true });
-            }
-          })
-        }
+              }
+              obj.token = claimToken;
+              obj.tokenContract = trustifiedContract.address;
+              obj.tokenId = parseInt(Number(tokenIds[i]));
+              obj.claimerAddress = "";
+              obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
+              obj.chain = firebasedata.chain;
+              obj.name = "";
+              obj.type = type;
+              obj.claimed = "No";
+              obj.eventId = parseInt(Number(eventId));
+              obj.templateId = "";
+              obj.Nontransferable = checked == true ? "on" : "off";
+              obj.templateId = "";
+              obj.title = firebasedata.title;
+              obj.description = firebasedata.description;
+              obj.expireDate = firebasedata.expireDate;
+              obj.issueDate = firebasedata.issueDate;
+              obj.position = "";
+              obj.uploadCertData = "";
+              obj.txHash = txm.transactionHash;
+              obj.createdBy = txm.from;
+              await addCollectors(obj);
+            } // Generating CSV file with unique link and storing data in firebase.
+            let obj = {
+              type: type,
+              data: array,
+            };
+            const api = await axios.create({
+              baseURL: "https://trustified-backend.onrender.com/trustified/api",
+            });
+            let response = await api
+              .post("/export/csv", obj)
+              .then((res) => {
+                return res;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            const blob = new Blob([response.data], { type: "text/csv" });
+            const downloadLink = document.createElement("a");
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = `${firebasedata.title}.csv`;
+            downloadLink.click();
+            toast.success("Successfully created NFT collection!!");
+            resolve({ isResolved: true });
+          }
+        );
       } catch (err) {
         console.log(err);
         toast.error("Something want wrong!!", err);
@@ -488,8 +480,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -659,8 +651,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -773,7 +765,7 @@ export const Web3ContextProvider = (props) => {
     });
   };
 
-  const claimBadges = async (claimToken, claimerAddress, price) => {
+  const claimBadges = async (claimToken, claimerAddress) => {
     setClaimLoading(true);
     const q = query(
       collection(db, "Collectors"),
@@ -796,9 +788,7 @@ export const Web3ContextProvider = (props) => {
             claimerAddress,
             fire.data().tokenId,
             "",
-            0,
-
-            { value: ethers.utils.parseEther(price.toString()) }
+            0
           );
 
           const txt = await transferTokenTransaction.wait();
@@ -826,8 +816,7 @@ export const Web3ContextProvider = (props) => {
             claimerAddress,
             fire.data().tokenId,
             "",
-            0,
-            { value: ethers.utils.parseEther(price.toString()) }
+            0
           );
 
           const txt = await transferTokenTransaction.wait();

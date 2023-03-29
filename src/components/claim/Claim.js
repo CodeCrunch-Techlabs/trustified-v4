@@ -159,7 +159,7 @@ export default function Claim() {
                   }
 
                   if (claimer?.type == "badge") {
-                    await claimBadges(token, add, claimer?.price);
+                    await claimBadges(token, add);
                   } else {
                     if (
                       claimer?.position != "" &&
@@ -196,7 +196,7 @@ export default function Claim() {
                       </p>
                     </>
                   ) : (
-                    `Buy ${claimer?.price}ETH`
+                    "Claim"
                   )}
                 </span>
               </a>
