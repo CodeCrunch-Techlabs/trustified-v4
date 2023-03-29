@@ -15,37 +15,20 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
-    uint256 public creationFees = 0 ether;
-    uint256 public claimFees = 0;
-
     event TokensMinted(uint256 indexed eventId, uint256[] tokenIds, address indexed issuer);
 
-    constructor() ERC721("Trustified1", "TF1") {
+    constructor() ERC721("TrustifiedTest", "TFT") {
        owner = payable(msg.sender);
     }
 
     struct token {
     uint256 tokenId;
     address payable creator;
-    uint256 price;
+    address payable owner;
     bool nonTransferable;
   }
 
     mapping(uint256 => token) private tokens;
-
-    modifier onlyOwner() {
-       require(msg.sender == owner, "Only the contract owner can call this function.");
-       _;
-    }
-
-    function setCreationFees(uint256 _creationFees) public onlyOwner {
-        creationFees = _creationFees;
-    }
-    
-    function setClaimFees(uint256 _claimFees) public onlyOwner {
-        require(_claimFees <= 100, "Invalid claim amount");
-        claimFees = _claimFees;
-    }
 
     /**
      * @dev value == 0 is for to check the nft we are minting is for certificate or badges. For badges we set tokenURI in mint.
@@ -70,18 +53,15 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
      * @param tokenUri Metadata of nft.
      * @param quantity Number of nft needs to be minted for particular event Id.
      * @param value 0 means it's Badges and 1 means it's certificates.
-    * @param price Price of nft.
      */
     function bulkMintERC721(
         string calldata tokenUri,
         uint256 quantity,
         uint256 value,
-        bool nonTransferable,
-        uint256 price
-    ) external payable nonReentrant {
+        bool nonTransferable
+    ) external nonReentrant {
         require(quantity > 0, "Invalid quantity"); // validate quantity is a non-zero positive integer
         require(value >= 0 && value <= 1, "Invalid value");
-        require(msg.value == creationFees, "Amount must be equal to creation fees");
         uint256 eventId = _eventIdCounter.current();
         _eventIdCounter.increment();
         uint256[] memory tokenIds = new uint256[](quantity);
@@ -90,12 +70,11 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
              tokens[tokenId] =  token (
                            tokenId,
                            payable(msg.sender),
-                           price,
+                           payable(msg.sender),
                            nonTransferable
                     );
             tokenIds[i] = tokenId;
         }
-        owner.transfer(msg.value);
         emit TokensMinted(eventId, tokenIds, msg.sender);
     }
 
@@ -127,9 +106,8 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint256 tokenId,
         string calldata tokenURI,
         uint256 value
-    ) external payable nonReentrant{
+    ) external nonReentrant{
         require(value >= 0 && value <= 1, "Invalid value");
-        require(msg.value == tokens[tokenId].price, "Amount must be equal to price of token");
         if (value == 1) {
             _setTokenURI(tokenId, tokenURI);
         }
@@ -139,20 +117,10 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
                 "ERC721: transfer caller is not owner nor approved"
             );
             _transfer(_msgSender(), to, tokenId);
-            claimRoyality(tokenId);
         } else {
             _transfer(from, to, tokenId);
-             claimRoyality(tokenId);
         }
+
     }
-
-    function claimRoyality(uint256 tokenId) public payable{
-            uint256 price = msg.value;
-             uint256 claimFee = price.mul(claimFees).div(100);
-             owner.transfer(claimFee);
-             uint256 creatorFees  = price.sub(claimFee);
-             payable(tokens[tokenId].creator).transfer(creatorFees); 
-     }
-
  
 }
