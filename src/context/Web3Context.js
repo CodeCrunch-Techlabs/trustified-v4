@@ -208,7 +208,6 @@ export const Web3ContextProvider = (props) => {
           signer
         );
         var transactionMint;
-
         if (type == "badge") {
           transactionMint = await trustifiedContract.bulkMintERC721(
             data.tokenUris[0],
@@ -219,9 +218,14 @@ export const Web3ContextProvider = (props) => {
             { value: ethers.utils.parseEther("0") }
           ); // Bulk Mint NFT collection.
         }
-
+        await trustifiedContract.on("TokensMinted", (eventId, tokenId, issuer) => {
+          console.log({
+            eventId, tokenId, issuer
+          });
+        });
+        console.log(transactionMint, "transactionMint");
         let txm = await transactionMint.wait();
-
+        console.log(txm, "txt");
         if (txm) {
           console.log(txm);
           var event = await txm.events[parseInt(firebasedata.quantity)];
@@ -488,8 +492,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -659,8 +663,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
