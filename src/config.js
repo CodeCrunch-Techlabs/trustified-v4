@@ -6,7 +6,7 @@ export const trustifiedContracts = {
     trustified: "0x4fa7ACf6bCa32F91A7CC51110f755472e51c85e3",
   }, // Mainnet
   mumbai: {
-    trustified: "0x5956122E1d0dE03C1b371F952c9B41341b48fB0b",
+    trustified: "0xCB9769Cd75598316E53832E6982eeE2726d88Ad8",
   },
   bsc: {
     trustified: "0x23f2933945ad729A404B1a632E0E07C06fF84512",

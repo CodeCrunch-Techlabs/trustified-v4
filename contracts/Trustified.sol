@@ -129,7 +129,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint256 value
     ) external payable nonReentrant{
         require(value >= 0 && value <= 1, "Invalid value");
-        // require(msg.value == tokens[tokenId].price, "Amount must be equal to price of token");
+        require(msg.value == tokens[tokenId].price, "Amount must be equal to price of token");
         if (value == 1) {
             _setTokenURI(tokenId, tokenURI);
         }

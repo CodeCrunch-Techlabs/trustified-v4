@@ -221,10 +221,10 @@ export const Web3ContextProvider = (props) => {
         }
 
         let txm = await transactionMint.wait();
-       
+
         if (txm) {
           var event = await txm.events[parseInt(firebasedata.quantity) + 2];
-        
+
           var eventId = await event?.args[0];
           var tokenIds = await event?.args[1];
           firebasedata.contract = trustifiedContract.address;
@@ -237,7 +237,7 @@ export const Web3ContextProvider = (props) => {
           firebasedata.txHash = txm.transactionHash;
           firebasedata.createdBy = txm.from;
           await addCollection(firebasedata);
-         
+
           var array = [];
           for (let i = 0; i < tokenIds.length; i++) {
             let obj = {};
@@ -790,8 +790,6 @@ export const Web3ContextProvider = (props) => {
             signer
           );
 
-          console.log(ethers.utils.parseEther(price.toString()));
-
           let transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
             claimerAddress,
@@ -827,7 +825,8 @@ export const Web3ContextProvider = (props) => {
             claimerAddress,
             fire.data().tokenId,
             "",
-            0
+            0,
+            { value: ethers.utils.parseEther(price.toString()) }
           );
 
           const txt = await transferTokenTransaction.wait();
