@@ -17,7 +17,7 @@ module.exports = {
       runs: 10000,
     },
   },
-  // defaultNetwork: "hyperspace",
+  defaultNetwork: "hyperspace",
   networks: {
     hardhat: {},
     hyperspace: {
