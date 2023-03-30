@@ -18,7 +18,7 @@ const steps = [
     {
         label: 'Step 2',
         description:
-            'Upload collectors list',
+            'Add Quantity of Badges you want to issue',
     },
     {
         label: 'Step 3',

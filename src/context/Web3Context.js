@@ -219,7 +219,6 @@ export const Web3ContextProvider = (props) => {
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
           
-            console.log(tokenIds,"tokenIds")
             let txm = await transactionMint.wait();
             firebasedata.contract = trustifiedContract.address;
             firebasedata.userId = userId;
@@ -284,7 +283,7 @@ export const Web3ContextProvider = (props) => {
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = `${firebasedata.title}.csv`;
             downloadLink.click();
-            toast.success("Successfully created NFT collection!!");
+            toast.success("Badges successfully issued!");
             resolve({ isResolved: true });
           }
         );
@@ -320,8 +319,7 @@ export const Web3ContextProvider = (props) => {
           1,
           formData.Nontransferable == "on" ? true : false ,  
         );
-        console.log(transactionMint,"transactionMint");
-        await trustifiedContract.on(
+        await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
             let txm = await transactionMint.wait();
@@ -393,7 +391,7 @@ export const Web3ContextProvider = (props) => {
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = `${formData.title}.csv`;
             downloadLink.click();
-            toast.success("Certificates Successfully issued!");
+            toast.success("Certificate Successfully issued!");
             resolve({ isResolved: true });
           }
         );
@@ -428,7 +426,6 @@ export const Web3ContextProvider = (props) => {
     textFamily
   ) => {
     setClaimLoading(true);
-    console.log("claimCertificate");
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
@@ -455,7 +452,6 @@ export const Web3ContextProvider = (props) => {
 
       let network = await getNetworkToken(claimer?.chain);
 
-      console.log(claimer, "claimer");
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
 
       // Set the font size and style for the footer text
@@ -508,7 +504,6 @@ export const Web3ContextProvider = (props) => {
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
-    console.log(metadata, "metadata");
 
     // let meta = await axios.get(
     //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
@@ -522,7 +517,6 @@ export const Web3ContextProvider = (props) => {
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach(async (fire) => {
-      console.log(fire.data(), "data");
       try {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
@@ -531,7 +525,6 @@ export const Web3ContextProvider = (props) => {
             signer
           );
 
-          console.log(trustifiedContract, "trustifiedContract");
 
           let transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
@@ -551,7 +544,7 @@ export const Web3ContextProvider = (props) => {
               txHash: txt.transactionHash,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         } else {
@@ -581,12 +574,14 @@ export const Web3ContextProvider = (props) => {
               txHash: txt.transactionHash,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         }
       } catch (error) {
-        toast.error("This certificate is already claimed!");
+        toast.error(
+          "Something went wrong! or This certificate is already claimed!"
+        );
         setClaimLoading(false);
         console.log(error);
       }
@@ -719,7 +714,7 @@ export const Web3ContextProvider = (props) => {
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
               txHash: txt.transactionHash,
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         } else {
@@ -749,13 +744,15 @@ export const Web3ContextProvider = (props) => {
               txHash: txt.transactionHash,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
 
             setClaimLoading(false);
           }
         }
       } catch (error) {
-        toast.error("This certificate is already claimed!");
+        toast.error(
+          "Something went wrong! or This certificate is already claimed!"
+        );
         setClaimLoading(false);
         console.log(error);
       }
@@ -798,7 +795,7 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               txHash: txt.transactionHash,
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Badge Successfully claimed!");
 
             setClaimLoading(false);
           }
@@ -827,12 +824,14 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               txHash: txt.transactionHash,
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Badge Successfully claimed!");
             setClaimLoading(false);
           }
         }
       } catch (error) {
-        toast.error("This certificate is already claimed!");
+        toast.error(
+          "Something went wrong! or This certificate is already claimed!"
+        );
         setClaimLoading(false);
         console.log(error);
       }

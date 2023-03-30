@@ -33,7 +33,7 @@ const GetCsvFile = () => {
               />
             </Box>
 
-            {validity == "limited" ? (
+            {/* {validity == "limited" ? (
               <Box sx={{ display: "flex", justifyContent: "start", m: 2 }}>
                 <TextField
                   id="date"
@@ -80,10 +80,10 @@ const GetCsvFile = () => {
                   </RadioGroup>
                 </FormControl>
               </Box>
-            )}
+            )} */}
 
             <Divider />
-            <FormControlLabel
+            {/* <FormControlLabel
               sx={{ m: 2 }}
               control={
                 <Switch
@@ -93,7 +93,7 @@ const GetCsvFile = () => {
               }
               label="Soulbound NFT"
             />
-            <FormHelperText>Make your NFT non-transferable</FormHelperText>
+            <FormHelperText>Make your NFT non-transferable</FormHelperText> */}
           </Stack>
         </div>
       </div>
