@@ -320,7 +320,6 @@ export const Web3ContextProvider = (props) => {
           1,
           formData.Nontransferable == "on" ? true : false , 
         );
-<<<<<<< HEAD
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
@@ -397,88 +396,6 @@ export const Web3ContextProvider = (props) => {
             resolve({ isResolved: true });
           }
         );
-=======
-
-        
-        console.log(transactionMint,"transactionMint");
-        await trustifiedContract.on(
-          "TokensMinted",
-          async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait(); 
-            if (txm) { 
-              var eventId = eventId ; 
-                formData.contract = trustifiedContract.address;
-                formData.userId = userId;
-                formData.eventId = parseInt(Number(eventId));
-                formData.type = type;
-                formData.image = previewUrl ? previewUrl : template.preview;
-                formData.templateId = templateId;
-                formData.txHash = txm.transactionHash;
-                formData.createdBy = issuer;
-                await addCollection(formData);  
-
-                var array = []; 
-                
-                for (let i = 0; i < tokenIds.length; i++) {
-                  let obj = {};
-                  let claimToken = generateClaimToken(20); 
-
-                    array.push({
-                      Name: csvdata[i].name,
-                      ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                    }); 
-
-                  obj.token = claimToken;
-                  obj.tokenContract = trustifiedContract.address;
-                  obj.tokenId = parseInt(Number(tokenIds[i]));
-                  obj.claimerAddress = "";
-                  obj.ipfsurl = previewUrl ? previewUrl : "";
-                  obj.chain = formData.chain;
-                  obj.name = csvdata[i].name;
-                  obj.type = type;
-                  obj.claimed = "No";
-                  obj.eventId = parseInt(Number(eventId));
-                  obj.Nontransferable = formData.Nontransferable;
-                  obj.templateId = previewUrl ? "" : templateId;
-                  obj.title = formData.title;
-                  obj.description = formData.description;
-                  obj.expireDate = formData.expireDate;
-                  obj.issueDate = formData.issueDate;
-                  obj.position = previewUrl ? position : "";
-                  obj.uploadCertData = previewUrl ? uploadObj.name : "";
-                  obj.txHash = txm.transactionHash;
-                  obj.createdBy = txm.from;
-                  await addCollectors(obj);
-                } // Generating CSV file with unique link and storing data in firebase.
-                let obj = {
-                  type: type,
-                  data: array,
-                };
-
-                const api = await axios.create({
-                  baseURL: "https://trustified-backend.onrender.com/trustified/api",
-                });
-                let response = await api
-                  .post("/export/csv", obj)
-                  .then((res) => {
-                    return res;
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-
-                const blob = new Blob([response.data], { type: "text/csv" });
-
-                const downloadLink = document.createElement("a");
-                downloadLink.href = URL.createObjectURL(blob);
-                downloadLink.download = `${formData.title}.csv`;
-                downloadLink.click(); 
-                toast.success("Successfully created NFT collection!!"); 
-                resolve({ isResolved: true }); 
-            }
-            return reject("Transaction is Failed!"); 
-          }) 
->>>>>>> contract-updates-1
       } catch (err) {
         // console.log(err);
         // toast.error("Something want wrong!!", err);
@@ -510,11 +427,7 @@ export const Web3ContextProvider = (props) => {
     textcolor,
     textFamily
   ) => {
-<<<<<<< HEAD
     setClaimLoading(true);
-=======
-    setClaimLoading(true); 
->>>>>>> contract-updates-1
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
