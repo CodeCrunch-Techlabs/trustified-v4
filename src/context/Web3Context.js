@@ -312,15 +312,12 @@ export const Web3ContextProvider = (props) => {
           trustifiedContractAbi.abi,
           signer
         );
-        const gasFee = csvdata.length > 500 ? 8000000 : 6000000;
+        
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false ,
-          {
-            gasLimit: gasFee
-          }
+          formData.Nontransferable == "on" ? true : false ,  
         );
         console.log(transactionMint,"transactionMint");
         await trustifiedContract.on(
@@ -402,8 +399,8 @@ export const Web3ContextProvider = (props) => {
             }
           }) 
       } catch (err) {
-        console.log(err);
-        toast.error("Something want wrong!!", err);
+        // console.log(err);
+        // toast.error("Something want wrong!!", err);
         return reject(err);  
       }
     });

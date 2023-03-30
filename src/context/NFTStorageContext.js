@@ -7,6 +7,7 @@ import html2canvas from "html2canvas";
 import { Web3Context } from "./Web3Context";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 export const NFTStorageContext = createContext(undefined);
 
@@ -97,7 +98,10 @@ export const NFTStorageContextProvider = (props) => {
         ).then((e) => {
           setUploading(false);
           setUploadObj("")
-        }); 
+        }).catch((error) => {
+          setUploading(false);
+          toast.error(error.message)
+        });
       } else {
         createNftFunction(
           csvData,
@@ -110,6 +114,9 @@ export const NFTStorageContextProvider = (props) => {
         ).then((res) => {
           setUploading(false);
           setUploadObj("")
+        }).catch((error) => {
+          setUploading(false);
+          toast.error(error.message)
         });
       }  
     } catch (error) {
