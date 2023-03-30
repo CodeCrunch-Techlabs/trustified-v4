@@ -215,9 +215,10 @@ export const Web3ContextProvider = (props) => {
           checked
         ); // Bulk Mint NFT collection.
 
-        await trustifiedContract.on(
+        await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
+            console.log(tokenIds,"tokenIds")
             let txm = await transactionMint.wait();
             firebasedata.contract = trustifiedContract.address;
             firebasedata.userId = userId;

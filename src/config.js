@@ -1,6 +1,6 @@
 export const trustifiedContracts = {
   fevm: {
-    trustified: "0x9Dd7773eD144F0B5169a799F6048f7283F127081",
+    trustified: "0x3FeC8276A291b53F986F4840Beae541C493226c8",
   }, // Testnet
   filecoin: {
     trustified: "0x4fa7ACf6bCa32F91A7CC51110f755472e51c85e3",
