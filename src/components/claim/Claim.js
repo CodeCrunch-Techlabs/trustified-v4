@@ -47,10 +47,10 @@ export default function Claim() {
 
   const getUrl = (chain) => {
     const url =
-      (chain === "filecoin" && "https://filfox.info/en/tx") ||
+      (chain === "fvm" && "https://filfox.info/en/tx") ||
       (chain === "mumbai" && "https://polygonscan.com/tx") ||
       (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
-      (chain === "fevm" && "https://hyperspace.filfox.info/en/tx") ||
+      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
       (chain === "bsc" && "https://bscscan.com/tx");
     return url;
   };
@@ -147,9 +147,9 @@ export default function Claim() {
                 className="thm-btn header__cta-btn"
                 onClick={async () => {
                   const { chainId } = await provider.getNetwork();
-                  if (claimer.chain == "filecoin" && chainId !== 314) {
+                  if (claimer.chain == "fvm" && chainId !== 314) {
                     await switchNetwork(ethers.utils.hexValue(314));
-                  } else if (claimer.chain == "fevm" && chainId !== 3141) {
+                  } else if (claimer.chain == "fvmtestnet" && chainId !== 3141) {
                     await switchNetwork(ethers.utils.hexValue(3141));
                   } else if (claimer.chain == "mumbai" && chainId !== 80001) {
                     await switchNetwork(ethers.utils.hexValue(137));

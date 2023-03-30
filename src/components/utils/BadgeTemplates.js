@@ -19,7 +19,7 @@ export const data = [
     },
     {
         id:3,
-        title: 'FEVM Space Wrap', 
+        title: 'FVM Space Wrap', 
         img: "cert2.png",
         sub: "Trustified Badges",
         bg: "bg2.png",

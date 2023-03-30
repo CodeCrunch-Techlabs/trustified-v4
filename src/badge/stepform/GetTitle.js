@@ -63,9 +63,9 @@ function GetTitle() {
             value={formdata.chain}
             onChange={async (e) => {
               const { chainId } = await provider.getNetwork();
-              if (e.target.value == "filecoin" && chainId !== 314) {
+              if (e.target.value == "fvm" && chainId !== 314) {
                 await switchNetwork(ethers.utils.hexValue(314));
-              } else if (e.target.value == "fevm" && chainId !== 3141) {
+              } else if (e.target.value == "fvmtestnet" && chainId !== 3141) {
                 await switchNetwork(ethers.utils.hexValue(3141));
               } else if (e.target.value == "mumbai" && chainId !== 80001) {
                 await switchNetwork(ethers.utils.hexValue(80001));
@@ -84,18 +84,18 @@ function GetTitle() {
               spacing={2}
             >
               <FormControlLabel
-                value="filecoin"
+                value="fvm"
                 control={<Radio />}
-                label="Filecoin(Mainnet)"
+                label="FVM(Mainnet)"
                 onChange={value.setFormdata("chain")}
               />
               <FormControlLabel
-                value="fevm"
+                value="fvmtestnet"
                 control={<Radio />}
                 label="FVM Testnet(Hyperspace)"
                 onChange={value.setFormdata("chain")}
               />
-              <FormControlLabel
+              {/* <FormControlLabel
                 value="mumbai"
                 control={<Radio />}
                 label="Polygon Mumbai"
@@ -112,7 +112,7 @@ function GetTitle() {
                 control={<Radio />}
                 label="BSC"
                 onChange={value.setFormdata("chain")}
-              />
+              /> */}
             </Stack>
           </RadioGroup>
         </FormControl>

@@ -290,6 +290,7 @@ export const FirebaseDataContextProvider = (props) => {
         obj.expireDate = fire.data().expireDate;
         obj.createdBy = fire.data().createdBy;
         obj.txHash = fire.data().txHash;
+    
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);

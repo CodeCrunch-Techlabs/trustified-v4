@@ -24,7 +24,7 @@ export const BadgeContextProvider = (props) => {
       description: "",
       template: "",
       name: "",
-      chain: "fevm",
+      chain: "fvm",
       badgeName: "",
       Nontransferable: true,
       quantity: 0,

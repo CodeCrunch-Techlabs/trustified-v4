@@ -1,8 +1,8 @@
 export const trustifiedContracts = {
-  fevm: {
+  fvmtestnet: {
     trustified: "0xE1b8A9e8F5492C5242DE5c6A59C5E7ff1145891a",
   }, // Testnet
-  filecoin: {
+  fvm: {
     trustified: "0x0867c907Ae1d7eB43c381BbdA494E61B77202BFa",
   }, // Mainnet
   mumbai: {
@@ -14,8 +14,8 @@ export const trustifiedContracts = {
 };
 
 export const chain = {
-  3141: "fevm",
-  314: "filecoin",
+  3141: "fvmtestnet",
+  314: "fvm",
   80001: "mumbai",
   97: "bsc",
 };

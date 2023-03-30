@@ -404,18 +404,19 @@ export const Web3ContextProvider = (props) => {
   };
 
   const getNetworkToken = (network) => {
-    var token;
-    if (network == "fevm") {
-      token = "fevm";
-    } else if (network == "filecoin") {
-      token = "filecoin";
+    var net;
+    if (network == "fvmtestnet") {
+      net = "fvmtestnet";
+    } else if (network == "fvm") {
+      net = "fvm";
     } else if (network == "mumbai") {
-      token = "mumbai";
+      net = "mumbai";
     } else if (network == "goerli") {
-      token = "goerli";
+      net = "goerli";
     } else {
-      token = "bsc";
+      net = "bsc";
     }
+    return net;
   };
 
   const claimCertificate = async (
@@ -623,6 +624,8 @@ export const Web3ContextProvider = (props) => {
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
+   
+
       let network = await getNetworkToken(claimer?.chain);
 
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
@@ -648,8 +651,11 @@ export const Web3ContextProvider = (props) => {
       }
 
       const pdfBlob = pdf.output("blob");
+      pdf.save();
       return { imageData, pdfBlob };
     });
+
+   
 
     const imageFile = new File(
       [pdfBlob.imageData],

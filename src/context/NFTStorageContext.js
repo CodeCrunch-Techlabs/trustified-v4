@@ -30,7 +30,7 @@ export const NFTStorageContextProvider = (props) => {
     formData: {
       title: "",
       description: "",
-      chain: "fevm",
+      chain: "fvm",
       expireDate: "",
       issueDate: new Date(),
       Nontransferable: "on",

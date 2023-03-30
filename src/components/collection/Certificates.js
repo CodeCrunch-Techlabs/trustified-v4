@@ -33,10 +33,10 @@ export default function Certificates() {
 
   const getUrl = (chain) => {
     const url =
-      (chain === "filecoin" && "https://filfox.info/en/tx") ||
+      (chain === "fvm" && "https://filfox.info/en/tx") ||
       (chain === "mumbai" && "https://polygonscan.com/tx") ||
       (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
-      (chain === "fevm" && "https://hyperspace.filfox.info/en/tx") ||
+      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
       (chain === "bsc" && "https://bscscan.com/tx");
     return url;
   };

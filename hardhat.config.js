@@ -25,7 +25,7 @@ module.exports = {
       url: "https://api.hyperspace.node.glif.io/rpc/v1",
       accounts: [PRIVATE_KEY],
     },
-    filecoin: {
+    fvm: {
       chainId: 314,
       url: "https://api.node.glif.io/rpc/v1",
       accounts: [PRIVATE_KEY],

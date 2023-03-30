@@ -103,7 +103,7 @@ export default function CreateNftForm({ handleClose }) {
           <RadioGroup
             row
             aria-labelledby="demo-row-radio-buttons-group-label"
-            defaultValue="fevm"
+            defaultValue="fvmtestnet"
             name="chain"
             type="radio"
             {...formik.getFieldProps("chain")}
