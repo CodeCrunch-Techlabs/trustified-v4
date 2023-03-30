@@ -25,7 +25,7 @@ function GetChain() {
   return (
     <div>
       <Stack spacing={3} sx={{ margin: "20px" }}>
-        {validity == "limited" ? (
+        {/* {validity == "limited" ? (
           <Box sx={{ display: "flex", justifyContent: "start", m: 2 }}>
             <TextField
               id="date"
@@ -72,10 +72,10 @@ function GetChain() {
               </RadioGroup>
             </FormControl>
           </Box>
-        )}
-        <Divider />
+        )} */}
+        {/* <Divider /> */}
 
-        <Box sx={{ minWidth: 120 }}>
+        {/* <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
             <FormLabel id="demo-controlled-radio-buttons-group">
               NFT Type
@@ -107,8 +107,8 @@ function GetChain() {
             </RadioGroup>
             <FormHelperText>Make your NFT non-transferable</FormHelperText>
           </FormControl>
-        </Box>
-        <Divider />
+        </Box> */}
+        {/* <Divider /> */}
         <Stack spacing={3} sx={{ margin: "20px" }}>
           <span>Upload excel sheet of collectors data</span>
           <Box sx={{ m: 1 }}>

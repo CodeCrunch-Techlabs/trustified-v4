@@ -24,7 +24,7 @@ export const BadgeContextProvider = (props) => {
       description: "",
       template: "",
       name: "",
-      chain: "fevm",
+      chain: "fvm",
       badgeName: "",
       Nontransferable: true,
       quantity: 0,
@@ -67,7 +67,7 @@ export const BadgeContextProvider = (props) => {
           useCORS: true,
         }).then(async (canvas) => {
           const imgData = canvas.toDataURL("image/jpeg", 1.0);
-          const imageData = await fetch(imgData).then((r) => r.blob());
+          const imageData = await fetch(previewUrl).then((r) => r.blob());
           return { imageData };
         });
         const imageFile = new File(

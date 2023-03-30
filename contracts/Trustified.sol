@@ -4,23 +4,35 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./comman/ERC721URIStorage.sol";
 
-contract Trustified is ERC721URIStorage {
+contract Trustified is ERC721URIStorage, ReentrancyGuard {
+    using SafeMath for uint256;
+    address payable public owner;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
-    bool public allTokenMinted;
+    event TokensMinted(
+        uint256 indexed eventId,
+        uint256[] tokenIds,
+        address indexed issuer
+    );
 
-    mapping(uint256 => uint256[]) public tokenIds; // Every event Id will have list of tokenIds.
-    mapping(uint256 => address) public issuers; // To get the issuer address from the event Id.
-    mapping(uint256 => bool) private _nonTransferable; // TokenId with the bool value which defines if token is tranferable or non-tranferable.
+    constructor() ERC721("TrustifiedTest", "TFT") {
+        owner = payable(msg.sender);
+    }
 
-    event TokenMinted(address, uint256);
+    struct token {
+        uint256 tokenId;
+        address payable creator;
+        address payable owner;
+        bool nonTransferable;
+    }
 
-    constructor() ERC721("ItsTrustified", "ITF") {}
+    mapping(uint256 => token) private tokens;
 
     /**
      * @dev value == 0 is for to check the nft we are minting is for certificate or badges. For badges we set tokenURI in mint.
@@ -51,36 +63,25 @@ contract Trustified is ERC721URIStorage {
         uint256 quantity,
         uint256 value,
         bool nonTransferable
-    ) external {
+    ) external nonReentrant {
         require(quantity > 0, "Invalid quantity"); // validate quantity is a non-zero positive integer
         require(value >= 0 && value <= 1, "Invalid value");
         uint256 eventId = _eventIdCounter.current();
         _eventIdCounter.increment();
+        uint256[] memory tokenIds = new uint256[](quantity);
         for (uint256 i = 0; i < quantity; i++) {
             uint256 tokenId = safeMint(tokenUri, value);
-            tokenIds[eventId].push(tokenId);
-            issuers[eventId] = msg.sender;
-            _nonTransferable[tokenId] = nonTransferable;
-            uint256 totalMinted = tokenId + 1;
-            if (totalMinted == quantity) {
-                allTokenMinted = true;
-            }
+            tokens[tokenId] = token(
+                tokenId,
+                payable(msg.sender),
+                payable(msg.sender),
+                nonTransferable
+            );
+            tokenIds[i] = tokenId;
         }
-        emit TokenMinted(msg.sender, eventId);
-    }
-
-    function getMintStatus() external view returns (bool) {
-        return allTokenMinted;
-    }
-
-    /**
-     * @dev Function to get tokenIds minted for particular event Id.
-     * @param eventId event Id created during mint.
-     */
-    function getTokenIds(
-        uint256 eventId
-    ) external view returns (uint256[] memory) {
-        return tokenIds[eventId];
+        if (tokenIds.length == quantity) {
+            emit TokensMinted(eventId, tokenIds, msg.sender);
+        }
     }
 
     function _beforeTokenTransfer(
@@ -91,7 +92,7 @@ contract Trustified is ERC721URIStorage {
     ) internal virtual override {
         if (from != address(this)) {
             require(
-                _nonTransferable[firstTokenId] != true,
+                tokens[firstTokenId].nonTransferable != true,
                 "Not allowed to transfer token"
             );
         }
@@ -111,7 +112,7 @@ contract Trustified is ERC721URIStorage {
         uint256 tokenId,
         string calldata tokenURI,
         uint256 value
-    ) external {
+    ) external nonReentrant {
         require(value >= 0 && value <= 1, "Invalid value");
         if (value == 1) {
             _setTokenURI(tokenId, tokenURI);

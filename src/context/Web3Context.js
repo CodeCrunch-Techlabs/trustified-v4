@@ -207,29 +207,19 @@ export const Web3ContextProvider = (props) => {
           trustifiedContractAbi.abi,
           signer
         );
-        var transactionMint;
 
-        if (type == "badge") {
-          transactionMint = await trustifiedContract.bulkMintERC721(
-            data.tokenUris[0],
-            parseInt(firebasedata.quantity),
-            0,
-            checked
-          ); // Bulk Mint NFT collection.
-        }
+        var transactionMint = await trustifiedContract.bulkMintERC721(
+          data.tokenUris[0],
+          parseInt(firebasedata.quantity),
+          0,
+          checked
+        ); // Bulk Mint NFT collection.
 
-        let txm = await transactionMint.wait();
-console.log(txm,"txm");
-        if (txm) {
-          var event;
-          if (type == "badge") {
-            event = await txm.events[parseInt(firebasedata.quantity)];
-          }
-
-          var eventId = event?.args[1];
-
-          const mintStaus = await trustifiedContract.getMintStatus();
-          if (mintStaus == true) {
+        await trustifiedContract.once(
+          "TokensMinted",
+          async (eventId, tokenIds, issuer) => {
+          
+            let txm = await transactionMint.wait();
             firebasedata.contract = trustifiedContract.address;
             firebasedata.userId = userId;
             firebasedata.eventId = parseInt(Number(eventId));
@@ -241,21 +231,15 @@ console.log(txm,"txm");
             firebasedata.createdBy = txm.from;
             await addCollection(firebasedata);
 
-            let tokenIds = await trustifiedContract.getTokenIds(
-              Number(eventId)
-            );
-
             var array = [];
             for (let i = 0; i < tokenIds.length; i++) {
               let obj = {};
               let claimToken = generateClaimToken(20);
-
               if (type == "badge") {
                 array.push({
                   ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
                 });
               }
-
               obj.token = claimToken;
               obj.tokenContract = trustifiedContract.address;
               obj.tokenId = parseInt(Number(tokenIds[i]));
@@ -279,12 +263,10 @@ console.log(txm,"txm");
               obj.createdBy = txm.from;
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
-
             let obj = {
               type: type,
               data: array,
             };
-
             const api = await axios.create({
               baseURL: "https://trustified-backend.onrender.com/trustified/api",
             });
@@ -296,21 +278,18 @@ console.log(txm,"txm");
               .catch((error) => {
                 console.log(error);
               });
-
             const blob = new Blob([response.data], { type: "text/csv" });
-
             const downloadLink = document.createElement("a");
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = `${firebasedata.title}.csv`;
             downloadLink.click();
-
-            toast.success("Successfully created NFT collection!!");
+            toast.success("Badges successfully issued!");
             resolve({ isResolved: true });
           }
-        }
+        );
       } catch (err) {
         console.log(err);
-        toast.error("Something want wrong!!", err); 
+        toast.error("Something want wrong!!", err);
         resolve({ isResolved: true });
       }
     });
@@ -327,26 +306,25 @@ console.log(txm,"txm");
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log("transactionMint");
+
         const trustifiedContract = new ethers.Contract(
           trustifiedContracts[formData.chain].trustified,
           trustifiedContractAbi.abi,
           signer
         );
+        
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false
+          formData.Nontransferable == "on" ? true : false ,  
         );
-        console.log(transactionMint, "transactionMint");
-        let txm = await transactionMint.wait();
-        console.log(txm, "txm");
-        if (txm) {
-          let event = await txm.events[parseInt(csvdata?.length)];
-          var eventId = event?.args[1];
-          const mintStaus = await trustifiedContract.getMintStatus();
-          if (mintStaus == true) {
+        await trustifiedContract.once(
+          "TokensMinted",
+          async (eventId, tokenIds, issuer) => {
+            let txm = await transactionMint.wait();
+
+            var eventId = eventId;
             formData.contract = trustifiedContract.address;
             formData.userId = userId;
             formData.eventId = parseInt(Number(eventId));
@@ -354,12 +332,8 @@ console.log(txm,"txm");
             formData.image = previewUrl ? previewUrl : template.preview;
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
-            formData.createdBy = txm.from;
+            formData.createdBy = issuer;
             await addCollection(formData);
-
-            let tokenIds = await trustifiedContract.getTokenIds(
-              parseInt(Number(eventId))
-            );
 
             var array = [];
 
@@ -367,16 +341,10 @@ console.log(txm,"txm");
               let obj = {};
               let claimToken = generateClaimToken(20);
 
-              if (type == "badge") {
-                array.push({
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              } else {
-                array.push({
-                  Name: csvdata[i].name,
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              }
+              array.push({
+                Name: csvdata[i].name,
+                ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+              });
 
               obj.token = claimToken;
               obj.tokenContract = trustifiedContract.address;
@@ -423,30 +391,32 @@ console.log(txm,"txm");
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = `${formData.title}.csv`;
             downloadLink.click();
-            toast.success("Successfully created NFT collection!!");
+            toast.success("Certificate Successfully issued!");
             resolve({ isResolved: true });
           }
-        }
+        );
       } catch (err) {
-        console.log(err);
-        toast.error("Something want wrong!!", err);
+        // console.log(err);
+        // toast.error("Something want wrong!!", err);
+        return reject(err);  
       }
     });
   };
 
   const getNetworkToken = (network) => {
-    var token;
-    if (network == "fevm") {
-      token = "fevm";
-    } else if (network == "filecoin") {
-      token = "filecoin";
+    var net;
+    if (network == "fvmtestnet") {
+      net = "fvmtestnet";
+    } else if (network == "fvm") {
+      net = "fvm";
     } else if (network == "mumbai") {
-      token = "mumbai";
+      net = "mumbai";
     } else if (network == "goerli") {
-      token = "goerli";
+      net = "goerli";
     } else {
-      token = "bsc";
+      net = "bsc";
     }
+    return net;
   };
 
   const claimCertificate = async (
@@ -457,7 +427,6 @@ console.log(txm,"txm");
     textFamily
   ) => {
     setClaimLoading(true);
-    console.log("claimCertificate");
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
@@ -484,7 +453,6 @@ console.log(txm,"txm");
 
       let network = await getNetworkToken(claimer?.chain);
 
-      console.log(claimer, "claimer");
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
 
       // Set the font size and style for the footer text
@@ -502,8 +470,8 @@ console.log(txm,"txm");
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -511,7 +479,7 @@ console.log(txm,"txm");
       return { imageData, pdfBlob };
     });
 
-    pdf.save();
+    // pdf.save();
 
     const imageFile = new File(
       [pdfBlob.imageData],
@@ -537,7 +505,6 @@ console.log(txm,"txm");
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
-    console.log(metadata, "metadata");
 
     // let meta = await axios.get(
     //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
@@ -551,7 +518,6 @@ console.log(txm,"txm");
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach(async (fire) => {
-      console.log(fire.data(), "data");
       try {
         if (fire.data().claimerAddress == "") {
           const trustifiedContract = new ethers.Contract(
@@ -560,7 +526,6 @@ console.log(txm,"txm");
             signer
           );
 
-          console.log(trustifiedContract, "trustifiedContract");
 
           let transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
@@ -577,9 +542,10 @@ console.log(txm,"txm");
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         } else {
@@ -606,14 +572,17 @@ console.log(txm,"txm");
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         }
       } catch (error) {
-        toast.error("This certificate is already claimed!");
+        toast.error(
+          "Something went wrong! or This certificate is already claimed!"
+        );
         setClaimLoading(false);
         console.log(error);
       }
@@ -655,6 +624,8 @@ console.log(txm,"txm");
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
+   
+
       let network = await getNetworkToken(claimer?.chain);
 
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
@@ -673,15 +644,18 @@ console.log(txm,"txm");
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
 
       const pdfBlob = pdf.output("blob");
+      pdf.save();
       return { imageData, pdfBlob };
     });
+
+   
 
     const imageFile = new File(
       [pdfBlob.imageData],
@@ -744,8 +718,9 @@ console.log(txm,"txm");
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         } else {
@@ -772,15 +747,18 @@ console.log(txm,"txm");
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
 
             setClaimLoading(false);
           }
         }
       } catch (error) {
-        toast.error("This certificate is already claimed!");
+        toast.error(
+          "Something went wrong! or This certificate is already claimed!"
+        );
         setClaimLoading(false);
         console.log(error);
       }
@@ -821,8 +799,9 @@ console.log(txm,"txm");
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
+              txHash: txt.transactionHash,
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Badge Successfully claimed!");
 
             setClaimLoading(false);
           }
@@ -849,13 +828,16 @@ console.log(txm,"txm");
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
+              txHash: txt.transactionHash,
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Badge Successfully claimed!");
             setClaimLoading(false);
           }
         }
       } catch (error) {
-        toast.error("This certificate is already claimed!");
+        toast.error(
+          "Something went wrong! or This certificate is already claimed!"
+        );
         setClaimLoading(false);
         console.log(error);
       }

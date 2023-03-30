@@ -1,22 +1,21 @@
 export const trustifiedContracts = {
-  fevm: {
-    trustified: "0x5bC69E7d58C19E99751De6Aa95e8daBeF39B0669",
+  fvmtestnet: {
+    trustified: "0xE1b8A9e8F5492C5242DE5c6A59C5E7ff1145891a",
   }, // Testnet
-  filecoin: {
-    trustified: "0x4fa7ACf6bCa32F91A7CC51110f755472e51c85e3",
+  fvm: {
+    trustified: "0x0867c907Ae1d7eB43c381BbdA494E61B77202BFa",
   }, // Mainnet
   mumbai: {
-    trustified: "0x8ea885E7505F8Bdf49850e0a29317554894f404d",
-  }, // Mainnet Polygon
+    trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077",
+  },
   bsc: {
-    trustified: "0x23f2933945ad729A404B1a632E0E07C06fF84512",
+    trustified: "0x0FE82cBB448A89Dd912EbC4117B927616826AcCC",
   },
 };
 
 export const chain = {
-  3141: "fevm",
-  314: "filecoin",
-  137: "mumbai",
-  5: "goerli",
+  3141: "fvmtestnet",
+  314: "fvm",
+  80001: "mumbai",
   97: "bsc",
 };

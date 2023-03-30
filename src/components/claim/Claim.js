@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 import TemplatePreview from "./Preview";
 import UploadPreview from "./UploadPreview";
 import Chip from "@mui/material/Chip";
-import OpenInNewIcon from '@mui/icons-material/OpenInNew';
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 export default function Claim() {
   const web3Context = React.useContext(Web3Context);
@@ -27,7 +27,6 @@ export default function Claim() {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const [show, setShow] = useState(false);
-  const [url, setUrl] = useState("");
 
   const { token } = useParams();
 
@@ -46,17 +45,15 @@ export default function Claim() {
     document.location.reload();
   }
 
-  const getUrl = () => {
-    // console.log(claimer,"claimer");
-    // const url = claimer.chain === 'filecoin' && "https://filfox.info/en/message" ||
-    //   claimer.chain === 'mumbai' && "https://polygonscan.com/tx" ||
-    //   claimer.chain === 'goerli' && "https://goerli.etherscan.io/tx" ||
-    //   claimer.chain === "fevm"  && "https://bscscan.com/tx" ||
-    //   claimer.chain === 'bsc' && "https://bscscan.com/tx";
-
-    //   console.log(url,"url");
-    // setUrl(url);
-  }
+  const getUrl = (chain) => {
+    const url =
+      (chain === "fvm" && "https://filfox.info/en/tx") ||
+      (chain === "mumbai" && "https://polygonscan.com/tx") ||
+      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
+      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
+      (chain === "bsc" && "https://bscscan.com/tx");
+    return url;
+  };
 
   return (
     <section className="footer-position" id="banner">
@@ -74,7 +71,7 @@ export default function Claim() {
                   ) : (
                     <>
                       {claimer?.position != "" &&
-                        claimer?.position != undefined ? (
+                      claimer?.position != undefined ? (
                         <UploadPreview claimer={claimer} />
                       ) : (
                         <TemplatePreview
@@ -100,14 +97,19 @@ export default function Claim() {
                       <h4 className="card-h4 claim-h4">{claimer?.title}</h4>
                     </div>
                     <p className="card-p claim-des">{claimer?.description}</p>
-                    <div className="card-body-cert d-flex" style={{ justifyContent: 'space-evenly' }}>
+                    <div
+                      className="card-body-cert d-flex"
+                      style={{ justifyContent: "space-evenly" }}
+                    >
                       <div>
                         <h4>TokenId</h4>
                         <p>#{claimer?.tokenId}</p>
                       </div>
                       <div>
                         <h4>Chain</h4>
-                        <p style={{textTransform:'capitalize'}}>{claimer?.chain}</p>
+                        <p style={{ textTransform: "capitalize" }}>
+                          {claimer?.chain}
+                        </p>
                       </div>
                       <div>
                         <h4>Type</h4>
@@ -118,7 +120,12 @@ export default function Claim() {
                         </p>
                       </div>
                     </div>
-                    <a href={`${url}/${claimer.txHash}`} target="_blank"  >View Transaction <OpenInNewIcon /></a>
+                    <a
+                      href={`${getUrl(claimer?.chain)}/${claimer.txHash}`}
+                      target="_blank"
+                    >
+                      View Transaction <OpenInNewIcon />
+                    </a>
                   </div>
                 </div>
               )}
@@ -140,22 +147,13 @@ export default function Claim() {
                 className="thm-btn header__cta-btn"
                 onClick={async () => {
                   const { chainId } = await provider.getNetwork();
-                  if (claimer.chain == "filecoin" && chainId !== 314) {
+                  if (claimer.chain == "fvm" && chainId !== 314) {
                     await switchNetwork(ethers.utils.hexValue(314));
-                  } else if (
-                    claimer.chain == "fevm" &&
-                    chainId !== 3141
-                  ) {
+                  } else if (claimer.chain == "fvmtestnet" && chainId !== 3141) {
                     await switchNetwork(ethers.utils.hexValue(3141));
-                  } else if (
-                    claimer.chain == "mumbai" &&
-                    chainId !== 137
-                  ) {
+                  } else if (claimer.chain == "mumbai" && chainId !== 80001) {
                     await switchNetwork(ethers.utils.hexValue(137));
-                  } else if (
-                    claimer.chain == "goerli" &&
-                    chainId !== 5
-                  ) {
+                  } else if (claimer.chain == "goerli" && chainId !== 5) {
                     await switchNetwork(ethers.utils.hexValue(5));
                   } else if (claimer.chain == "bsc" && chainId !== 97) {
                     await switchNetwork(ethers.utils.hexValue(97));
@@ -168,7 +166,6 @@ export default function Claim() {
                       claimer?.position != "" &&
                       claimer?.position != undefined
                     ) {
-                      console.log("call upload");
                       await claimUploadedCertificate(
                         token,
                         add,
@@ -176,7 +173,6 @@ export default function Claim() {
                         claimer?.uploadObj.style.color
                       );
                     } else {
-                      console.log("call cert");
                       await claimCertificate(
                         token,
                         add,
@@ -188,13 +184,20 @@ export default function Claim() {
                   }
                 }}
               >
-                <span>{claimLoading ?
-                  <>
-                    <CircularProgress />
-                    <div id="cover-spin"></div>
-                    <p id="cover-spin-text">Please don't refresh! {claimer?.type} is being minted! 😎 </p>
-                  </>
-                  : " Claim"}</span>
+                <span>
+                  {claimLoading ? (
+                    <>
+                      <CircularProgress />
+                      <div id="cover-spin"></div>
+                      <p id="cover-spin-text">
+                        Please don't refresh! {claimer?.type} is being minted!
+                        😎 
+                      </p>
+                    </>
+                  ) : (
+                    "Claim"
+                  )}
+                </span>
               </a>
             </div>
 
