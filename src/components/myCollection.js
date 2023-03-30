@@ -152,6 +152,16 @@ export default function MyCollection({ show }) {
     };
   };
 
+  const getUrl = (chain) => {
+    const url =
+      (chain === "filecoin" && "https://filfox.info/en/tx") ||
+      (chain === "mumbai" && "https://polygonscan.com/tx") ||
+      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
+      (chain === "fevm" && "https://hyperspace.filfox.info/en/tx") ||
+      (chain === "bsc" && "https://bscscan.com/tx");
+    return url;
+  };
+
   return (
     <div
       className={
@@ -241,13 +251,6 @@ export default function MyCollection({ show }) {
             <div className="row">
               {certificatesData.length != 0 &&
                 certificatesData.map((item, i) => {
-                  const url =
-                    (item.chain === "filecoin" &&
-                      "https://filfox.info/en/message") ||
-                    (item.chain === "mumbai" && "https://polygonscan.com/tx") ||
-                    (item.chain === "goerli" &&
-                      "https://goerli.etherscan.io/tx") ||
-                    (item.chain === "bsc" && "https://bscscan.com/tx");
                   return (
                     <div
                       className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
@@ -332,7 +335,10 @@ export default function MyCollection({ show }) {
                             {item.description}
                           </Typography>
 
-                          <a href={`${url}/${item.txHash}`} target="_blank">
+                          <a
+                            href={`${getUrl(item?.chain)}/${item.txHash}`}
+                            target="_blank"
+                          >
                             View Transaction <OpenInNewIcon />
                           </a>
                         </div>

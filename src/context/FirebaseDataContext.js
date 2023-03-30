@@ -149,6 +149,7 @@ export const FirebaseDataContextProvider = (props) => {
       claimerAddress: data.claimerAddress,
       claimed: data.claimed,
       ipfsurl: data.ipfsurl,
+      txHash: data.txHash,
     });
   }
 
@@ -157,6 +158,7 @@ export const FirebaseDataContextProvider = (props) => {
     await updateDoc(collectorRef, {
       claimerAddress: data.claimerAddress,
       claimed: data.claimed,
+      txHash: data.txHash,
     });
   }
 
@@ -291,7 +293,7 @@ export const FirebaseDataContextProvider = (props) => {
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);
-  
+
           obj.ipfsurl = meta.data.image.replace(
             "ipfs://",
             "https://nftstorage.link/ipfs/"

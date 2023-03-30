@@ -315,10 +315,10 @@ export const Web3ContextProvider = (props) => {
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false,
-          {
-            gasLimit: gasFee,
-          }
+          formData.Nontransferable == "on" ? true : false
+          // {
+          //   gasLimit: gasFee,
+          // }
         );
         await trustifiedContract.once(
           "TokensMinted",
@@ -335,7 +335,6 @@ export const Web3ContextProvider = (props) => {
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
             await addCollection(formData);
-            console.log(formData, "formData");
 
             var array = [];
 
@@ -542,6 +541,7 @@ export const Web3ContextProvider = (props) => {
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
 
             toast.success("Certificate Successfully claimed!");
@@ -571,6 +571,7 @@ export const Web3ContextProvider = (props) => {
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
 
             toast.success("Certificate Successfully claimed!");
@@ -710,6 +711,7 @@ export const Web3ContextProvider = (props) => {
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
             toast.success("Claimed Certificate Successfully!");
             setClaimLoading(false);
@@ -738,6 +740,7 @@ export const Web3ContextProvider = (props) => {
               claimerAddress: claimerAddress,
               claimed: "Yes",
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+              txHash: txt.transactionHash,
             });
 
             toast.success("Certificate Successfully claimed!");
@@ -789,6 +792,7 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
+              txHash: txt.transactionHash,
             });
             toast.success("Badge Successfully claimed!");
 
@@ -817,6 +821,7 @@ export const Web3ContextProvider = (props) => {
               id: fire.id,
               claimerAddress: claimerAddress,
               claimed: "Yes",
+              txHash: txt.transactionHash,
             });
             toast.success("Badge Successfully claimed!");
             setClaimLoading(false);

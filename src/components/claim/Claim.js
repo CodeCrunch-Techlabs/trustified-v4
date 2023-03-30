@@ -27,7 +27,6 @@ export default function Claim() {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const [show, setShow] = useState(false);
-  const [url, setUrl] = useState("");
 
   const { token } = useParams();
 
@@ -46,15 +45,14 @@ export default function Claim() {
     document.location.reload();
   }
 
-  const getUrl = () => {
-    // console.log(claimer,"claimer");
-    // const url = claimer.chain === 'filecoin' && "https://filfox.info/en/message" ||
-    //   claimer.chain === 'mumbai' && "https://polygonscan.com/tx" ||
-    //   claimer.chain === 'goerli' && "https://goerli.etherscan.io/tx" ||
-    //   claimer.chain === "fevm"  && "https://bscscan.com/tx" ||
-    //   claimer.chain === 'bsc' && "https://bscscan.com/tx";
-    //   console.log(url,"url");
-    // setUrl(url);
+  const getUrl = (chain) => {
+    const url =
+      (chain === "filecoin" && "https://filfox.info/en/tx") ||
+      (chain === "mumbai" && "https://polygonscan.com/tx") ||
+      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
+      (chain === "fevm" && "https://hyperspace.filfox.info/en/tx") ||
+      (chain === "bsc" && "https://bscscan.com/tx");
+    return url;
   };
 
   return (
@@ -122,7 +120,10 @@ export default function Claim() {
                         </p>
                       </div>
                     </div>
-                    <a href={`${url}/${claimer.txHash}`} target="_blank">
+                    <a
+                      href={`${getUrl(claimer?.chain)}/${claimer.txHash}`}
+                      target="_blank"
+                    >
                       View Transaction <OpenInNewIcon />
                     </a>
                   </div>
@@ -165,7 +166,6 @@ export default function Claim() {
                       claimer?.position != "" &&
                       claimer?.position != undefined
                     ) {
-  
                       await claimUploadedCertificate(
                         token,
                         add,
