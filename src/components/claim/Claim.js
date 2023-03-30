@@ -165,7 +165,7 @@ export default function Claim() {
                       claimer?.position != "" &&
                       claimer?.position != undefined
                     ) {
-                      console.log("call upload");
+  
                       await claimUploadedCertificate(
                         token,
                         add,
@@ -173,7 +173,6 @@ export default function Claim() {
                         claimer?.uploadObj.style.color
                       );
                     } else {
-                      console.log("call cert");
                       await claimCertificate(
                         token,
                         add,
