@@ -15,18 +15,22 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
     Counters.Counter private _tokenIdCounter;
     Counters.Counter private _eventIdCounter; // Counter for event id which issuer will create.
 
-    event TokensMinted(uint256 indexed eventId, uint256[] tokenIds, address indexed issuer);
+    event TokensMinted(
+        uint256 indexed eventId,
+        uint256[] tokenIds,
+        address indexed issuer
+    );
 
     constructor() ERC721("TrustifiedTest", "TFT") {
-       owner = payable(msg.sender);
+        owner = payable(msg.sender);
     }
 
     struct token {
-    uint256 tokenId;
-    address payable creator;
-    address payable owner;
-    bool nonTransferable;
-  }
+        uint256 tokenId;
+        address payable creator;
+        address payable owner;
+        bool nonTransferable;
+    }
 
     mapping(uint256 => token) private tokens;
 
@@ -67,15 +71,17 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint256[] memory tokenIds = new uint256[](quantity);
         for (uint256 i = 0; i < quantity; i++) {
             uint256 tokenId = safeMint(tokenUri, value);
-             tokens[tokenId] =  token (
-                           tokenId,
-                           payable(msg.sender),
-                           payable(msg.sender),
-                           nonTransferable
-                    );
+            tokens[tokenId] = token(
+                tokenId,
+                payable(msg.sender),
+                payable(msg.sender),
+                nonTransferable
+            );
             tokenIds[i] = tokenId;
         }
-        emit TokensMinted(eventId, tokenIds, msg.sender);
+        if (tokenIds.length == quantity) {
+            emit TokensMinted(eventId, tokenIds, msg.sender);
+        }
     }
 
     function _beforeTokenTransfer(
@@ -106,7 +112,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint256 tokenId,
         string calldata tokenURI,
         uint256 value
-    ) external nonReentrant{
+    ) external nonReentrant {
         require(value >= 0 && value <= 1, "Invalid value");
         if (value == 1) {
             _setTokenURI(tokenId, tokenURI);
@@ -120,7 +126,5 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         } else {
             _transfer(from, to, tokenId);
         }
-
     }
- 
 }
