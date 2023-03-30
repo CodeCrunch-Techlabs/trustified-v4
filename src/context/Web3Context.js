@@ -305,109 +305,105 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-        console.log("transactionMint");
+
         const trustifiedContract = new ethers.Contract(
           trustifiedContracts[formData.chain].trustified,
           trustifiedContractAbi.abi,
           signer
         );
+        const gasFee = csvdata.length > 500 ? 8000000 : 6000000;
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false
-        );
-        console.log(transactionMint, "transactionMint");
-        let txm = await transactionMint.wait();
-        console.log(txm, "txm");
-        if (txm) {
-          let event = await txm.events[parseInt(csvdata?.length)];
-          var eventId = event?.args[1];
-          const mintStaus = await trustifiedContract.getMintStatus();
-          if (mintStaus == true) {
-            formData.contract = trustifiedContract.address;
-            formData.userId = userId;
-            formData.eventId = parseInt(Number(eventId));
-            formData.type = type;
-            formData.image = previewUrl ? previewUrl : template.preview;
-            formData.templateId = templateId;
-            formData.txHash = txm.transactionHash;
-            formData.createdBy = txm.from;
-            await addCollection(formData);
-
-            let tokenIds = await trustifiedContract.getTokenIds(
-              parseInt(Number(eventId))
-            );
-
-            var array = [];
-
-            for (let i = 0; i < tokenIds.length; i++) {
-              let obj = {};
-              let claimToken = generateClaimToken(20);
-
-              if (type == "badge") {
-                array.push({
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              } else {
-                array.push({
-                  Name: csvdata[i].name,
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              }
-
-              obj.token = claimToken;
-              obj.tokenContract = trustifiedContract.address;
-              obj.tokenId = parseInt(Number(tokenIds[i]));
-              obj.claimerAddress = "";
-              obj.ipfsurl = previewUrl ? previewUrl : "";
-              obj.chain = formData.chain;
-              obj.name = csvdata[i].name;
-              obj.type = type;
-              obj.claimed = "No";
-              obj.eventId = parseInt(Number(eventId));
-              obj.Nontransferable = formData.Nontransferable;
-              obj.templateId = previewUrl ? "" : templateId;
-              obj.title = formData.title;
-              obj.description = formData.description;
-              obj.expireDate = formData.expireDate;
-              obj.issueDate = formData.issueDate;
-              obj.position = previewUrl ? position : "";
-              obj.uploadCertData = previewUrl ? uploadObj.name : "";
-              obj.txHash = txm.transactionHash;
-              obj.createdBy = txm.from;
-              await addCollectors(obj);
-            } // Generating CSV file with unique link and storing data in firebase.
-            let obj = {
-              type: type,
-              data: array,
-            };
-
-            const api = await axios.create({
-              baseURL: "https://trustified-backend.onrender.com/trustified/api",
-            });
-            let response = await api
-              .post("/export/csv", obj)
-              .then((res) => {
-                return res;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-
-            const blob = new Blob([response.data], { type: "text/csv" });
-
-            const downloadLink = document.createElement("a");
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = `${formData.title}.csv`;
-            downloadLink.click();
-            toast.success("Successfully created NFT collection!!");
-            resolve({ isResolved: true });
+          formData.Nontransferable == "on" ? true : false ,
+          {
+            gasLimit: gasFee
           }
-        }
+        );
+        console.log(transactionMint,"transactionMint");
+        await trustifiedContract.on(
+          "TokensMinted",
+          async (eventId, tokenIds, issuer) => {
+            let txm = await transactionMint.wait();
+             console.log(txm, "txm");
+            if (txm) { 
+              var eventId = eventId ; 
+                formData.contract = trustifiedContract.address;
+                formData.userId = userId;
+                formData.eventId = parseInt(Number(eventId));
+                formData.type = type;
+                formData.image = previewUrl ? previewUrl : template.preview;
+                formData.templateId = templateId;
+                formData.txHash = txm.transactionHash;
+                formData.createdBy = issuer;
+                await addCollection(formData); 
+                console.log(formData,"formData");
+
+                var array = []; 
+                
+                for (let i = 0; i < tokenIds.length; i++) {
+                  let obj = {};
+                  let claimToken = generateClaimToken(20); 
+
+                    array.push({
+                      Name: csvdata[i].name,
+                      ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+                    }); 
+
+                  obj.token = claimToken;
+                  obj.tokenContract = trustifiedContract.address;
+                  obj.tokenId = parseInt(Number(tokenIds[i]));
+                  obj.claimerAddress = "";
+                  obj.ipfsurl = previewUrl ? previewUrl : "";
+                  obj.chain = formData.chain;
+                  obj.name = csvdata[i].name;
+                  obj.type = type;
+                  obj.claimed = "No";
+                  obj.eventId = parseInt(Number(eventId));
+                  obj.Nontransferable = formData.Nontransferable;
+                  obj.templateId = previewUrl ? "" : templateId;
+                  obj.title = formData.title;
+                  obj.description = formData.description;
+                  obj.expireDate = formData.expireDate;
+                  obj.issueDate = formData.issueDate;
+                  obj.position = previewUrl ? position : "";
+                  obj.uploadCertData = previewUrl ? uploadObj.name : "";
+                  obj.txHash = txm.transactionHash;
+                  obj.createdBy = txm.from;
+                  await addCollectors(obj);
+                } // Generating CSV file with unique link and storing data in firebase.
+                let obj = {
+                  type: type,
+                  data: array,
+                };
+
+                const api = await axios.create({
+                  baseURL: "https://trustified-backend.onrender.com/trustified/api",
+                });
+                let response = await api
+                  .post("/export/csv", obj)
+                  .then((res) => {
+                    return res;
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+
+                const blob = new Blob([response.data], { type: "text/csv" });
+
+                const downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = `${formData.title}.csv`;
+                downloadLink.click(); 
+                toast.success("Successfully created NFT collection!!"); 
+                resolve({ isResolved: true }); 
+            }
+          }) 
       } catch (err) {
         console.log(err);
         toast.error("Something want wrong!!", err);
+        return reject(err);  
       }
     });
   };
@@ -480,8 +476,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -489,7 +485,7 @@ export const Web3ContextProvider = (props) => {
       return { imageData, pdfBlob };
     });
 
-    pdf.save();
+    // pdf.save();
 
     const imageFile = new File(
       [pdfBlob.imageData],
@@ -651,8 +647,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
+          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+          10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
