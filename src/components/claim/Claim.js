@@ -25,7 +25,7 @@ export default function Claim() {
   const { getMyCollection, getClaimer, claimer } = firebaseContext;
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-
+  const [id, setId]= useState("");
   const [show, setShow] = useState(false);
   const [url, setUrl] = useState("");
 
@@ -35,7 +35,7 @@ export default function Claim() {
 
   useEffect(() => {
     getClaimer(token);
-    getUrl();
+    getUrl(); 
   }, [token]);
 
   async function switchNetwork(chainId) {
@@ -57,6 +57,31 @@ export default function Claim() {
     // setUrl(url);
   };
 
+  async function getCertId(){
+    let network =  getNetworkToken(claimer?.chain);  
+    var certId = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
+    setId(certId);
+  }
+  useEffect(()=>{
+    getCertId();
+  },[claimer]);
+
+  const getNetworkToken = (network) => {
+    var token;
+    if (network == "fevm") {
+      token = "fevm";
+    } else if (network == "filecoin") {
+      token = "filecoin";
+    } else if (network == "mumbai") {
+      token = "mumbai";
+    } else if (network == "goerli") {
+      token = "goerli";
+    } else {
+      token = "bsc";
+    }
+    return token;
+  };
+
   return (
     <section className="footer-position" id="banner">
       <div className="bannercontainer container">
@@ -74,12 +99,13 @@ export default function Claim() {
                     <>
                       {claimer?.position != "" &&
                       claimer?.position != undefined ? (
-                        <UploadPreview claimer={claimer} />
+                        <UploadPreview claimer={claimer} id={id} />
                       ) : (
                         <TemplatePreview
+                          id={id}
                           data={claimer?.template}
                           name={claimer?.claimer}
-                          issueDate={claimer?.issueDate}
+                          issueDate={claimer?.issueDate} 
                         />
                       )}
                     </>

@@ -11,6 +11,7 @@ import { NFTStorage, File } from "nft.storage";
 
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import Web3 from "web3";
 
 export const Web3Context = createContext(undefined);
 
@@ -311,14 +312,16 @@ export const Web3ContextProvider = (props) => {
           trustifiedContracts[formData.chain].trustified,
           trustifiedContractAbi.abi,
           signer
-        );
-        
+        ); 
+   
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false ,  
+          formData.Nontransferable == "on" ? true : false , 
         );
+
+        
         console.log(transactionMint,"transactionMint");
         await trustifiedContract.on(
           "TokensMinted",
@@ -397,6 +400,7 @@ export const Web3ContextProvider = (props) => {
                 toast.success("Successfully created NFT collection!!"); 
                 resolve({ isResolved: true }); 
             }
+            return reject("Transaction is Failed!"); 
           }) 
       } catch (err) {
         // console.log(err);

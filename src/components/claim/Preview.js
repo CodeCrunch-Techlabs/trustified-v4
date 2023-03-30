@@ -1,6 +1,7 @@
 import React from "react";
 
-const TemplatePreview = ({ data, name, issueDate }) => {
+const TemplatePreview = ({id,data, name, issueDate }) => {
+  
   function formatDate(date) {
     var d = new Date(date),
       month = "" + (d.getMonth() + 1),
@@ -12,6 +13,9 @@ const TemplatePreview = ({ data, name, issueDate }) => {
 
     return [year, month, day].join("-");
   }
+  
+ 
+
   return (
     <>
       {data && (
@@ -47,6 +51,14 @@ const TemplatePreview = ({ data, name, issueDate }) => {
               width="100"
             />
           </label>
+          <div  style={{
+            position:'absolute',
+            transform: `translate(${555.327}px, ${-35.1444}px`,
+            color: data.title.style.color,
+            fontSize:'18px'
+            }}>
+            {id}
+          </div>
         </div>
       )}
     </>
