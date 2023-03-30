@@ -35,10 +35,6 @@ module.exports = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
       accounts: [PRIVATE_KEY],
     },
-    goerli: {
-      url: `https://eth-goerli.alchemyapi.io/v2/${process.env.REACT_APP_ALCHEMY_KEY_GOERLI}`,
-      accounts: [PRIVATE_KEY],
-    },
     bsc: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
