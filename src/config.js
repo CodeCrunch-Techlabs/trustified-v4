@@ -3,7 +3,7 @@ export const trustifiedContracts = {
     trustified: "0xE1b8A9e8F5492C5242DE5c6A59C5E7ff1145891a",
   }, // Testnet
   filecoin: {
-    trustified: "0x4fa7ACf6bCa32F91A7CC51110f755472e51c85e3",
+    trustified: "0x0867c907Ae1d7eB43c381BbdA494E61B77202BFa",
   }, // Mainnet
   mumbai: {
     trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077",

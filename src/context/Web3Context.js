@@ -218,6 +218,7 @@ export const Web3ContextProvider = (props) => {
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
+          
             console.log(tokenIds,"tokenIds")
             let txm = await transactionMint.wait();
             firebasedata.contract = trustifiedContract.address;
