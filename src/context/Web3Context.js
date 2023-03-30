@@ -282,7 +282,7 @@ export const Web3ContextProvider = (props) => {
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = `${firebasedata.title}.csv`;
             downloadLink.click();
-            toast.success("Successfully created NFT collection!!");
+            toast.success("Badges successfully issued!");
             resolve({ isResolved: true });
           }
         );
@@ -310,18 +310,22 @@ export const Web3ContextProvider = (props) => {
           trustifiedContractAbi.abi,
           signer
         );
+        const gasFee = csvdata.length > 500 ? 8000000 : 6000000;
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false
+          formData.Nontransferable == "on" ? true : false,
+          {
+            gasLimit: gasFee,
+          }
         );
-        let txm = await transactionMint.wait();
-        if (txm) {
-          let event = await txm.events[parseInt(csvdata?.length)];
-          var eventId = event?.args[1];
-          const mintStaus = await trustifiedContract.getMintStatus();
-          if (mintStaus == true) {
+        await trustifiedContract.once(
+          "TokensMinted",
+          async (eventId, tokenIds, issuer) => {
+            let txm = await transactionMint.wait();
+
+            var eventId = eventId;
             formData.contract = trustifiedContract.address;
             formData.userId = userId;
             formData.eventId = parseInt(Number(eventId));
@@ -329,12 +333,9 @@ export const Web3ContextProvider = (props) => {
             formData.image = previewUrl ? previewUrl : template.preview;
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
-            formData.createdBy = txm.from;
+            formData.createdBy = issuer;
             await addCollection(formData);
-
-            let tokenIds = await trustifiedContract.getTokenIds(
-              parseInt(Number(eventId))
-            );
+            console.log(formData, "formData");
 
             var array = [];
 
@@ -342,16 +343,10 @@ export const Web3ContextProvider = (props) => {
               let obj = {};
               let claimToken = generateClaimToken(20);
 
-              if (type == "badge") {
-                array.push({
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              } else {
-                array.push({
-                  Name: csvdata[i].name,
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              }
+              array.push({
+                Name: csvdata[i].name,
+                ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+              });
 
               obj.token = claimToken;
               obj.tokenContract = trustifiedContract.address;
@@ -398,13 +393,14 @@ export const Web3ContextProvider = (props) => {
             downloadLink.href = URL.createObjectURL(blob);
             downloadLink.download = `${formData.title}.csv`;
             downloadLink.click();
-            toast.success("Successfully created NFT collection!!");
+            toast.success("Certificates Successfully issued!");
             resolve({ isResolved: true });
           }
-        }
+        );
       } catch (err) {
         console.log(err);
         toast.error("Something want wrong!!", err);
+        return reject(err);
       }
     });
   };
@@ -484,7 +480,7 @@ export const Web3ContextProvider = (props) => {
       return { imageData, pdfBlob };
     });
 
-    pdf.save();
+    // pdf.save();
 
     const imageFile = new File(
       [pdfBlob.imageData],
@@ -548,7 +544,7 @@ export const Web3ContextProvider = (props) => {
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         } else {
@@ -577,7 +573,7 @@ export const Web3ContextProvider = (props) => {
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
           }
         }
@@ -744,7 +740,7 @@ export const Web3ContextProvider = (props) => {
               ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
             });
 
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Certificate Successfully claimed!");
 
             setClaimLoading(false);
           }
@@ -794,7 +790,7 @@ export const Web3ContextProvider = (props) => {
               claimerAddress: claimerAddress,
               claimed: "Yes",
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Badge Successfully claimed!");
 
             setClaimLoading(false);
           }
@@ -822,7 +818,7 @@ export const Web3ContextProvider = (props) => {
               claimerAddress: claimerAddress,
               claimed: "Yes",
             });
-            toast.success("Claimed Certificate Successfully!");
+            toast.success("Badge Successfully claimed!");
             setClaimLoading(false);
           }
         }
