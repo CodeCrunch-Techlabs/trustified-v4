@@ -59,8 +59,7 @@ const DemoTemplate = () => {
     };
   
     const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
-
+    const id = open ? 'simple-popover' : undefined; 
     return (
         <div className='container mt-5 mb-5'>
             <p>Create Template</p>
