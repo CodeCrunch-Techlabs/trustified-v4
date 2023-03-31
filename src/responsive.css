@@ -625,3 +625,6 @@
     margin-top: 15px;
   }
 }
+.claim-margin{
+  margin-top: -10px !important;
+}

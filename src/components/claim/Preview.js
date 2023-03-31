@@ -1,7 +1,7 @@
 import React from "react";
 
-const TemplatePreview = ({id,data, name, issueDate }) => {
-  
+const TemplatePreview = ({ id, data, name, issueDate }) => {
+
   function formatDate(date) {
     var d = new Date(date),
       month = "" + (d.getMonth() + 1),
@@ -12,9 +12,7 @@ const TemplatePreview = ({id,data, name, issueDate }) => {
     if (day.length < 2) day = "0" + day;
 
     return [year, month, day].join("-");
-  }
-  
- 
+  } 
 
   return (
     <>
@@ -28,10 +26,10 @@ const TemplatePreview = ({id,data, name, issueDate }) => {
           }}
         >
           <img src={data.bgImage} width={data.width} height={data.height} />
-          <div style={data.title.style}>{data.title.text}</div>
+          <div className="claim-margin" style={data.title.style} >{data.title.text}</div>
           <div style={data.subTitle.style}>{data.subTitle.text}</div>
           <div style={data.certName.style}>{data.certName.text}</div>
-          <div id="certName" style={data.name.style}>
+          <div className="claim-margin"  id="certName"  style={data.name.style}>
             {name}
           </div>
           <div style={data.description.style}>{data.description.text}</div>
@@ -51,15 +49,14 @@ const TemplatePreview = ({id,data, name, issueDate }) => {
               width="100"
             />
           </label>
-          <div  style={{
-            position:'absolute',
-            right:0,
-            bottom:0,
-padding:'0 5px',
-            // transform: `translate(${555.327}px, ${-35.1444}px`,
+          <div style={{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            padding: '0 5px',
             color: data.title.style.color,
-            fontSize:'18px'
-            }}>
+            fontSize: '18px'
+          }}>
             {id}
           </div>
         </div>
