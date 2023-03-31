@@ -19,7 +19,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         address indexed issuer
     );
 
-    constructor() ERC721("TrustifiedTest", "TFT") {
+    constructor() ERC721("Trustified", "TFD") {
         owner = payable(msg.sender);
     }
 
