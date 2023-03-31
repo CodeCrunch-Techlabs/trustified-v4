@@ -53,7 +53,10 @@ const TemplatePreview = ({id,data, name, issueDate }) => {
           </label>
           <div  style={{
             position:'absolute',
-            transform: `translate(${555.327}px, ${-35.1444}px`,
+            right:0,
+            bottom:0,
+padding:'0 5px',
+            // transform: `translate(${555.327}px, ${-35.1444}px`,
             color: data.title.style.color,
             fontSize:'18px'
             }}>

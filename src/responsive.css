@@ -316,7 +316,7 @@
 }
 @media (max-width: 425px) {
   .header-navigation .container .right-side-box {
-    display: none !important;
+    /* display: none !important; */
   }
 
   .header-navigation .container .menu-toggler {
