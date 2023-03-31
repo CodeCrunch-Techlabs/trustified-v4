@@ -45,7 +45,6 @@ export default function Claim() {
     document.location.reload();
   }
 
-  console.log(claimer);
 
   const getUrl = (chain) => {
     const url =

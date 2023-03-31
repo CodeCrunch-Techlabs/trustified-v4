@@ -452,7 +452,7 @@ export const Web3ContextProvider = (props) => {
 
       let network = await getNetworkToken(claimer?.chain);
 
-      console.log(network, claimer?.chain);
+
 
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
 
