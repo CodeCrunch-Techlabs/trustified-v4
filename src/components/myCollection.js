@@ -226,7 +226,6 @@ export default function MyCollection({ show }) {
                           variant="body"
                           component="a"
                           sx={{
-                            textTransform: "uppercase",
                             fontWeight: 600,
                             margin: "10px",
                             color: "#84a8fb",
