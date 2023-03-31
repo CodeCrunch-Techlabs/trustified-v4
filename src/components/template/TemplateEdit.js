@@ -42,22 +42,22 @@ const TemplateEdit = ({ id }) => {
           }}
         >
           <img src={data.bgImage} width={data.width} height={data.height} />
-          <div contentEditable={true} style={data.title.style}>
+          <div  style={data.title.style}>
             {data.title.text}
           </div>
-          <div contentEditable={true} style={data.subTitle.style}>
+          <div  style={data.subTitle.style}>
             {data.subTitle.text}
           </div>
-          <div contentEditable={true} style={data.certName.style}>
+          <div  style={data.certName.style}>
             {data.certName.text}
           </div>
-          <div id="certName" contentEditable={true} style={data.name.style}>
+          <div id="certName"  style={data.name.style}>
             {data.name.text}
           </div>
-          <div contentEditable={true} style={data.description.style}>
+          <div  style={data.description.style}>
             {data.description.text}
           </div>
-          <div id="validity" contentEditable={true} style={data.date.style}>
+          <div id="validity"  style={data.date.style}>
             {data.date.text}
           </div>
           <input
