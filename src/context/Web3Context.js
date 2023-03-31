@@ -439,49 +439,11 @@ export const Web3ContextProvider = (props) => {
       allowTaint: true,
       useCORS: true,
     }).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/jpeg", 1.0);
-
-      const imageData = await fetch(imgData).then((r) => r.blob());
-      var pdf;
-      if (canvas.width > canvas.height) {
-        pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
-      } else {
-        pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
-      }
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-
-      let network = await getNetworkToken(claimer?.chain);
-
-      console.log(network, claimer?.chain);
-
-      var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
-
-      // Set the font size and style for the footer text
-
-      pdf.setFontSize(17);
-      pdf.setFont(textFamily);
-      pdf.setTextColor(textcolor);
-
-      // Get the number of pages in the document
-      var pageCount = pdf.internal.getNumberOfPages();
-
-      // Loop through each page and add the footer text
-      for (var i = 1; i <= pageCount; i++) {
-        pdf.setPage(i);
-        pdf.text(
-          text,
-          pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
-          pdf.internal.pageSize.getHeight() - 10
-        );
-      }
-      const pdfBlob = pdf.output("blob");
-      return { imageData, pdfBlob };
+      const imgData = canvas.toDataURL("image/jpeg", 1.0); 
+      const imageData = await fetch(imgData).then((r) => r.blob()); 
+      return { imageData };
     });
-
-    // pdf.save();
-
+ 
     const imageFile = new File(
       [pdfBlob.imageData],
       `${claimer?.claimer.replace(/ +/g, "")}.png`,
@@ -489,27 +451,16 @@ export const Web3ContextProvider = (props) => {
         type: "image/png",
       }
     );
-    const pdfFile = new File(
-      [pdfBlob.pdfBlob],
-      `${claimer?.claimer.replace(/ +/g, "")}.pdf`,
-      {
-        type: "application/pdf",
-      }
-    );
+  
     const metadata = await client.store({
       name: claimer?.title,
       description: claimer?.description,
-      image: imageFile,
-      pdf: pdfFile,
+      image: imageFile, 
       claimer: claimer?.claimer,
       eventId: claimer?.eventId,
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
-    });
-
-    // let meta = await axios.get(
-    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    // );
+    }); 
 
     const q = query(
       collection(db, "Collectors"),
@@ -610,46 +561,9 @@ export const Web3ContextProvider = (props) => {
       height: canvasHeight,
       scale: 2,
     }).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      // const img = new Image(); // create a new image element
-      // img.src = imgData; // set the source of the image to the data URL
-      const imageData = await fetch(imgData).then((r) => r.blob()); //
-
-      var pdf;
-      if (canvas.width > canvas.height) {
-        pdf = new jsPDF("l", "pt", [pdfWidth, pdfHeight]);
-      } else {
-        pdf = new jsPDF("p", "pt", [pdfHeight, pdfWidth]);
-      }
-
-      pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
-
-      let network = await getNetworkToken(claimer?.chain);
-
-      var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
-
-      // Set the font size and style for the footer text
-      pdf.setFontSize(17);
-      pdf.setFont("italic");
-      pdf.setTextColor(textcolor);
-
-      // Get the number of pages in the document
-      var pageCount = pdf.internal.getNumberOfPages();
-
-      // Loop through each page and add the footer text
-      for (var i = 1; i <= pageCount; i++) {
-        pdf.setPage(i);
-        pdf.text(
-          text,
-          pdf.internal.pageSize.getWidth() -
-            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-            10,
-          pdf.internal.pageSize.getHeight() - 10
-        );
-      }
-
-      const pdfBlob = pdf.output("blob");
-      return { imageData, pdfBlob };
+      const imgData = canvas.toDataURL("image/png"); 
+      const imageData = await fetch(imgData).then((r) => r.blob());   
+      return { imageData};
     });
 
     const imageFile = new File(
@@ -659,18 +573,11 @@ export const Web3ContextProvider = (props) => {
         type: "image/png",
       }
     );
-    const pdfFile = new File(
-      [pdfBlob.pdfBlob],
-      `${claimer?.claimer.replace(/ +/g, "")}.pdf`,
-      {
-        type: "application/pdf",
-      }
-    );
+     
     const metadata = await client.store({
       name: claimer?.title,
       description: claimer?.description,
-      image: imageFile,
-      pdf: pdfFile,
+      image: imageFile, 
       claimer: claimer?.claimer,
       eventId: claimer?.eventId,
       expireDate: claimer?.expireDate,
@@ -796,8 +703,7 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               txHash: txt.transactionHash,
             });
-            toast.success("Badge Successfully claimed!");
-
+            toast.success("Badge Successfully claimed!"); 
             setClaimLoading(false);
           }
         } else {

@@ -9,6 +9,7 @@ import TemplatePreview from "./Preview";
 import UploadPreview from "./UploadPreview";
 import Chip from "@mui/material/Chip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { toast } from "react-toastify";
 
 export default function Claim() {
   const web3Context = React.useContext(Web3Context);
@@ -44,8 +45,7 @@ export default function Claim() {
     });
     document.location.reload();
   }
-
-  console.log(claimer);
+ 
 
   const getUrl = (chain) => {
     const url =
@@ -97,7 +97,7 @@ export default function Claim() {
                   ) : (
                     <>
                       {claimer?.position != "" &&
-                      claimer?.position != undefined ? (
+                        claimer?.position != undefined ? (
                         <UploadPreview claimer={claimer} id={id} />
                       ) : (
                         <TemplatePreview
@@ -173,6 +173,10 @@ export default function Claim() {
               <a
                 className="thm-btn header__cta-btn"
                 onClick={async () => {
+                  if (add === "") {
+                    toast.error("Please inpur Address!");
+                    return;
+                  }
                   const { chainId } = await provider.getNetwork();
                   if (claimer.chain == "fvm" && chainId !== 314) {
                     await switchNetwork(ethers.utils.hexValue(314));
@@ -214,23 +218,19 @@ export default function Claim() {
                   }
                 }}
               >
-                <span>
-                  {claimLoading ? (
-                    <>
-                      <CircularProgress />
-                      <div id="cover-spin"></div>
-                      <p id="cover-spin-text">
-                        Please don't refresh! {claimer?.type} is being minted!
-                        😎 
-                      </p>
-                    </>
-                  ) : (
-                    "Claim"
-                  )}
+                <span> Claim
                 </span>
               </a>
             </div>
-
+            {claimLoading &&
+              <>
+                <div id="cover-spin"></div>
+                <p id="cover-spin-text">
+                  Please don't refresh! {claimer?.type} is being minted!
+                  😎
+                </p>
+              </>
+            }
             <div className="mt-4">
               <a
                 className="thm-btn header__cta-btn"

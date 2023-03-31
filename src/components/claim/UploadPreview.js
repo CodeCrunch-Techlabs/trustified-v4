@@ -20,7 +20,10 @@ const UploadPreview = ({ claimer ,id}) => {
         </div>
         <div  style={{
             position:'absolute',
-            transform: `translate(${555.327}px, ${-35.1444}px`,
+            // transform: `translate(${555.327}px, ${-35.1444}px`,
+            right:0,
+            padding:'0 5px',
+            bottom:0,
             color: claimer.uploadObj.style.color,
             fontSize:'18px'
             }}>

@@ -118,9 +118,9 @@ const NavOne = () => {
                 alt="alter text"
               />
             </a>
-            <button className="menu-toggler" onClick={mobileMenu}>
+            {/* <button className="menu-toggler" onClick={mobileMenu}>
               <span className="fa fa-bars"></span>
-            </button>
+            </button> */}
           </div>
           <div
             className="main-navigation"

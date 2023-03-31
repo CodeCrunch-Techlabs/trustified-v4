@@ -54,11 +54,20 @@ const BadgeTemplate = () => {
 
 
     return (
-        <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" > 
+        <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" >
             <div className='text-center '>
                 <h4 className=' text-dark'>Create Badge</h4>
                 <p className=''>Please fill out the form with as much information as possible.</p>
             </div>
+
+            {
+                formdatavalue.loading &&
+                <>
+                    <div id="cover-spin"></div>
+                    <p id="cover-spin-text">Please don't refresh!  Badges are being minted! 😎 </p>
+                </>
+
+            }
             <Box sx={{ marginTop: '30px' }}>
                 <Stepper activeStep={activeStep} orientation="vertical">
                     {steps.map((step, index) => (
@@ -80,15 +89,7 @@ const BadgeTemplate = () => {
                                                 className="thm-btn header__cta-btn"
                                                 style={{ pointerEvents: !btnDisbaled && "none" }}
                                             >
-                                                {formdatavalue.loading ? (
-                                                    <>
-                                                        <CircularProgress />
-                                                        <div id="cover-spin"></div>
-                                                        <p id="cover-spin-text">Please don't refresh!  Badges are being minted! 😎 </p>
-                                                    </>
-                                                ) : (
-                                                    <span>Create NFT</span>
-                                                )}
+                                                <span>Create NFT</span>
                                             </a>
                                             : <Button
                                                 variant="contained"
