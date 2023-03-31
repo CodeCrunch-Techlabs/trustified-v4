@@ -172,10 +172,10 @@ export default function Claim() {
               <a
                 className="thm-btn header__cta-btn"
                 onClick={async () => {
-                  // if (add === "") {
-                  //   toast.error("Please inpur Address!");
-                  //   return;
-                  // }
+                  if (add === "") {
+                    toast.error("Please inpur Address!");
+                    return;
+                  }
                   const { chainId } = await provider.getNetwork();
                   if (claimer.chain == "fvm" && chainId !== 314) {
                     await switchNetwork(ethers.utils.hexValue(314));
