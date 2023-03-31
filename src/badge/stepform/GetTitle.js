@@ -30,7 +30,7 @@ function GetTitle() {
     <div>
       <Stack spacing={3} sx={{ margin: "10px" }}>
         <TextField
-          fullWidth
+          fullwidth={"true"}
           label="Title"
           name="title"
           id="title"
@@ -39,7 +39,7 @@ function GetTitle() {
           value={formdata.title}
         />
         <TextareaAutosize
-          fullWidth
+          fullwidth={"true"}
           name="description"
           id="description"
           type="text"
@@ -53,7 +53,7 @@ function GetTitle() {
         />
       </Stack>
       <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
+        <FormControl fullwidth={"true"}>
           <FormLabel id="demo-controlled-radio-buttons-group">
             Select Your Network
           </FormLabel>
