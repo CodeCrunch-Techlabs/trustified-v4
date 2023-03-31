@@ -219,7 +219,6 @@ export const Web3ContextProvider = (props) => {
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
-          
             let txm = await transactionMint.wait();
             firebasedata.contract = trustifiedContract.address;
             firebasedata.userId = userId;
@@ -307,18 +306,17 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-
         const trustifiedContract = new ethers.Contract(
           trustifiedContracts[formData.chain].trustified,
           trustifiedContractAbi.abi,
           signer
-        ); 
-   
+        );
+
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false , 
+          formData.Nontransferable == "on" ? true : false
         );
         await trustifiedContract.once(
           "TokensMinted",
@@ -399,7 +397,7 @@ export const Web3ContextProvider = (props) => {
       } catch (err) {
         // console.log(err);
         // toast.error("Something want wrong!!", err);
-        return reject(err);  
+        return reject(err);
       }
     });
   };
@@ -454,6 +452,8 @@ export const Web3ContextProvider = (props) => {
 
       let network = await getNetworkToken(claimer?.chain);
 
+      console.log(network, claimer?.chain);
+
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
 
       // Set the font size and style for the footer text
@@ -471,8 +471,8 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
@@ -526,7 +526,6 @@ export const Web3ContextProvider = (props) => {
             trustifiedContractAbi.abi,
             signer
           );
-
 
           let transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
@@ -625,8 +624,6 @@ export const Web3ContextProvider = (props) => {
 
       pdf.addImage(imgData, "JPEG", 0, 0, pdfWidth, pdfHeight);
 
-   
-
       let network = await getNetworkToken(claimer?.chain);
 
       var text = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
@@ -645,18 +642,15 @@ export const Web3ContextProvider = (props) => {
         pdf.text(
           text,
           pdf.internal.pageSize.getWidth() -
-          pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
-          10,
+            pdf.getStringUnitWidth(text) * pdf.internal.getFontSize() -
+            10,
           pdf.internal.pageSize.getHeight() - 10
         );
       }
 
       const pdfBlob = pdf.output("blob");
-      pdf.save();
       return { imageData, pdfBlob };
     });
-
-   
 
     const imageFile = new File(
       [pdfBlob.imageData],

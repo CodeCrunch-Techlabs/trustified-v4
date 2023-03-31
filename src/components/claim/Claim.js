@@ -25,7 +25,7 @@ export default function Claim() {
   const { getMyCollection, getClaimer, claimer } = firebaseContext;
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const [id, setId]= useState("");
+  const [id, setId] = useState("");
   const [show, setShow] = useState(false);
 
   const { token } = useParams();
@@ -34,7 +34,7 @@ export default function Claim() {
 
   useEffect(() => {
     getClaimer(token);
-    getUrl(); 
+    getUrl();
   }, [token]);
 
   async function switchNetwork(chainId) {
@@ -44,6 +44,8 @@ export default function Claim() {
     });
     document.location.reload();
   }
+
+  console.log(claimer);
 
   const getUrl = (chain) => {
     const url =
@@ -55,31 +57,30 @@ export default function Claim() {
     return url;
   };
 
-  async function getCertId(){
-    let network =  getNetworkToken(claimer?.chain);  
+  async function getCertId() {
+    let network = getNetworkToken(claimer?.chain);
     var certId = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
     setId(certId);
   }
-  useEffect(()=>{
+  useEffect(() => {
     getCertId();
-  },[claimer]);
+  }, [claimer]);
 
   const getNetworkToken = (network) => {
-    var token;
-    if (network == "fevm") {
-      token = "fevm";
-    } else if (network == "filecoin") {
-      token = "filecoin";
+    var net;
+    if (network == "fvmtestnet") {
+      net = "fvmtestnet";
+    } else if (network == "fvm") {
+      net = "fvm";
     } else if (network == "mumbai") {
-      token = "mumbai";
+      net = "mumbai";
     } else if (network == "goerli") {
-      token = "goerli";
+      net = "goerli";
     } else {
-      token = "bsc";
+      net = "bsc";
     }
-    return token;
+    return net;
   };
-
   return (
     <section className="footer-position" id="banner">
       <div className="bannercontainer container">
@@ -103,7 +104,7 @@ export default function Claim() {
                           id={id}
                           data={claimer?.template}
                           name={claimer?.claimer}
-                          issueDate={claimer?.issueDate} 
+                          issueDate={claimer?.issueDate}
                         />
                       )}
                     </>
@@ -175,7 +176,10 @@ export default function Claim() {
                   const { chainId } = await provider.getNetwork();
                   if (claimer.chain == "fvm" && chainId !== 314) {
                     await switchNetwork(ethers.utils.hexValue(314));
-                  } else if (claimer.chain == "fvmtestnet" && chainId !== 3141) {
+                  } else if (
+                    claimer.chain == "fvmtestnet" &&
+                    chainId !== 3141
+                  ) {
                     await switchNetwork(ethers.utils.hexValue(3141));
                   } else if (claimer.chain == "mumbai" && chainId !== 80001) {
                     await switchNetwork(ethers.utils.hexValue(137));

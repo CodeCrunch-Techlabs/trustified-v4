@@ -42,7 +42,7 @@ const NavOne = () => {
   const [sticky, setSticky] = useState(false);
   const [menu, setMenu] = useState(false);
   const [user, setUser] = React.useState("");
-  const [anchorElUser, setAnchorElUser] = React.useState(false);
+  const [anchorElUser, setAnchorElUser] = React.useState(null);
   const [open, setOpen] = useState(false);
 
   const formik = useFormik({
@@ -62,11 +62,11 @@ const NavOne = () => {
   const { handleSubmit } = formik;
 
   const handleOpenUserMenu = (event) => {
-    setAnchorElUser(true);
+    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseUserMenu = () => {
-    setAnchorElUser(false);
+    setAnchorElUser(null);
   };
 
   React.useEffect(() => {
@@ -168,7 +168,7 @@ const NavOne = () => {
                 vertical: "top",
                 horizontal: "right",
               }}
-              open={anchorElUser}
+              open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
               <MenuItem>
