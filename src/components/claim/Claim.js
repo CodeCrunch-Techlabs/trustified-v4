@@ -225,7 +225,7 @@ export default function Claim() {
               <>
                 <div id="cover-spin"></div>
                 <p id="cover-spin-text">
-                  Please don't refresh! {claimer?.type} is being minted!
+                  Please don't refresh! {claimer?.type} is being claimed!
                   😎
                 </p>
               </>
