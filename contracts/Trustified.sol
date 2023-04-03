@@ -4,12 +4,10 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 import "./comman/ERC721URIStorage.sol";
 
 contract Trustified is ERC721URIStorage, ReentrancyGuard {
-    using SafeMath for uint256;
     address payable public owner;
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
@@ -21,14 +19,13 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         address indexed issuer
     );
 
-    constructor() ERC721("TrustifiedTest", "TFT") {
+    constructor() ERC721("Trustified", "TFD") {
         owner = payable(msg.sender);
     }
 
     struct token {
         uint256 tokenId;
         address payable creator;
-        address payable owner;
         bool nonTransferable;
     }
 
@@ -56,7 +53,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
     /**
      * @param tokenUri Metadata of nft.
      * @param quantity Number of nft needs to be minted for particular event Id.
-     * @param value 0 means it's Badges and 1 means it's certificates.
+     * @param value 0 means it's badges and 1 means it's certificates.
      */
     function bulkMintERC721(
         string calldata tokenUri,
@@ -73,7 +70,6 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
             uint256 tokenId = safeMint(tokenUri, value);
             tokens[tokenId] = token(
                 tokenId,
-                payable(msg.sender),
                 payable(msg.sender),
                 nonTransferable
             );
