@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useMemo, useCallback } from "react";
+import React, { useContext, useEffect, useState, useMemo, useCallback, useRef } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import Draggable from "react-draggable";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../../firebase";
 import TemplateEdit from "../../template/TemplateEdit";
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { SketchPicker } from 'react-color';
 import Popover from '@mui/material/Popover';
 
@@ -24,18 +24,22 @@ function GetTemplate() {
   const value = useContext(NFTStorageContext);
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
-    x: 143.8812255859375,
-    y: -570.6504516601562
+    x: 0,
+    y: 0
   });
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [fontSize, setFontSize] = useState(24);
-  const [colors, setColor] = useState("#36219e");
+  const [colors, setColor] = useState("#000");
   const [docId, setDocId] = useState("");
   const [bold, setBold] = useState(500);
   const [selectedElement, setSelectedElement] = useState(null);
   const [show, setShow] = useState(false);
-
+  const [height, setHeight] = useState(600);
+  const [width, setWidth] = useState(800);
+  const [imageHeight, setImageHeight] = useState();
+  const [imageWidth, setImageWidth] = useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const imgRef = useRef(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -65,24 +69,55 @@ function GetTemplate() {
     });
   }, []);
 
+  useEffect(() => {
+    getImageResolution()
+  }, [width, height])
+ 
+
+  async function getImageResolution() {
+    if (width >= 1000 || height >= 700 && width > height) {
+      setImageHeight(600)
+      setImageWidth(800)
+    } else if (width >= 1000 || height >= 700 && width < height) {
+      setImageHeight(800)
+      setImageWidth(600)
+    } else if (width >= 1000 || height >= 700 && width === height) {
+      if (width > 600 || height > 600) {
+        setImageHeight(600)
+        setImageWidth(600)
+      } else {
+        setImageHeight(height)
+        setImageWidth(width)
+      }
+    } else {
+      setImageHeight(height)
+      setImageWidth(width)
+    }
+  }
+
   const textName = {
     name: {
       text: 'Your Name',
+      width: imageWidth,
+      height: imageHeight,
       style: {
         position: 'absolute',
-        color: username?.color?.hex ? username?.color?.hex : '#860a1e',
+        color: username?.color?.hex ? username?.color?.hex : '#000',
         fontSize: `${username?.size}px` ? `${username?.size}px` : '40px',
         textAlign: 'center',
         margin: '10px auto',
         fontFamily: username?.font ? username?.font : 'Poppins',
-        fontWeight: username?.bold ? username?.bold : 800,
-        transform: `translate(${username.x}px, ${username.y}px)`
+        fontWeight: username?.bold ? username?.bold : 100,
+        transform: `translate(${username.x}px, ${username.y}px)`,
       }
     }
-  }; 
+  };
   useEffect(() => {
     if (selectedElement === "certText") {
-      setUsername({ ...username, font: selectedFont, color: colors, size: fontSize, bold: bold });
+      setUsername({
+        ...username, font: selectedFont, color: colors, size: fontSize, bold: bold, width: imageWidth,
+        height: imageHeight
+      });
       value.setUploadObj(textName);
     }
   }, [selectedFont, colors, fontSize, bold])
@@ -92,7 +127,7 @@ function GetTemplate() {
     event.stopPropagation();
     setSelectedElement(event.currentTarget.id);
   };
- 
+
   const handleFontChange = useCallback(event => {
     setSelectedFont(event.target.value);
   }, []);
@@ -112,6 +147,18 @@ function GetTemplate() {
     const image = e.target.files[0];
     value.setPreviewUrl(URL.createObjectURL(image));
     value.uploadCertificate(image);
+
+    const url = URL.createObjectURL(image);
+    const img = new Image();
+    img.src = url;
+    img.onload = handleImageLoad;
+  };
+
+  const handleImageLoad = (e) => {
+    const width = e.target.width;
+    const height = e.target.height;
+    setWidth(width);
+    setHeight(height);
   };
 
   const onClose = () => {
@@ -199,7 +246,7 @@ function GetTemplate() {
                   variant="contained"
                   component="label"
                 >
-                {value.uploadCert ? <CircularProgress  sx={{color:'#fff'}}/> : 'Upload Your Certificate' }  
+                  {value.uploadCert ? <CircularProgress sx={{ color: '#fff' }} /> : 'Upload Your Certificate'}
                   <input
                     onChange={(e) => handleImageChange(e)}
                     hidden
@@ -234,7 +281,7 @@ function GetTemplate() {
 
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Select Font Size</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Font Size</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -254,7 +301,7 @@ function GetTemplate() {
 
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <FormControl fullWidth >
-                    <InputLabel id="demo-simple-select-label">Font weight</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Font Weight</InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -303,6 +350,32 @@ function GetTemplate() {
                 </Popover>
               </Stack>
             }
+            {
+              value.previewUrl !== "" && <Stack direction="row" >
+                <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
+                  <TextField
+                    label="width"
+                    value={imageWidth}
+                    onChange={(e) => setImageWidth(e.target.value)}
+                    id="outlined-basic"
+                    variant="outlined"
+                    type="number"
+                  />
+                </Box>
+                <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
+                  <TextField
+                    label="Height"
+                    value={imageHeight}
+                    onChange={(e) => setImageHeight(e.target.value)}
+                    id="outlined-height"
+                    variant="outlined"
+                    type="number"
+                  />
+                </Box>
+              </Stack>
+            }
+
+
 
 
             {value.previewUrl !== "" && (
@@ -319,13 +392,14 @@ function GetTemplate() {
               </IconButton>
             )}
 
+
             {value.previewUrl && (
-              <div id="certificateX" style={{ width: '800px', height: '600px' }}>
-                <img width="800" height="600" src={value.previewUrl} />
+              <div id="certificateX" style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}>
+                <img ref={imgRef} width={imageWidth} height={imageHeight} src={value.previewUrl} />
                 <Draggable
                   position={username}
                   onStop={(e, data) =>
-                     setUsername({ ...username, x: data.x, y: data.y })
+                    setUsername({ ...username, x: data.x, y: data.y })
                   }
                   onMouseDown={(e) => {
                     handleDivClick(e);
@@ -341,13 +415,17 @@ function GetTemplate() {
               </div>
             )}
 
-            {value.previewUrl === "" && value.template === "" && (
+            {value.previewUrl && <span style={{ marginTop: '40px' }}>
+              Drag your name and put when you want to display certificate name
+            </span>}
+
+            {/* {value.previewUrl === "" && value.template === "" && (
               <Divider>
                 <Chip label="OR" />
               </Divider>
-            )}
+            )} */}
 
-            <Slider {...settings}>
+            {/* <Slider {...settings}>
               {data &&
                 data.map((e, i) => {
                   return (
@@ -360,26 +438,13 @@ function GetTemplate() {
                     </div>
                   );
                 })}
-            </Slider>
+            </Slider> */}
           </Stack>
         </div>
       </div>
       <div className="row">
         <div className="col-12">
-          {docId && <TemplateEdit id={docId} />}
-
-          {/* {value.template && value.template == "divTotemp1" && (
-            <Temp1 />
-          )}
-          {value.template && value.template == "divTotemp2" && (
-            <Temp2 />
-          )}
-            {value.template && value.template == "divTotemp3" && (
-            <Temp3 />
-          )}
-          {value.template && value.template == "divTotemp4" && (
-            <Temp4 />
-          )} */}
+          {/* {docId && <TemplateEdit id={docId} />}  */}
         </div>
       </div>
     </div>

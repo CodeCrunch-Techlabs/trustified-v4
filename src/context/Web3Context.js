@@ -364,7 +364,8 @@ export const Web3ContextProvider = (props) => {
               obj.position = previewUrl ? position : "";
               obj.uploadCertData = previewUrl ? uploadObj.name : "";
               obj.txHash = txm.transactionHash;
-              obj.createdBy = txm.from;
+              obj.createdBy = txm.from; 
+              console.log(obj,"object");
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {

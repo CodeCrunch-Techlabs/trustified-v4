@@ -3411,21 +3411,21 @@ right: 5%; */
   margin: 20px 0 0 0;
 }
 
-.card-h4 {
+/* .card-h4 {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   width: 200px;
-}
+} */
 
 
 .card-p {
   margin-top: 10px;
-  line-height: 20px; 
+  /* line-height: 20px; 
   overflow: hidden;
   text-overflow: ellipsis;
   height: 50px;
-  overflow: scroll;
+  overflow: scroll; */
 }
 
 .card-root h4 {
@@ -3438,9 +3438,10 @@ right: 5%; */
 }
 
 .card-root p {
-  font-size: 14px;
+  font-size: 12px;
   color: #74727a;
   margin-bottom: 0;
+  line-height: 24px !important;
 }
 
 .badge-root {

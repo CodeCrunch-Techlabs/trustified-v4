@@ -2,15 +2,15 @@ import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 
-const UploadPreview = ({ claimer ,id}) => {   
+const UploadPreview = ({ claimer ,id}) => {    
 
   return (
     <>
       <div id="certificateX" style={{ position: "relative" }}>
         <LazyLoadImage
           src={claimer.ipfsurl}
-          width={800}
-          height={600}
+          width={claimer.uploadObj.width}
+          height={claimer.uploadObj.height}
           PlaceholderSrc="/images/placeholder.jpg"
           alt="Image Alt"
         />

@@ -13,7 +13,6 @@ const TemplatePreview = ({ id, data, name, issueDate }) => {
 
     return [year, month, day].join("-");
   } 
-
   return (
     <>
       {data && (
