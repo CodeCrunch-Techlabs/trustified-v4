@@ -3,7 +3,6 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 
 const UploadPreview = ({ claimer ,id}) => {    
-
   return (
     <>
       <div id="certificateX" style={{ position: "relative" }}>
