@@ -103,7 +103,7 @@ function GetTemplate() {
       height: imageHeight,
       style: {
         position: 'absolute',
-        color: colors?.color?.hex ? colors?.color?.hex : '#000',
+        color: colors?.hex ? colors?.hex : '#000',
         fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
         textAlign: 'left',
         margin: '10px auto',
