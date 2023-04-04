@@ -14,7 +14,7 @@ const UploadPreview = ({ claimer ,id}) => {
           alt="Image Alt"
         />
         {/* <img width="800" height="600" src={claimer.ipfsurl} /> */}
-        <div style={claimer.uploadObj.style}>
+        <div style={claimer.uploadObj.style} >
           {claimer?.claimer}
         </div>
         <div  style={{

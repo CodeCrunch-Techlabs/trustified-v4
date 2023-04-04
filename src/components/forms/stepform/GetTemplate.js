@@ -29,7 +29,7 @@ function GetTemplate() {
   });
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [fontSize, setFontSize] = useState(24);
-  const [colors, setColor] = useState("#000");
+  const [colors, setColor] = useState("");
   const [docId, setDocId] = useState("");
   const [bold, setBold] = useState(500);
   const [selectedElement, setSelectedElement] = useState(null);
@@ -81,7 +81,7 @@ function GetTemplate() {
     } else if (width >= 1000 || height >= 700 && width < height) {
       setImageHeight(800)
       setImageWidth(600)
-    } else if (width >= 1000 || height >= 700 && width === height) {
+    } else if (width === height) {
       if (width > 600 || height > 600) {
         setImageHeight(600)
         setImageWidth(600)
@@ -94,6 +94,7 @@ function GetTemplate() {
       setImageWidth(width)
     }
   }
+ 
 
   const textName = {
     name: {
@@ -104,11 +105,12 @@ function GetTemplate() {
         position: 'absolute',
         color: username?.color?.hex ? username?.color?.hex : '#000',
         fontSize: `${username?.size}px` ? `${username?.size}px` : '40px',
-        textAlign: 'center',
+        textAlign: 'left',
         margin: '10px auto',
         fontFamily: username?.font ? username?.font : 'Poppins',
         fontWeight: username?.bold ? username?.bold : 100,
         transform: `translate(${username.x}px, ${username.y}px)`,
+        width: `${imageWidth - 200}px`,
       }
     }
   };
@@ -163,6 +165,7 @@ function GetTemplate() {
 
   const onClose = () => {
     value.setPreviewUrl("");
+    setUsername({});
   };
 
   const getTemplates = async () => {
