@@ -221,7 +221,7 @@ export default function Claim() {
                 </span>
               </a>
             </div>
-            {/* {claimLoading &&
+            {claimLoading &&
               <>
                 <div id="cover-spin"></div>
                 <p id="cover-spin-text">
@@ -229,7 +229,7 @@ export default function Claim() {
                   😎
                 </p>
               </>
-            } */}
+            }
             <div className="mt-4">
               <a
                 className="thm-btn header__cta-btn"
