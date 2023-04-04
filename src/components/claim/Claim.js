@@ -203,7 +203,9 @@ export default function Claim() {
                         token,
                         add,
                         claimer,
-                        claimer?.uploadObj.style.color
+                        claimer?.uploadObj.style.color,
+                        claimer?.uploadObj.width,
+                       claimer?.uploadObj.height
                       );
                     } else {
                       await claimCertificate(

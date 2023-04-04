@@ -119,7 +119,7 @@ function GetTemplate() {
       setUsername({...username  });
       value.setUploadObj(textName);
     }
-  }, [selectedFont, colors, fontSize, bold])
+  }, [selectedFont, colors, fontSize, bold,imageWidth,imageHeight])
 
 
   const handleDivClick = (event) => {
