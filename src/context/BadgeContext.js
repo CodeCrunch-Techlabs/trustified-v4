@@ -60,18 +60,9 @@ export const BadgeContextProvider = (props) => {
       var array = [];
 
       if (previewUrl) {
-        const badgeImg = document.getElementById("badge-img");
-        var pdfBlob = await html2canvas(badgeImg, {
-          allowTaint: true,
-          scale: 2,
-          useCORS: true,
-        }).then(async (canvas) => {
-          const imgData = canvas.toDataURL("image/jpeg", 1.0);
-          const imageData = await fetch(previewUrl).then((r) => r.blob());
-          return { imageData };
-        });
+        const imageData = await fetch(previewUrl).then((r) => r.blob());
         const imageFile = new File(
-          [pdfBlob.imageData],
+          [imageData],
           `${labelInfo.formData.title.replace(/ +/g, "")}.png`,
           {
             type: "image/png",
@@ -86,6 +77,7 @@ export const BadgeContextProvider = (props) => {
           expireDate: labelInfo.formData.expireDate,
           issueDate: labelInfo.formData.issueDate,
         });
+
         array.push(metadata.ipnft);
       } else {
         const idd = `badgeToprint${labelInfo.formData.template}`;
