@@ -103,12 +103,12 @@ function GetTemplate() {
       height: imageHeight,
       style: {
         position: 'absolute',
-        color: username?.color?.hex ? username?.color?.hex : '#000',
-        fontSize: `${username?.size}px` ? `${username?.size}px` : '40px',
+        color: colors?.color?.hex ? colors?.color?.hex : '#000',
+        fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
         textAlign: 'left',
         margin: '10px auto',
-        fontFamily: username?.font ? username?.font : 'Poppins',
-        fontWeight: username?.bold ? username?.bold : 100,
+        fontFamily: selectedFont ? selectedFont : 'Poppins',
+        fontWeight: bold ? bold : 100,
         transform: `translate(${username.x}px, ${username.y}px)`,
         width: `${imageWidth - 200}px`,
       }
@@ -116,10 +116,7 @@ function GetTemplate() {
   };
   useEffect(() => {
     if (selectedElement === "certText") {
-      setUsername({
-        ...username, font: selectedFont, color: colors, size: fontSize, bold: bold, width: imageWidth,
-        height: imageHeight
-      });
+      setUsername({...username  });
       value.setUploadObj(textName);
     }
   }, [selectedFont, colors, fontSize, bold])
