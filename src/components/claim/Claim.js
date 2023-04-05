@@ -173,7 +173,7 @@ export default function Claim() {
                 className="thm-btn header__cta-btn"
                 onClick={async () => {
                   if (add === "") {
-                    toast.error("Please inpur Address!");
+                    toast.error("Please Enter Address!");
                     return;
                   }
                   const { chainId } = await provider.getNetwork();
