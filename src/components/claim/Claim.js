@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextField, Divider, CircularProgress } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import MyCollection from "../myCollection";
@@ -96,7 +96,7 @@ export default function Claim() {
                   ) : (
                     <>
                       {claimer?.position != "" &&
-                        claimer?.position != undefined ? (
+                      claimer?.position != undefined ? (
                         <UploadPreview claimer={claimer} id={id} />
                       ) : (
                         <TemplatePreview
@@ -112,6 +112,7 @@ export default function Claim() {
               ) : (
                 <CircularProgress />
               )}
+              {console.log(claimer)}
 
               {claimer && (
                 <div
@@ -123,6 +124,16 @@ export default function Claim() {
                       <h4 className="card-h4 claim-h4">{claimer?.title}</h4>
                     </div>
                     <p className="card-p claim-des">{claimer?.description}</p>
+                    <div>
+                      {console.log(claimer?.platforms)}
+                      {claimer?.platforms.map((link) => (
+                        <div>
+                          <Link to={link} target="_blank">
+                            {link}
+                          </Link>
+                        </div>
+                      ))}
+                    </div>
                     <div
                       className="card-body-cert d-flex"
                       style={{ justifyContent: "space-evenly" }}
@@ -205,7 +216,7 @@ export default function Claim() {
                         claimer,
                         claimer?.uploadObj.style.color,
                         claimer?.uploadObj.width,
-                       claimer?.uploadObj.height
+                        claimer?.uploadObj.height
                       );
                     } else {
                       await claimCertificate(
@@ -219,19 +230,17 @@ export default function Claim() {
                   }
                 }}
               >
-                <span> Claim
-                </span>
+                <span> Claim</span>
               </a>
             </div>
-            {claimLoading &&
+            {claimLoading && (
               <>
                 <div id="cover-spin"></div>
                 <p id="cover-spin-text">
-                  Please don't refresh! {claimer?.type} is being claimed!
-                  😎
+                  Please don't refresh! {claimer?.type} is being claimed! 😎
                 </p>
               </>
-            }
+            )}
             <div className="mt-4">
               <a
                 className="thm-btn header__cta-btn"

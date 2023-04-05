@@ -9,6 +9,7 @@ import {
   RadioGroup,
   Radio,
   Divider,
+  Button,
 } from "@mui/material";
 import { Box, Stack } from "@mui/system";
 import { BadgeContext } from "../../context/BadgeContext";
@@ -31,6 +32,35 @@ const GetCsvFile = () => {
                 onChange={value.setFormdata("quantity")}
                 value={formdata.quantity}
               />
+            </Box>
+
+            <Box sx={{ m: 1 }}>
+              <Button
+                variant="contained"
+                style={{ color: "white" }}
+                onClick={value.handleAddLink}
+                sx={{ mt: 1, mr: 1 }}
+                disabled={value.links.length > 2 ? true : false}
+              >
+                Add Links
+              </Button>
+              <FormHelperText>Where people can find you?</FormHelperText>
+            </Box>
+
+            <Box>
+              {value.links.map((link, index) => (
+                <TextField
+                key={index}
+                  sx={{ marginRight: "5px" }}
+                  id="outlined-size-small"
+                  size="small"
+                  label="Link"
+                  name="link"
+                  type="text"
+                  onChange={(e) => value.handleLinkChange(e, index)}
+                  value={link}
+                />
+              ))}
             </Box>
 
             {/* {validity == "limited" ? (

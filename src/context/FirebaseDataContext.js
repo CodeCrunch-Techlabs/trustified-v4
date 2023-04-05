@@ -109,6 +109,7 @@ export const FirebaseDataContextProvider = (props) => {
       templateId: data.templateId,
       txHash: data.txHash,
       createdBy: data.createdBy,
+      platforms: data.platforms,
     });
 
     setLoading(false);
@@ -138,6 +139,7 @@ export const FirebaseDataContextProvider = (props) => {
       uploadObj: data.uploadCertData,
       txHash: data.txHash,
       createdBy: data.createdBy,
+      platforms: data.platforms,
     });
     setLoading(false);
     setUpdated(!updated);
@@ -290,7 +292,7 @@ export const FirebaseDataContextProvider = (props) => {
         obj.expireDate = fire.data().expireDate;
         obj.createdBy = fire.data().createdBy;
         obj.txHash = fire.data().txHash;
-    
+        obj.platforms = fire.data().platforms;
 
         if (fire.data().type == "badge") {
           let meta = await axios.get(fire.data().ipfsurl);
