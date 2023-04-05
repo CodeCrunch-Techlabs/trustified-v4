@@ -424,7 +424,7 @@ export const Web3ContextProvider = (props) => {
     claimerAddress,
     claimer,
     textcolor,
-    textFamily
+    textFamily 
   ) => {
     setClaimLoading(true);
     const input = document.getElementById("create-temp");
@@ -545,13 +545,15 @@ export const Web3ContextProvider = (props) => {
     claimToken,
     claimerAddress,
     claimer,
-    textcolor
+    textcolor,
+    width,
+    height
   ) => {
     setClaimLoading(true);
 
     const input = document.getElementById("certificateX");
-    const pdfWidth = 800;
-    const pdfHeight = 600;
+    const pdfWidth = width;
+    const pdfHeight = height;
     const canvasWidth = pdfWidth * 1;
     const canvasHeight = pdfHeight * 1;
 

@@ -3,10 +3,9 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 
 const UploadPreview = ({ claimer ,id}) => {    
-
   return (
     <>
-      <div id="certificateX" style={{ position: "relative" }}>
+      <div id="certificateX" style={{ position: "relative", width: claimer.uploadObj.width, height: claimer.uploadObj.height}}>
         <LazyLoadImage
           src={claimer.ipfsurl}
           width={claimer.uploadObj.width}
@@ -15,7 +14,7 @@ const UploadPreview = ({ claimer ,id}) => {
           alt="Image Alt"
         />
         {/* <img width="800" height="600" src={claimer.ipfsurl} /> */}
-        <div style={claimer.uploadObj.style}>
+        <div style={claimer.uploadObj.style} >
           {claimer?.claimer}
         </div>
         <div  style={{

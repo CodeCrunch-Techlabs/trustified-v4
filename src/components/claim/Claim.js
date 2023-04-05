@@ -203,7 +203,9 @@ export default function Claim() {
                         token,
                         add,
                         claimer,
-                        claimer?.uploadObj.style.color
+                        claimer?.uploadObj.style.color,
+                        claimer?.uploadObj.width,
+                       claimer?.uploadObj.height
                       );
                     } else {
                       await claimCertificate(
@@ -221,7 +223,7 @@ export default function Claim() {
                 </span>
               </a>
             </div>
-            {/* {claimLoading &&
+            {claimLoading &&
               <>
                 <div id="cover-spin"></div>
                 <p id="cover-spin-text">
@@ -229,7 +231,7 @@ export default function Claim() {
                   😎
                 </p>
               </>
-            } */}
+            }
             <div className="mt-4">
               <a
                 className="thm-btn header__cta-btn"
