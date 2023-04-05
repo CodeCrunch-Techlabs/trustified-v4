@@ -29,7 +29,7 @@ import { db } from "../../firebase";
 import { toast } from "react-toastify";
 import { Web3Context } from "../../context/Web3Context";
 import MyCollection from "../myCollection";
-import Chip from '@mui/material/Chip';
+import Chip from "@mui/material/Chip";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 
 import { Card, Container, Row, Col } from "react-bootstrap";
@@ -37,27 +37,55 @@ import web3 from "web3";
 
 function User() {
   const web3Context = React.useContext(Web3Context);
-  const { shortAddress, data, setUpdate, update } = web3Context;
+  const { shortAddress, setUpdate, update } = web3Context;
   const [open, setOpen] = useState(false);
-  const [avatar, setAvatar] = useState(data ? data.Photo : "");
   const [loading, setLoading] = useState(false);
   const storage = getStorage();
-  const [name, setName] = useState(data ? data.Name : ""); 
-  const [userName, setUsername] = useState(data ? data.UserName : "");
-  const [bio, setBio] = useState(data ? data.Bio : "");
-  const [purpose, setPurpose] = useState(data ? data.Purpose : "");
+  const [profileData, setProfileData] = useState({
+    avatar: "",
+    name: "",
+    userName: "",
+    bio: "",
+    purpose: "",
+    address: "",
+  });
 
   const firebaseContext = React.useContext(firebaseDataContext);
   const { getMyCollection } = firebaseContext;
 
   useEffect(() => {
-    let add = localStorage.getItem("address");  
+    let add = localStorage.getItem("address");
     getMyCollection(web3.utils.toChecksumAddress(add));
   }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      const add = window.localStorage.getItem("address");
+      const q = query(
+        collection(db, "UserProfile"),
+        where("Address", "==", add)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((fire) => {
+        let obj = {
+          avatar: fire.data().Photo,
+          name: fire.data().Name,
+          userName: fire.data().UserName,
+          bio: fire.data().Bio,
+          purpose: fire.data().purpose,
+          address: fire.data().Address,
+        };
+        setProfileData(obj);
+      });
+    };
+    init();
+  }, [update]);
 
   const handleEditProfile = () => {
     setOpen(!open);
   };
+
+  // console.log(profileData, "profileData");
 
   async function onChangeAvatar(e) {
     setLoading(true);
@@ -65,7 +93,7 @@ function User() {
     const storageRef = ref(storage, `Photo/${file.name}`);
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(snapshot.ref).then((url) => {
-        setAvatar(url);
+        setProfileData({ ...profileData, avatar: url });
       });
     });
     setLoading(false);
@@ -74,13 +102,14 @@ function User() {
   const updateProfile = async () => {
     const add = window.localStorage.getItem("address");
     const data = {
-      Name: name,
-      UserName: userName,
-      Bio: bio,
-      Photo: avatar,
+      Name: profileData.name,
+      UserName: profileData.userName,
+      Bio: profileData.bio,
+      Photo: profileData.avatar,
       Address: add,
-      verified:0,
+      verified: 0,
       CreatedAt: new Date(),
+      purpose: profileData.purpose,
     };
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
     const querySnapshot = await getDocs(q);
@@ -91,12 +120,20 @@ function User() {
     } else {
       querySnapshot.forEach((fire) => {
         const data = {
-          Name: name !== "" ? name : fire.data().Name,
-          UserName: userName !== "" ? userName : fire.data().UserName,
-          Bio: bio !== "" ? bio : fire.data().Bio,
-          Photo: avatar !== "" ? avatar : fire.data().Photo,
+          Name: profileData.name !== "" ? profileData.name : fire.data().Name,
+          UserName:
+            profileData.userName !== ""
+              ? profileData.userName
+              : fire.data().UserName,
+          Bio: profileData.bio !== "" ? profileData.bio : fire.data().Bio,
+          Photo:
+            profileData.avatar !== "" ? profileData.avatar : fire.data().Photo,
           Address: add,
           UpdatedAt: new Date(),
+          purpose:
+            profileData.purpose !== ""
+              ? profileData.purpose
+              : fire.data().purpose,
         };
         const dataref = doc(db, "UserProfile", fire.id);
         updateDoc(dataref, data);
@@ -157,8 +194,8 @@ function User() {
                         src={
                           loading ? (
                             <CircularProgress />
-                          ) : avatar ? (
-                            avatar
+                          ) : profileData.avatar ? (
+                            profileData.avatar
                           ) : (
                             "/images/log.png"
                           )
@@ -180,26 +217,36 @@ function User() {
                       marginTop: "20px",
                     }}
                   >
-                    {data ? shortAddress(data.Address) : shortAddress(window.localStorage.getItem("address"))}
-                  </Typography> 
+                    {profileData
+                      ? shortAddress(profileData.address)
+                      : shortAddress(window.localStorage.getItem("address"))}
+                  </Typography>
                   <TextField
                     sx={{ m: 2 }}
                     id="outlined-multiline-flexible"
                     label="Name"
                     name="name"
                     type="text"
-                    defaultValue={data?.Name ? data?.Name : "Name"}
-                    onChange={(e) => setName(e.target.value)}
+                    value={profileData.name}
+                    onChange={(e) =>
+                      setProfileData({ ...profileData, name: e.target.value })
+                    }
                     fullWidth
                   />
+
                   <TextField
                     sx={{ m: 2 }}
                     id="outlined-multiline-flexible"
                     label="Username"
-                    name="username"
+                    name="userName"
                     type="text"
-                    onChange={(e) => setUsername(e.target.value)}
-                    defaultValue={data?.UserName ? data?.UserName : "@username"}
+                    value={profileData.userName}
+                    onChange={(e) =>
+                      setProfileData({
+                        ...profileData,
+                        userName: e.target.value,
+                      })
+                    }
                     fullWidth
                   />
                   <TextField
@@ -208,21 +255,29 @@ function User() {
                     label="Bio"
                     name="bio"
                     type="text"
-                    onChange={(e) => setBio(e.target.value)}
-                    defaultValue={data?.Bio ? data?.Bio : "Bio"}
+                    onChange={(e) =>
+                      setProfileData({ ...profileData, bio: e.target.value })
+                    }
+                    value={profileData.bio}
                     fullWidth
                     multiline
                     maxRows={4}
                     minRows={3}
                   />
-                   <TextField
+
+                  <TextField
                     sx={{ m: 2 }}
                     id="outlined-multiline-flexible"
                     label="Purpose of Issue"
                     name="purpose"
                     type="text"
-                    onChange={(e) => setPurpose(e.target.value)}
-                    defaultValue={data?.Purpose ? data?.Purpose : "Purpose of Issue"}
+                    onChange={(e) =>
+                      setProfileData({
+                        ...profileData,
+                        purpose: e.target.value,
+                      })
+                    }
+                    value={profileData.purpose}
                     fullWidth
                     multiline
                     maxRows={4}
@@ -248,7 +303,7 @@ function User() {
                   }}
                 >
                   <Avatar
-                    src={data && data.Photo}
+                    src={profileData.avatar}
                     sx={{
                       height: 100,
                       mb: 2,
@@ -268,9 +323,10 @@ function User() {
                       marginTop: "20px",
                     }}
                   >
-                    {data ? shortAddress(data.Address) : shortAddress(window.localStorage.getItem("address"))}
+                    {profileData.address !== ""
+                      ? shortAddress(profileData.address)
+                      : shortAddress(window.localStorage.getItem("address"))}
                   </Typography>
-
                   <div
                     style={{
                       margin: "10px",
@@ -278,9 +334,14 @@ function User() {
                     }}
                   >
                     <h3>
-                      <a href="#none">@{data ? data.UserName : "username"}</a>
+                      <a href="#none">
+                        
+                        {profileData.userName !== ""
+                          ? profileData.userName
+                          : "@UserName"}
+                      </a>
                     </h3>
-                    <p>{data ? data.Bio : "Bio"}</p>
+                    <p>{profileData.bio !== "" ? profileData.bio : "Bio"}</p>
                   </div>
                 </Box>
               </CardContent>

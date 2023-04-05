@@ -364,8 +364,7 @@ export const Web3ContextProvider = (props) => {
               obj.position = previewUrl ? position : "";
               obj.uploadCertData = previewUrl ? uploadObj.name : "";
               obj.txHash = txm.transactionHash;
-              obj.createdBy = txm.from; 
-              console.log(obj,"object");
+              obj.createdBy = txm.from;
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {
@@ -424,7 +423,7 @@ export const Web3ContextProvider = (props) => {
     claimerAddress,
     claimer,
     textcolor,
-    textFamily 
+    textFamily
   ) => {
     setClaimLoading(true);
     const input = document.getElementById("create-temp");
@@ -440,11 +439,11 @@ export const Web3ContextProvider = (props) => {
       allowTaint: true,
       useCORS: true,
     }).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/jpeg", 1.0); 
-      const imageData = await fetch(imgData).then((r) => r.blob()); 
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const imageData = await fetch(imgData).then((r) => r.blob());
       return { imageData };
     });
- 
+
     const imageFile = new File(
       [pdfBlob.imageData],
       `${claimer?.claimer.replace(/ +/g, "")}.png`,
@@ -452,16 +451,16 @@ export const Web3ContextProvider = (props) => {
         type: "image/png",
       }
     );
-  
+
     const metadata = await client.store({
       name: claimer?.title,
       description: claimer?.description,
-      image: imageFile, 
+      image: imageFile,
       claimer: claimer?.claimer,
       eventId: claimer?.eventId,
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
-    }); 
+    });
 
     const q = query(
       collection(db, "Collectors"),
@@ -564,9 +563,9 @@ export const Web3ContextProvider = (props) => {
       height: canvasHeight,
       scale: 2,
     }).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/png"); 
-      const imageData = await fetch(imgData).then((r) => r.blob());   
-      return { imageData};
+      const imgData = canvas.toDataURL("image/png");
+      const imageData = await fetch(imgData).then((r) => r.blob());
+      return { imageData };
     });
 
     const imageFile = new File(
@@ -576,11 +575,11 @@ export const Web3ContextProvider = (props) => {
         type: "image/png",
       }
     );
-     
+
     const metadata = await client.store({
       name: claimer?.title,
       description: claimer?.description,
-      image: imageFile, 
+      image: imageFile,
       claimer: claimer?.claimer,
       eventId: claimer?.eventId,
       expireDate: claimer?.expireDate,
@@ -706,7 +705,7 @@ export const Web3ContextProvider = (props) => {
               claimed: "Yes",
               txHash: txt.transactionHash,
             });
-            toast.success("Badge Successfully claimed!"); 
+            toast.success("Badge Successfully claimed!");
             setClaimLoading(false);
           }
         } else {
