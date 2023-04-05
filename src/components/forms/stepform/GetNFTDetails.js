@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   TextField,
   Box,
@@ -12,19 +12,76 @@ import {
 import { ethers } from "ethers";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
+import { toast } from "react-toastify";
 
 function GetNFTDetails() {
+  const provider = new ethers.providers.Web3Provider(window.ethereum); 
   const value = useContext(NFTStorageContext);
-  const formdata = value.labelInfo.formData;
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const formdata = value.labelInfo.formData; 
+ 
+ 
+  async function switchNetwork(chainId) { 
+    try {
+      // check if the chain ID is already available in MetaMask
+      const chainData = await window.ethereum.request({
+        method: "eth_chainId",
+        params: [],
+      }); 
+ 
 
-  async function switchNetwork(chainId) {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-    });
-    document.location.reload();
+      if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
+        
+        // chain ID is not available, add the chain to MetaMask
+        const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
+        const chainName = "Filecoin Mainnet"; // replace with your chain name
+        const symbol = "FIL"; // replace with your chain symbol
+        const decimals = 18; // replace with your token's decimals
+        const chainParams = {
+          chainId: chainId,
+          chainName: chainName,
+          nativeCurrency: {
+            name: chainName,
+            symbol: symbol,
+            decimals: decimals,
+          },
+          rpcUrls: [rpcUrl],
+        };
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [chainParams],
+        });
+      } else {
+        
+        // chain ID is not available, add the chain to MetaMask
+        const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
+        const chainName = "Filecoin hyperspace"; // replace with your chain name
+        const symbol = "tFIL"; // replace with your chain symbol
+        const decimals = 18; // replace with your token's decimals
+        const chainParams = {
+          chainId: chainId,
+          chainName: chainName,
+          nativeCurrency: {
+            name: chainName,
+            symbol: symbol,
+            decimals: decimals,
+          },
+          rpcUrls: [rpcUrl],
+        };
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [chainParams],
+        });
+      }
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+      });
+      document.location.reload();
+    } catch (error) {
+      toast.error(error.message);
+    }
   }
+
 
   return (
     <div className="container mt-5">
@@ -62,13 +119,18 @@ function GetNFTDetails() {
                 value={formdata.chain}
                 onChange={async (e) => {
                   const { chainId } = await provider.getNetwork();
+                  console.log(chainId, "=>", e.target.value, "chainId chainId");
                   if (e.target.value == "fvm" && chainId !== 314) {
+                    console.log("call main");
                     await switchNetwork(ethers.utils.hexValue(314));
+
                   } else if (
                     e.target.value == "fvmtestnet" &&
                     chainId !== 3141
                   ) {
+                    console.log("call test");
                     await switchNetwork(ethers.utils.hexValue(3141));
+
                   } else if (e.target.value == "mumbai" && chainId !== 80001) {
                     await switchNetwork(ethers.utils.hexValue(80001));
                   } else if (e.target.value == "goerli" && chainId !== 5) {
@@ -81,7 +143,7 @@ function GetNFTDetails() {
               >
                 <Stack
                   direction="row"
-                  justifyContent="start" 
+                  justifyContent="start"
                   alignItems="center"
                   spacing={2}
                 >

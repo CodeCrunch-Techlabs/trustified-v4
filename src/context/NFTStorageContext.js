@@ -100,7 +100,11 @@ export const NFTStorageContextProvider = (props) => {
           setUploadObj("")
         }).catch((error) => {
           setUploading(false);
-          toast.error(error.message)
+          if(error.message == "Internal JSON-RPC error."){
+            toast.error("You don't have enough balance to create certificate!")
+          } else{
+            toast.error(error.message);
+          }  
         });
       } else {
         createNftFunction(
@@ -116,7 +120,11 @@ export const NFTStorageContextProvider = (props) => {
           setUploadObj("")
         }).catch((error) => {
           setUploading(false);
-          toast.error(error.message)
+          if(error.message == "Internal JSON-RPC error."){
+            toast.error("You don't have enough balance to create certificate!")
+          } else{
+            toast.error(error.message);
+          } 
         });
       }  
     } catch (error) {
