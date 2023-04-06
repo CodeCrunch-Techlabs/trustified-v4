@@ -3,6 +3,7 @@ import React, { useState, createContext, useEffect } from "react";
 import { NFTStorage, File } from "nft.storage";
 import jsPDF from "jspdf";
 import { Web3Context } from "./Web3Context";
+import { toast } from "react-toastify";
 export const BadgeContext = createContext(undefined);
 export const BadgeContextProvider = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -133,10 +134,17 @@ export const BadgeContextProvider = (props) => {
           links
         ).then((response) => {
           setLoading(false);
+        }).catch((error) => {
+          setLoading(false);
+          if (error.message == "Internal JSON-RPC error.") {
+            toast.error("You don't have enough balance to create Badges!")
+          } else {
+            toast.error(error.message);
+          }
         });
       }
     } catch (error) {
-      setLoading(false);
+      toast.error(error.message);
     }
   };
   return (

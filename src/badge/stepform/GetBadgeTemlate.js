@@ -111,7 +111,7 @@ const GetBadgeTemlate = () => {
           </Stack>
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         {formdata.template && <Badge1 idd={formdata.template} />}
 
         {formdata.template && (
@@ -151,7 +151,7 @@ const GetBadgeTemlate = () => {
             </Stack>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

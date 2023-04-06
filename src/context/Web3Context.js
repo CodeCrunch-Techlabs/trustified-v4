@@ -289,10 +289,8 @@ export const Web3ContextProvider = (props) => {
             resolve({ isResolved: true });
           }
         );
-      } catch (err) {
-        console.log(err);
-        toast.error("Something went wrong!!", err);
-        resolve({ isResolved: true });
+      } catch (err) { 
+        return reject(err);
       }
     });
   };

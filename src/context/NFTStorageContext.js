@@ -1,4 +1,4 @@
-import React, { useState, createContext } from "react";
+import React, { useState, createContext, useEffect } from "react";
 import { NFTStorage, File } from "nft.storage";
 
 import jsPDF from "jspdf";
@@ -8,6 +8,7 @@ import { Web3Context } from "./Web3Context";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { ethers } from "ethers";
 
 export const NFTStorageContext = createContext(undefined);
 
@@ -31,12 +32,12 @@ export const NFTStorageContextProvider = (props) => {
     formData: {
       title: "",
       description: "",
-      chain: "fvm",
+      chain: "fvm" ,
       expireDate: "",
       issueDate: new Date(),
       Nontransferable: "on",
     },
-  });
+  }); 
 
   const web3Context = React.useContext(Web3Context);
   const { createNftFunction } = web3Context;
