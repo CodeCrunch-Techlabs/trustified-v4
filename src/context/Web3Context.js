@@ -304,7 +304,8 @@ export const Web3ContextProvider = (props) => {
     templateId,
     position,
     previewUrl,
-    uploadObj
+    uploadObj,
+    links
   ) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -334,6 +335,7 @@ export const Web3ContextProvider = (props) => {
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
+            formData.platforms = links;
             await addCollection(formData);
 
             var array = [];
@@ -367,6 +369,7 @@ export const Web3ContextProvider = (props) => {
               obj.uploadCertData = previewUrl ? uploadObj.name : "";
               obj.txHash = txm.transactionHash;
               obj.createdBy = txm.from;
+              obj.platforms = links;
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {
