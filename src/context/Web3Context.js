@@ -200,7 +200,7 @@ export const Web3ContextProvider = (props) => {
     return result;
   }
 
-  const createBadges = function (data, firebasedata, checked, type) {
+  const createBadges = function (data, firebasedata, checked, type, links) {
     return new Promise(async (resolve, reject) => {
       try {
         const trustifiedContract = new ethers.Contract(
@@ -229,6 +229,7 @@ export const Web3ContextProvider = (props) => {
             firebasedata.Nontransferable = checked == true ? "on" : "off";
             firebasedata.txHash = txm.transactionHash;
             firebasedata.createdBy = txm.from;
+            firebasedata.platforms = links;
             await addCollection(firebasedata);
 
             var array = [];
@@ -261,6 +262,7 @@ export const Web3ContextProvider = (props) => {
               obj.uploadCertData = "";
               obj.txHash = txm.transactionHash;
               obj.createdBy = txm.from;
+              obj.platforms = links;
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {

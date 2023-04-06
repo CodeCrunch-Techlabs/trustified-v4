@@ -15,6 +15,7 @@ export const BadgeContextProvider = (props) => {
   const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
   const [checked, setChecked] = useState(true);
+  const [links, setLinks] = useState([]);
 
   const [previewUrl, setPreviewUrl] = useState("");
   const [usernamePos, setUsernamePos] = useState({ x: 112, y: -171 });
@@ -54,6 +55,17 @@ export const BadgeContextProvider = (props) => {
   const switchHandler = (event) => {
     setChecked(event.target.checked);
   };
+
+  const handleAddLink = () => {
+    setLinks([...links, ""]);
+  };
+
+  const handleLinkChange = (event, index) => {
+    const updatedLinks = [...links];
+    updatedLinks[index] = event.target.value;
+    setLinks(updatedLinks);
+  };
+
 
   const createBadge = async () => {
     try {
@@ -118,7 +130,8 @@ export const BadgeContextProvider = (props) => {
           },
           labelInfo.formData,
           checked,
-          "badge"
+          "badge",
+          links
         ).then((response) => {
           setLoading(false);
         }).catch((error) => {
@@ -132,34 +145,36 @@ export const BadgeContextProvider = (props) => {
       }
     } catch (error) {
       toast.error(error.message);
-    } 
-};
-
-return (
-  <BadgeContext.Provider
-    value={{
-      labelInfo,
-      setFormdata,
-      handleClickOpen,
-      handleClose,
-      open,
-      handleChangeLogo,
-      uploadLogo,
-      csvData,
-      setCsvData,
-      loading,
-      createBadge,
-      setUsernamePos,
-      previewUrl,
-      usernamePos,
-      setPreviewUrl,
-      checked,
-      switchHandler,
-    }}
-    {...props}
-  >
-    {" "}
-    {props.children}
-  </BadgeContext.Provider>
-);
+    }
+  };
+  return (
+    <BadgeContext.Provider
+      value={{
+        labelInfo,
+        setFormdata,
+        handleClickOpen,
+        handleClose,
+        open,
+        handleChangeLogo,
+        uploadLogo,
+        csvData,
+        setCsvData,
+        loading,
+        createBadge,
+        setUsernamePos,
+        previewUrl,
+        usernamePos,
+        setPreviewUrl,
+        checked,
+        switchHandler,
+        handleAddLink,
+        handleLinkChange,
+        links
+      }}
+      {...props}
+    >
+      {" "}
+      {props.children}
+    </BadgeContext.Provider>
+  );
 };
