@@ -79,10 +79,10 @@ const GetBadgeTemlate = () => {
               </div>
             )}
 
-            <Divider>
+            {/* <Divider>
               <Chip label="OR" />
-            </Divider>
-            {value.previewUrl === "" && (
+            </Divider> */}
+            {/* {value.previewUrl === "" && (
               <Box sx={{ minWidth: 120 }}>
                 <FormControl sx={{ m: 1, minWidth: 200 }}>
                   <InputLabel id="demo-simple-select-helper-label">
@@ -107,11 +107,11 @@ const GetBadgeTemlate = () => {
                   </Select>
                 </FormControl>
               </Box>
-            )}
+            )} */}
           </Stack>
         </div>
       </div>
-      <div className="row">
+      {/* <div className="row">
         {formdata.template && <Badge1 idd={formdata.template} />}
 
         {formdata.template && (
@@ -151,7 +151,7 @@ const GetBadgeTemlate = () => {
             </Stack>
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
