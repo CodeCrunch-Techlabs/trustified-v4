@@ -112,7 +112,7 @@ export default function Claim() {
               ) : (
                 <CircularProgress />
               )}
-              {console.log(claimer)}
+
 
               {claimer && (
                 <div
@@ -125,7 +125,7 @@ export default function Claim() {
                     </div>
                     <p className="card-p claim-des">{claimer?.description}</p>
                     <div>
-                      {console.log(claimer?.platforms)}
+                  
                       {claimer?.platforms.map((link) => (
                         <div>
                           <Link to={link} target="_blank">
