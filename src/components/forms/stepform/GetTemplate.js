@@ -19,6 +19,12 @@ import TemplateEdit from "../../template/TemplateEdit";
 import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { SketchPicker } from 'react-color';
 import Popover from '@mui/material/Popover';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
+import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
+import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 function GetTemplate() {
   const value = useContext(NFTStorageContext);
@@ -40,6 +46,13 @@ function GetTemplate() {
   const [imageWidth, setImageWidth] = useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const imgRef = useRef(null);
+  const [alignment, setAlignment] = React.useState('left');
+
+  const handleAlignment = (event, newAlignment) => {
+    if (newAlignment !== null) {
+      setAlignment(newAlignment);
+    }
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -72,7 +85,7 @@ function GetTemplate() {
   useEffect(() => {
     getImageResolution()
   }, [width, height])
- 
+
 
   async function getImageResolution() {
     if (width >= 1000 || height >= 700 && width > height) {
@@ -94,7 +107,7 @@ function GetTemplate() {
       setImageWidth(width)
     }
   }
- 
+
 
   const textName = {
     name: {
@@ -105,7 +118,7 @@ function GetTemplate() {
         position: 'absolute',
         color: colors?.hex ? colors?.hex : '#000',
         fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
-        textAlign: 'left',
+        textAlign: alignment,
         margin: '10px auto',
         fontFamily: selectedFont ? selectedFont : 'Poppins',
         fontWeight: bold ? bold : 100,
@@ -116,10 +129,10 @@ function GetTemplate() {
   };
   useEffect(() => {
     if (selectedElement === "certText") {
-      setUsername({...username  });
+      setUsername({ ...username });
       value.setUploadObj(textName);
     }
-  }, [selectedFont, colors, fontSize, bold,imageWidth,imageHeight])
+  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight])
 
 
   const handleDivClick = (event) => {
@@ -317,6 +330,24 @@ function GetTemplate() {
                       }
                     </Select>
                   </FormControl>
+                </Box>
+                <Box sx={{ m: 1 }}>
+                  <ToggleButtonGroup
+                    value={alignment}
+                    exclusive
+                    onChange={handleAlignment}
+                    aria-label="text alignment"
+                  >
+                    <ToggleButton value="left" aria-label="left aligned">
+                      <FormatAlignLeftIcon />
+                    </ToggleButton>
+                    <ToggleButton value="center" aria-label="centered">
+                      <FormatAlignCenterIcon />
+                    </ToggleButton>
+                    <ToggleButton value="right" aria-label="right aligned">
+                      <FormatAlignRightIcon />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
                 </Box>
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <div style={{
