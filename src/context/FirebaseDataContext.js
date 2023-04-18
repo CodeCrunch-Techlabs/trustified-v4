@@ -93,7 +93,23 @@ export const FirebaseDataContextProvider = (props) => {
     getNFTCollections();
   }, []);
 
-  async function addCollection(data) {
+  async function addCollection(data) {  
+    const dd = {
+      userId: data.userId,
+      name: data.title,
+      description: data.description,
+      collectionContract: data.contract,
+      chain: data.chain,
+      issueDate: data.issueDate,
+      eventId: data.eventId,
+      type: data.type,
+      Nontransferable: data.Nontransferable,
+      image: data.image,
+      templateId: data.templateId,
+      txHash: data.txHash,
+      createdBy: data.createdBy,
+      platforms: data.platforms,
+    } 
     setLoading(true);
     await addDoc(collection(db, "Collections"), {
       userId: data.userId,

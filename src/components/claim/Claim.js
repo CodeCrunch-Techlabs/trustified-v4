@@ -49,7 +49,7 @@ export default function Claim() {
   const getUrl = (chain) => {
     const url =
       (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://polygonscan.com/tx") ||
+      (chain === "mumbai" && "https://mumbai.polygonscan.com/tx") ||
       (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
       (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
       (chain === "bsc" && "https://bscscan.com/tx");
