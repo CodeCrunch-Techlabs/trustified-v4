@@ -111,13 +111,14 @@ function GetTemplate() {
 
   const textName = {
     name: {
-      text: 'Your Name',
+      text: ' Your Name',
       width: imageWidth,
       height: imageHeight,
       style: {
         position: 'absolute',
         color: colors?.hex ? colors?.hex : '#000',
         fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
+        lineHeight:`${fontSize + 5}px` ? `${fontSize + 5}px` : '20px',
         textAlign: alignment,
         margin: '10px auto',
         fontFamily: selectedFont ? selectedFont : 'Poppins',
