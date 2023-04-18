@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useState, useMemo, useCallback, useRef } from "react";
+import React, {
+  useContext,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+} from "react";
 import {
   Box,
   Button,
@@ -6,8 +13,9 @@ import {
   Divider,
   CircularProgress,
   Stack,
+  FormHelperText,
 } from "@mui/material";
-import WebFont from 'webfontloader';
+import WebFont from "webfontloader";
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
@@ -46,6 +54,7 @@ function GetTemplate() {
   const [imageWidth, setImageWidth] = useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const imgRef = useRef(null);
+  const [fileName, setFileName] = useState("");
   const [alignment, setAlignment] = React.useState('left');
 
   const handleAlignment = (event, newAlignment) => {
@@ -63,22 +72,47 @@ function GetTemplate() {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
+  const id = open ? "simple-popover" : undefined;
 
   useMemo(() => {
     WebFont.load({
       google: {
-        families: ['Roboto',
-          'Borsok', 'Open Sans',
-          'Lato ', 'Poppins', 'Zeyada',
-          'Babylonica', 'Dancing Script',
-          'Lobster', 'Pacifico', 'Caveat',
-          'Satisfy', 'Great Vibes', 'Ole', 'Coiny', 'Kenia', 'Rubik Beastly', 'Londrina Sketch', 'Neonderthaw',
-          'Kumar One', 'Ribeye', 'Emblema One', 'Ewert', 'Kavoon', 'Moul', 'Rubik Moonrocks', 'Rubik Iso',
-          'Unifraktur Cook', 'Germania One', 'Monoton', 'Orbitron', 'Rampart One'
+        families: [
+          "Roboto",
+          "Borsok",
+          "Open Sans",
+          "Lato ",
+          "Poppins",
+          "Zeyada",
+          "Babylonica",
+          "Dancing Script",
+          "Lobster",
+          "Pacifico",
+          "Caveat",
+          "Satisfy",
+          "Great Vibes",
+          "Ole",
+          "Coiny",
+          "Kenia",
+          "Rubik Beastly",
+          "Londrina Sketch",
+          "Neonderthaw",
+          "Kumar One",
+          "Ribeye",
+          "Emblema One",
+          "Ewert",
+          "Kavoon",
+          "Moul",
+          "Rubik Moonrocks",
+          "Rubik Iso",
+          "Unifraktur Cook",
+          "Germania One",
+          "Monoton",
+          "Orbitron",
+          "Rampart One",
         ],
       },
-      active: () => setSelectedFont('Roboto'),
+      active: () => setSelectedFont("Roboto"),
     });
   }, []);
 
@@ -88,30 +122,29 @@ function GetTemplate() {
 
 
   async function getImageResolution() {
-    if (width >= 1000 || height >= 700 && width > height) {
-      setImageHeight(600)
-      setImageWidth(800)
-    } else if (width >= 1000 || height >= 700 && width < height) {
-      setImageHeight(800)
-      setImageWidth(600)
+    if (width >= 1000 || (height >= 700 && width > height)) {
+      setImageHeight(600);
+      setImageWidth(800);
+    } else if (width >= 1000 || (height >= 700 && width < height)) {
+      setImageHeight(800);
+      setImageWidth(600);
     } else if (width === height) {
       if (width > 600 || height > 600) {
-        setImageHeight(600)
-        setImageWidth(600)
+        setImageHeight(600);
+        setImageWidth(600);
       } else {
-        setImageHeight(height)
-        setImageWidth(width)
+        setImageHeight(height);
+        setImageWidth(width);
       }
     } else {
-      setImageHeight(height)
-      setImageWidth(width)
+      setImageHeight(height);
+      setImageWidth(width);
     }
   }
 
-
   const textName = {
     name: {
-      text: ' Your Name',
+      text: "Your Name",
       width: imageWidth,
       height: imageHeight,
       style: {
@@ -141,21 +174,21 @@ function GetTemplate() {
     setSelectedElement(event.currentTarget.id);
   };
 
-  const handleFontChange = useCallback(event => {
+  const handleFontChange = useCallback((event) => {
     setSelectedFont(event.target.value);
   }, []);
 
-  const handleSizeChange = useCallback(e => {
-    setFontSize(e.target.value)
+  const handleSizeChange = useCallback((e) => {
+    setFontSize(e.target.value);
   }, []);
 
-  const handleBoldChange = useCallback(e => {
-    setBold(e.target.value)
+  const handleBoldChange = useCallback((e) => {
+    setBold(e.target.value);
   }, []);
 
   const handleChangeColor = (color) => {
-    setColor(color)
-  }
+    setColor(color);
+  };
   const handleImageChange = (e) => {
     const image = e.target.files[0];
     value.setPreviewUrl(URL.createObjectURL(image));
@@ -165,6 +198,7 @@ function GetTemplate() {
     const img = new Image();
     img.src = url;
     img.onload = handleImageLoad;
+    setFileName(image.name);
   };
 
   const handleImageLoad = (e) => {
@@ -177,6 +211,7 @@ function GetTemplate() {
   const onClose = () => {
     value.setPreviewUrl("");
     setUsername({});
+    setFileName("");
   };
 
   const getTemplates = async () => {
@@ -234,19 +269,44 @@ function GetTemplate() {
     ],
   };
 
-  const fsize = [12, 14, 16, 18, 20, 24, 26, 30, 32, 36, 40, 42, 48, 50, 54, 60];
-  const fbold = [100, 200, 300, 400, 500, 600, 700, 800, 900];
-  const fontList = ['Roboto',
-    'Borsok', 'Open Sans',
-    'Lato ', 'Poppins', 'Zeyada',
-    'Babylonica', 'Dancing Script',
-    'Lobster', 'Pacifico', 'Caveat',
-    'Satisfy', 'Great Vibes', 'Ole', 'Coiny', 'Kenia', 'Rubik Beastly', 'Londrina Sketch', 'Neonderthaw',
-    'Kumar One', 'Ribeye', 'Emblema One', 'Ewert', 'Kavoon', 'Moul', 'Rubik Moonrocks', 'Rubik Iso',
-    'Unifraktur Cook', 'Germania One', 'Monoton', 'Orbitron', 'Rampart One'
+  const fsize = [
+    12, 14, 16, 18, 20, 24, 26, 30, 32, 36, 40, 42, 48, 50, 54, 60,
   ];
-
-
+  const fbold = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+  const fontList = [
+    "Roboto",
+    "Borsok",
+    "Open Sans",
+    "Lato ",
+    "Poppins",
+    "Zeyada",
+    "Babylonica",
+    "Dancing Script",
+    "Lobster",
+    "Pacifico",
+    "Caveat",
+    "Satisfy",
+    "Great Vibes",
+    "Ole",
+    "Coiny",
+    "Kenia",
+    "Rubik Beastly",
+    "Londrina Sketch",
+    "Neonderthaw",
+    "Kumar One",
+    "Ribeye",
+    "Emblema One",
+    "Ewert",
+    "Kavoon",
+    "Moul",
+    "Rubik Moonrocks",
+    "Rubik Iso",
+    "Unifraktur Cook",
+    "Germania One",
+    "Monoton",
+    "Orbitron",
+    "Rampart One",
+  ];
 
   return (
     <div className="container">
@@ -260,7 +320,11 @@ function GetTemplate() {
                   variant="contained"
                   component="label"
                 >
-                  {value.uploadCert ? <CircularProgress sx={{ color: '#fff' }} /> : 'Upload Your Certificate'}
+                  {value.uploadCert ? (
+                    <CircularProgress sx={{ color: "#fff" }} />
+                  ) : (
+                    "Upload Your Certificate"
+                  )}
                   <input
                     onChange={(e) => handleImageChange(e)}
                     hidden
@@ -269,14 +333,21 @@ function GetTemplate() {
                     type="file"
                   />
                 </Button>
+                {fileName && (
+                  <FormHelperText sx={{ fontWeight: "bold" }}>
+                    {fileName}
+                  </FormHelperText>
+                )}
               </Box>
             )}
 
-            {
-              value.previewUrl !== "" && <Stack sx={{ my: 2 }} direction="row">
+            {value.previewUrl !== "" && (
+              <Stack sx={{ my: 2 }} direction="row">
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Select Font</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Select Font
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -284,18 +355,22 @@ function GetTemplate() {
                       label="Select Font"
                       onChange={handleFontChange}
                     >
-                      {
-                        fontList.map((e) => {
-                          return <MenuItem style={{ fontFamily: e }} value={e}>{e}</MenuItem>
-                        })
-                      }
+                      {fontList.map((e) => {
+                        return (
+                          <MenuItem style={{ fontFamily: e }} value={e}>
+                            {e}
+                          </MenuItem>
+                        );
+                      })}
                     </Select>
                   </FormControl>
                 </Box>
 
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Font Size</InputLabel>
+                    <InputLabel id="demo-simple-select-label">
+                      Font Size
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -303,19 +378,18 @@ function GetTemplate() {
                       label="Select Font"
                       onChange={handleSizeChange}
                     >
-
-                      {
-                        fsize.map((e) => {
-                          return <MenuItem value={e}>{e}</MenuItem>
-                        })
-                      }
+                      {fsize.map((e) => {
+                        return <MenuItem value={e}>{e}</MenuItem>;
+                      })}
                     </Select>
                   </FormControl>
                 </Box>
 
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
-                  <FormControl fullWidth >
-                    <InputLabel id="demo-simple-select-label">Font Weight</InputLabel>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">
+                      Font Weight
+                    </InputLabel>
                     <Select
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
@@ -323,12 +397,9 @@ function GetTemplate() {
                       label="Font weight"
                       onChange={handleBoldChange}
                     >
-
-                      {
-                        fbold.map((e) => {
-                          return <MenuItem value={e}>{e}</MenuItem>
-                        })
-                      }
+                      {fbold.map((e) => {
+                        return <MenuItem value={e}>{e}</MenuItem>;
+                      })}
                     </Select>
                   </FormControl>
                 </Box>
@@ -351,20 +422,25 @@ function GetTemplate() {
                   </ToggleButtonGroup>
                 </Box>
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
-                  <div style={{
-                    padding: '5px',
-                    background: '#fff',
-                    borderRadius: '1px',
-                    boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
-                    display: 'inline-block',
-                    cursor: 'pointer',
-                  }} onClick={handleClick}>
-                    <div style={{
-                      width: '50px',
-                      height: '20px',
-                      borderRadius: '2px',
-                      backgroundColor: colors,
-                    }}></div>
+                  <div
+                    style={{
+                      padding: "5px",
+                      background: "#fff",
+                      borderRadius: "1px",
+                      boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
+                      display: "inline-block",
+                      cursor: "pointer",
+                    }}
+                    onClick={handleClick}
+                  >
+                    <div
+                      style={{
+                        width: "50px",
+                        height: "20px",
+                        borderRadius: "2px",
+                        backgroundColor: colors,
+                      }}
+                    ></div>
                   </div>
                 </Box>
 
@@ -374,16 +450,16 @@ function GetTemplate() {
                   anchorEl={anchorEl}
                   onClose={handleClose}
                   anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
+                    vertical: "bottom",
+                    horizontal: "left",
                   }}
                 >
                   <SketchPicker color={colors} onChange={handleChangeColor} />
                 </Popover>
               </Stack>
-            }
-            {
-              value.previewUrl !== "" && <Stack direction="row" >
+            )}
+            {value.previewUrl !== "" && (
+              <Stack direction="row">
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <TextField
                     label="width"
@@ -405,10 +481,7 @@ function GetTemplate() {
                   />
                 </Box>
               </Stack>
-            }
-
-
-
+            )}
 
             {value.previewUrl !== "" && (
               <IconButton
@@ -424,10 +497,17 @@ function GetTemplate() {
               </IconButton>
             )}
 
-
             {value.previewUrl && (
-              <div id="certificateX" style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}>
-                <img ref={imgRef} width={imageWidth} height={imageHeight} src={value.previewUrl} />
+              <div
+                id="certificateX"
+                style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}
+              >
+                <img
+                  ref={imgRef}
+                  width={imageWidth}
+                  height={imageHeight}
+                  src={value.previewUrl}
+                />
                 <Draggable
                   position={username}
                   onStop={(e, data) =>
@@ -437,19 +517,18 @@ function GetTemplate() {
                     handleDivClick(e);
                   }}
                 >
-                  <div
-                    id="certText"
-                    style={textName.name.style}
-                  >
+                  <div id="certText" style={textName.name.style}>
                     {textName.name.text}
                   </div>
                 </Draggable>
               </div>
             )}
 
-            {value.previewUrl && <span style={{ marginTop: '40px' }}>
-              Drag your name and put when you want to display certificate name
-            </span>}
+            {value.previewUrl && (
+              <span style={{ marginTop: "40px" }}>
+                Drag your name and put when you want to display certificate name
+              </span>
+            )}
 
             {/* {value.previewUrl === "" && value.template === "" && (
               <Divider>

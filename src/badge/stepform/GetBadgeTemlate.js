@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Box,
   Button,
@@ -11,6 +11,7 @@ import {
   Select,
   Stack,
   TextField,
+  FormHelperText,
 } from "@mui/material";
 import { data } from "../../components/utils/BadgeTemplates";
 import { BadgeContext } from "../../context/BadgeContext";
@@ -20,14 +21,20 @@ import CloseIcon from "@mui/icons-material/Close";
 const GetBadgeTemlate = () => {
   const value = useContext(BadgeContext);
   const formdata = value.labelInfo.formData;
+  const [fileName, setFileName] = useState("");
+  const [upload, setUpload] = useState(false);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
+    setUpload(true);
     const image = e.target.files[0];
-    value.setPreviewUrl(URL.createObjectURL(image));
+    await value.setPreviewUrl(URL.createObjectURL(image));
+    setUpload(false);
+    setFileName(image.name);
   };
 
   const onClose = () => {
     value.setPreviewUrl("");
+    setFileName("");
   };
 
   return (
@@ -41,8 +48,9 @@ const GetBadgeTemlate = () => {
                   sx={{ m: 1, color: "#fff" }}
                   variant="contained"
                   component="label"
+                  disabled={upload}
                 >
-                  Upload Your Badge
+                  {upload ? "Uploading..." : "Upload Your Badge"}
                   <input
                     onChange={(e) => handleImageChange(e)}
                     hidden
@@ -51,6 +59,11 @@ const GetBadgeTemlate = () => {
                     type="file"
                   />
                 </Button>
+                {fileName && (
+                  <FormHelperText sx={{ fontWeight: "bold" }}>
+                    {fileName}
+                  </FormHelperText>
+                )}
               </Box>
             )}
 

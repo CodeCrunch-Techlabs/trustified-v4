@@ -15,12 +15,15 @@ import {
 import CSVReader from "react-csv-reader";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
+import { async } from "@firebase/util";
 
 function GetChain() {
   const value = useContext(NFTStorageContext);
   const formdata = value.labelInfo.formData;
   const setCsvData = value.setCsvData;
   const [validity, setValidity] = useState("lifetime");
+  const [upload, setUpload] = useState(false);
+  const [fileName, setFileName] = useState("");
 
   return (
     <div>
@@ -116,21 +119,33 @@ function GetChain() {
               sx={{ m: 1, color: "white" }}
               variant="contained"
               component="label"
+              disabled={upload}
             >
-              Upload File
+              {upload ? "Uploading..." : "Upload File"}
               <CSVReader
                 inputStyle={{ display: "none" }}
-                onFileLoaded={(data) => {
+                onFileLoaded={async (data, file) => {
+                  setUpload(true);
+
                   data.shift();
                   var result = data.map(function (row) {
                     return {
                       name: row[0],
                     };
                   });
-                  setCsvData(result);
+                  await setCsvData(result);
+                  setTimeout(function () {
+                    setUpload(false);
+                    setFileName(file.name);
+                  }, 2000);
                 }}
               />
             </Button>
+            {fileName && (
+              <FormHelperText sx={{ fontWeight: "bold" }}>
+                {fileName}
+              </FormHelperText>
+            )}
           </Box>
         </Stack>
         <Divider />

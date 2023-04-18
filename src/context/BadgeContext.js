@@ -66,7 +66,6 @@ export const BadgeContextProvider = (props) => {
     setLinks(updatedLinks);
   };
 
-
   const createBadge = async () => {
     try {
       setLoading(true);
@@ -132,16 +131,23 @@ export const BadgeContextProvider = (props) => {
           checked,
           "badge",
           links
-        ).then((response) => {
-          setLoading(false);
-        }).catch((error) => {
-          setLoading(false);
-          if (error.message == "Internal JSON-RPC error.") {
-            toast.error("You don't have enough balance to create Badges!")
-          } else {
-            toast.error(error.message);
-          }
-        });
+        )
+          .then((response) => {
+            setLoading(false);
+          })
+          .catch((error) => {
+            setLoading(false);
+            if (error.message == "Internal JSON-RPC error.") {
+              toast.error("You don't have enough balance to create Badges!");
+            } else if (error.message.length == 735) {
+              toast.error(
+                "MetaMask Tx Signature: User denied transaction signature!"
+              );
+            } else {
+              console.log(error.message.length, "err");
+              toast.error(error.message);
+            }
+          });
       }
     } catch (error) {
       toast.error(error.message);
@@ -169,7 +175,7 @@ export const BadgeContextProvider = (props) => {
         switchHandler,
         handleAddLink,
         handleLinkChange,
-        links
+        links,
       }}
       {...props}
     >
