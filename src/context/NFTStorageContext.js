@@ -32,12 +32,12 @@ export const NFTStorageContextProvider = (props) => {
     formData: {
       title: "",
       description: "",
-      chain: "fvm" ,
+      chain: "fvm",
       expireDate: "",
       issueDate: new Date(),
       Nontransferable: "on",
     },
-  }); 
+  });
 
   const web3Context = React.useContext(Web3Context);
   const { createNftFunction } = web3Context;
@@ -118,7 +118,12 @@ export const NFTStorageContextProvider = (props) => {
               toast.error(
                 "You don't have enough balance to create certificate!"
               );
+            } else if (error.message.length == 607) {
+              toast.error(
+                "MetaMask Tx Signature: User denied transaction signature!"
+              );
             } else {
+              console.log(error.message.length);
               toast.error(error.message);
             }
           });
@@ -142,6 +147,10 @@ export const NFTStorageContextProvider = (props) => {
             if (error.message == "Internal JSON-RPC error.") {
               toast.error(
                 "You don't have enough balance to create certificate!"
+              );
+            } else if (error.message.length == 607) {
+              toast.error(
+                "MetaMask Tx Signature: User denied transaction signature!"
               );
             } else {
               toast.error(error.message);
