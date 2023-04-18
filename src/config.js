@@ -5,9 +5,9 @@ export const trustifiedContracts = {
   fvm: {
     trustified: "0xb93F6F074107C4dd6707879874D1C017450898FC",
   }, // Mainnet
-  // mumbai: {
-  //   trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077",
-  // },
+  mumbai: {
+    trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077",
+  },
   // bsc: {
   //   trustified: "0x0FE82cBB448A89Dd912EbC4117B927616826AcCC",
   // },

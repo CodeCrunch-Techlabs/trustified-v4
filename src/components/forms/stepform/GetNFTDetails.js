@@ -28,6 +28,13 @@ function GetNFTDetails() {
         params: [],
       }); 
  
+      if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+        });
+        document.location.reload();
+      }
 
       if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
         
@@ -132,6 +139,7 @@ function GetNFTDetails() {
                     await switchNetwork(ethers.utils.hexValue(3141));
 
                   } else if (e.target.value == "mumbai" && chainId !== 80001) {
+                    console.log("call mumbai");
                     await switchNetwork(ethers.utils.hexValue(80001));
                   } else if (e.target.value == "goerli" && chainId !== 5) {
                     await switchNetwork(ethers.utils.hexValue(5));
@@ -159,13 +167,13 @@ function GetNFTDetails() {
                     label="FVM Testnet(Hyperspace)"
                     onChange={value.setFormdata("chain")}
                   />
-                  {/* <FormControlLabel
+                 <FormControlLabel
                     value="mumbai"
                     control={<Radio />}
                     label="Polygon Mumbai"
                     onChange={value.setFormdata("chain")}
                   />
-                  <FormControlLabel
+                 {/*   <FormControlLabel
                     value="goerli"
                     control={<Radio />}
                     label="Goerli"

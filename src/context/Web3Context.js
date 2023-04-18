@@ -289,7 +289,7 @@ export const Web3ContextProvider = (props) => {
             resolve({ isResolved: true });
           }
         );
-      } catch (err) { 
+      } catch (err) {
         return reject(err);
       }
     });
@@ -317,12 +317,11 @@ export const Web3ContextProvider = (props) => {
           parseInt(csvdata.length),
           1,
           formData.Nontransferable == "on" ? true : false
-        );
+        ); 
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait();
-
+            let txm = await transactionMint.wait(); 
             var eventId = eventId;
             formData.contract = trustifiedContract.address;
             formData.userId = userId;
@@ -331,9 +330,8 @@ export const Web3ContextProvider = (props) => {
             formData.image = previewUrl ? previewUrl : template.preview;
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
-            formData.createdBy = issuer;
-            await addCollection(formData);
-
+            formData.createdBy = issuer; 
+            await addCollection(formData); 
             var array = [];
 
             for (let i = 0; i < tokenIds.length; i++) {
