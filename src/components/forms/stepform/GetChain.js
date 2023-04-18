@@ -108,7 +108,7 @@ function GetChain() {
             <FormHelperText>Make your NFT non-transferable</FormHelperText>
           </FormControl>
         </Box> */}
-        {/* <Divider /> */}
+
         <Stack spacing={3} sx={{ margin: "20px" }}>
           <span>Upload excel sheet of collectors data</span>
           <Box sx={{ m: 1 }}>
@@ -133,6 +133,35 @@ function GetChain() {
             </Button>
           </Box>
         </Stack>
+        <Divider />
+        <Box sx={{ m: 1 }}>
+          <Button
+            variant="contained"
+            style={{ color: "white" }}
+            onClick={value.handleAddLink}
+            sx={{ mt: 1, mr: 1 }}
+            disabled={value.links.length > 2 ? true : false}
+          >
+            Add Links
+          </Button>
+          <FormHelperText>Where people can find you?</FormHelperText>
+        </Box>
+
+        <Box>
+          {value.links.map((link, index) => (
+            <TextField
+              key={index}
+              sx={{ marginRight: "5px" }}
+              id="outlined-size-small"
+              size="small"
+              label="Link"
+              name="link"
+              type="text"
+              onChange={(e) => value.handleLinkChange(e, index)}
+              value={link}
+            />
+          ))}
+        </Box>
       </Stack>
     </div>
   );

@@ -49,7 +49,7 @@ export default function Claim() {
   const getUrl = (chain) => {
     const url =
       (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://polygonscan.com/tx") ||
+      (chain === "mumbai" && "https://mumbai.polygonscan.com/tx") ||
       (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
       (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
       (chain === "bsc" && "https://bscscan.com/tx");
@@ -112,7 +112,7 @@ export default function Claim() {
               ) : (
                 <CircularProgress />
               )}
-              {console.log(claimer)}
+
 
               {claimer && (
                 <div
@@ -125,7 +125,7 @@ export default function Claim() {
                     </div>
                     <p className="card-p claim-des">{claimer?.description}</p>
                     <div>
-                      {console.log(claimer?.platforms)}
+                  
                       {claimer?.platforms.map((link) => (
                         <div>
                           <Link to={link} target="_blank">
