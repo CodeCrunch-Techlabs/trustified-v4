@@ -30,7 +30,7 @@ function GetTemplate() {
   const value = useContext(NFTStorageContext);
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
-    x: 0,
+    x: 30,
     y: 0
   });
   const [selectedFont, setSelectedFont] = useState("Roboto");
@@ -122,8 +122,8 @@ function GetTemplate() {
         margin: '10px auto',
         fontFamily: selectedFont ? selectedFont : 'Poppins',
         fontWeight: bold ? bold : 100,
-        transform: `translate(${username.x}px, ${username.y}px)`,
-        width: `${imageWidth - 200}px`,
+        transform: `translate(${30}px, ${username.y}px)`,
+        width: `${imageWidth - 100}px`,
       }
     }
   };
@@ -430,7 +430,7 @@ function GetTemplate() {
                 <Draggable
                   position={username}
                   onStop={(e, data) =>
-                    setUsername({ ...username, x: data.x, y: data.y })
+                    setUsername({ ...username, x: 30, y: data.y })
                   }
                   onMouseDown={(e) => {
                     handleDivClick(e);
