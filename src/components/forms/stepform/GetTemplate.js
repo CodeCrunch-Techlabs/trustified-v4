@@ -166,7 +166,7 @@ function GetTemplate() {
       setUsername({ ...username });
       value.setUploadObj(textName);
     }
-  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight])
+  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight,alignment])
 
 
   const handleDivClick = (event) => {
