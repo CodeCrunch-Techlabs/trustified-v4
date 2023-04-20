@@ -58,7 +58,7 @@ export default function Claim() {
 
   async function getCertId() {
     let network = getNetworkToken(claimer?.chain);
-    var certId = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
+    var certId = `${network}#${claimer?.eventId}#${claimer?.tokenId}`;
     setId(certId);
   }
   useEffect(() => {
@@ -138,6 +138,10 @@ export default function Claim() {
                       className="card-body-cert d-flex"
                       style={{ justifyContent: "space-evenly" }}
                     >
+                      <div>
+                        <h4>Certificate Id</h4>
+                        <p>{id}</p>
+                      </div>
                       <div>
                         <h4>TokenId</h4>
                         <p>#{claimer?.tokenId}</p>
