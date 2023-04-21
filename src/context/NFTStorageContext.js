@@ -118,12 +118,11 @@ export const NFTStorageContextProvider = (props) => {
               toast.error(
                 "You don't have enough balance to create certificate!"
               );
-            } else if (error.message.length == 607) {
+            } else if (error.code == "ACTION_REJECTED") {
               toast.error(
                 "MetaMask Tx Signature: User denied transaction signature!"
               );
             } else {
-              console.log(error.message.length);
               toast.error(error.message);
             }
           });
@@ -148,7 +147,7 @@ export const NFTStorageContextProvider = (props) => {
               toast.error(
                 "You don't have enough balance to create certificate!"
               );
-            } else if (error.message.length == 607) {
+            } else if (error.code == "ACTION_REJECTED") {
               toast.error(
                 "MetaMask Tx Signature: User denied transaction signature!"
               );
