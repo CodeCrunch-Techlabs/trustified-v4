@@ -740,8 +740,9 @@ export const Web3ContextProvider = (props) => {
           }
         }
       } catch (error) {
+        console.log(error,"error");
         toast.error(
-          "Something went wrong! or This certificate is already claimed!"
+          "You don't have enough balance to claim!"
         );
         setClaimLoading(false);
         console.log(error);
