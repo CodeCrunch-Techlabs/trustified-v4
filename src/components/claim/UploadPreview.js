@@ -1,60 +1,19 @@
-import { collection, doc, getDocs, query, updateDoc, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where,
+} from "firebase/firestore";
 import React, { useState } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import placeholderImage from "../../assets/jk-placeholder-image-768x518.jpg";
 import { db } from "../../firebase";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const UploadPreview = ({ claimer, id }) => {
-  const [loaded, setLoaded] = useState(false); 
+  const [loaded, setLoaded] = useState(false);
 
-  // async function updateFvmdata() {
-  //   const q = query(collection(db, "Collectors"), where("eventId", "==", 2));
-  //   const querySnapshot = await getDocs(q);
-  //   querySnapshot.forEach((fire) => {
-  //     console.log(fire.data(), "data");
-  //     const dataref = doc(db, "Collectors", fire.id);
-  //     const data = {
-  //     claimToken: fire.data().claimToken,
-  //     tokenContract: fire.data().tokenContract,
-  //     tokenId: fire.data().tokenId,
-  //     claimerAddress: fire.data().claimerAddress,
-  //     ipfsurl: fire.data().ipfsurl,
-  //     chain: fire.data().chain,
-  //     name: fire.data().name,
-  //     claimed: fire.data().claimed,
-  //     type: fire.data().type,
-  //     Nontransferable: fire.data().Nontransferable,
-  //     eventId: fire.data().eventId,
-  //     templateId: fire.data().templateId,
-  //     title: fire.data().title,
-  //     description: fire.data().description,
-  //     expireDate: fire.data().expireDate,
-  //     issueDate: fire.data().issueDate,
-  //     position: fire.data().position,
-  //     uploadObj: {
-  //       "height": 600,
-  //       "text": "Your Name",
-  //       "width": 600,
-  //       "style": {
-  //         "fontWeight": 600,
-  //         "transform": "translate(0px, -149.5px)",
-  //         "position": "absolute",
-  //         "margin": "10px auto",
-  //         "color": "#ffffff",
-  //         "fontSize": "32px",
-  //         "width": "600px",
-  //         "textAlign": "center",
-  //         "fontFamily": "Poppins"
-  //       }
-  //     },
-  //     txHash: fire.data().txHash,
-  //     createdBy: fire.data().createdBy,
-  //     platforms: fire.data().platforms, 
-  //     }
-  //     updateDoc(dataref, data);
-  //     console.log("done");
-  //   })
-  // }
-  
   return (
     <>
       <div
@@ -65,15 +24,17 @@ const UploadPreview = ({ claimer, id }) => {
           height: claimer.uploadObj.height,
         }}
       >
-        <img
-          src={claimer.ipfsurl}
-          width={claimer.uploadObj.width}
-          height={claimer.uploadObj.height}
+        <LazyLoadImage
           alt="Image Alt"
+          height={claimer.uploadObj.height}
+          src={claimer.ipfsurl}
+          placeholderSrc={placeholderImage}
+          width={claimer.uploadObj.width}
           onLoad={() => setLoaded(!loaded)}
+          effect="blur"
         />
 
-        {loaded == true  && claimer.status !== "Yes" && (
+        {loaded == true && claimer.status !== "Yes" && (
           <>
             <div style={claimer.uploadObj.style}>{claimer?.claimer}</div>
             <div

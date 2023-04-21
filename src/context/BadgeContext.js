@@ -137,14 +137,14 @@ export const BadgeContextProvider = (props) => {
           })
           .catch((error) => {
             setLoading(false);
+
             if (error.message == "Internal JSON-RPC error.") {
               toast.error("You don't have enough balance to create Badges!");
-            } else if (error.message.length == 735) {
+            } else if (error.code == "ACTION_REJECTED") {
               toast.error(
                 "MetaMask Tx Signature: User denied transaction signature!"
               );
             } else {
-              console.log(error.message.length, "err");
               toast.error(error.message);
             }
           });
