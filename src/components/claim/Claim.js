@@ -58,7 +58,7 @@ export default function Claim() {
 
   async function getCertId() {
     let network = getNetworkToken(claimer?.chain);
-    var certId = `Certificate Id: ${network}#${claimer?.eventId}#${claimer?.tokenId}`;
+    var certId = `${network}#${claimer?.eventId}#${claimer?.tokenId}`;
     setId(certId);
   }
   useEffect(() => {
@@ -139,6 +139,10 @@ export default function Claim() {
                       style={{ justifyContent: "space-evenly" }}
                     >
                       <div>
+                        <h4>Certificate Id</h4>
+                        <p>{id}</p>
+                      </div>
+                      <div>
                         <h4>TokenId</h4>
                         <p>#{claimer?.tokenId}</p>
                       </div>
@@ -183,6 +187,10 @@ export default function Claim() {
               <a
                 className="thm-btn header__cta-btn"
                 onClick={async () => {
+                  if(claimer.status === "Yes"){
+                    toast.error('This certificate is already claimed!');
+                    return;
+                  }
                   if (add === "") {
                     toast.error("Please Enter Address!");
                     return;
@@ -196,7 +204,7 @@ export default function Claim() {
                   ) {
                     await switchNetwork(ethers.utils.hexValue(3141));
                   } else if (claimer.chain == "mumbai" && chainId !== 80001) {
-                    await switchNetwork(ethers.utils.hexValue(137));
+                    await switchNetwork(ethers.utils.hexValue(80001));
                   } else if (claimer.chain == "goerli" && chainId !== 5) {
                     await switchNetwork(ethers.utils.hexValue(5));
                   } else if (claimer.chain == "bsc" && chainId !== 97) {

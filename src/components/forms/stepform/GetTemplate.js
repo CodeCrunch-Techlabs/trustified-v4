@@ -151,6 +151,7 @@ function GetTemplate() {
         position: 'absolute',
         color: colors?.hex ? colors?.hex : '#000',
         fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
+        lineHeight:`${fontSize + 5}px` ? `${fontSize + 5}px` : '20px',
         textAlign: alignment,
         margin: '10px auto',
         fontFamily: selectedFont ? selectedFont : 'Poppins',
@@ -165,7 +166,7 @@ function GetTemplate() {
       setUsername({ ...username });
       value.setUploadObj(textName);
     }
-  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight])
+  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight,alignment])
 
 
   const handleDivClick = (event) => {
@@ -232,42 +233,7 @@ function GetTemplate() {
   useEffect(() => {
     getTemplates();
   }, []);
-
-  const settings = {
-    dots: true,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 3,
-    initialSlide: 0,
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 3,
-          infinite: true,
-          dots: true,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
-        },
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };
-
+ 
   const fsize = [
     12, 14, 16, 18, 20, 24, 26, 30, 32, 36, 40, 42, 48, 50, 54, 60,
   ];

@@ -358,6 +358,8 @@ export const FirebaseDataContextProvider = (props) => {
     // });
   }
 
+
+
   async function getNFTCollections() {
     const add = window.localStorage.getItem("address");
     const q = query(collection(db, "UserProfile"), where("Address", "==", add));
