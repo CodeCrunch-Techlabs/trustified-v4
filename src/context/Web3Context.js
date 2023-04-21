@@ -28,8 +28,8 @@ export const Web3ContextProvider = (props) => {
   const [claimer, setClaimer] = useState({});
   const [aLoading, setaLoading] = useState(false);
 
-  const [provider, setProvider] = useState();
-  const [signer, setSigner] = useState();
+  const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
 
   const [csvData, setCsvData] = useState([]);
 

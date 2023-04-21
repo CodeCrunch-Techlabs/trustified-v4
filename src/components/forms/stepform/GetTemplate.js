@@ -39,7 +39,7 @@ function GetTemplate() {
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
     x: 30,
-    y: 0
+    y: -590
   });
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [fontSize, setFontSize] = useState(24);
@@ -151,7 +151,7 @@ function GetTemplate() {
         position: 'absolute',
         color: colors?.hex ? colors?.hex : '#000',
         fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
-        lineHeight:`${fontSize + 5}px` ? `${fontSize + 5}px` : '20px',
+        lineHeight: `${fontSize + 5}px` ? `${fontSize + 5}px` : '20px',
         textAlign: alignment,
         margin: '10px auto',
         fontFamily: selectedFont ? selectedFont : 'Poppins',
@@ -166,7 +166,7 @@ function GetTemplate() {
       setUsername({ ...username });
       value.setUploadObj(textName);
     }
-  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight,alignment])
+  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight, alignment])
 
 
   const handleDivClick = (event) => {
@@ -233,7 +233,7 @@ function GetTemplate() {
   useEffect(() => {
     getTemplates();
   }, []);
- 
+
   const fsize = [
     12, 14, 16, 18, 20, 24, 26, 30, 32, 36, 40, 42, 48, 50, 54, 60,
   ];
@@ -463,6 +463,12 @@ function GetTemplate() {
             )}
 
             {value.previewUrl && (
+              <span style={{ marginTop: "40px" }}>
+                Drag your name and put when you want to display certificate name
+              </span>
+            )}
+
+            {value.previewUrl && (
               <div
                 id="certificateX"
                 style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}
@@ -483,16 +489,10 @@ function GetTemplate() {
                   }}
                 >
                   <div id="certText" style={textName.name.style}>
-                    {textName.name.text}
+                    <span style={{ backgroundColor: 'rgba(255,255,255,0.5)', color: textName.name.style.color == "#000" ? "#000" :  textName.name.style.color, padding: '2px 5px' }}>{textName.name.text}</span>
                   </div>
                 </Draggable>
               </div>
-            )}
-
-            {value.previewUrl && (
-              <span style={{ marginTop: "40px" }}>
-                Drag your name and put when you want to display certificate name
-              </span>
             )}
 
             {/* {value.previewUrl === "" && value.template === "" && (
