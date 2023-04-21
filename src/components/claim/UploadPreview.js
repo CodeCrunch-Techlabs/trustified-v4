@@ -54,7 +54,7 @@ const UploadPreview = ({ claimer, id }) => {
   //     console.log("done");
   //   })
   // }
-
+  
   return (
     <>
       <div
@@ -73,7 +73,7 @@ const UploadPreview = ({ claimer, id }) => {
           onLoad={() => setLoaded(!loaded)}
         />
 
-        {loaded == true && (
+        {loaded == true  && claimer.status !== "Yes" && (
           <>
             <div style={claimer.uploadObj.style}>{claimer?.claimer}</div>
             <div
