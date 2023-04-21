@@ -13,81 +13,85 @@ import { ethers } from "ethers";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
 import { toast } from "react-toastify";
+import { Web3Context } from "../../../context/Web3Context";
 
 function GetNFTDetails() {
   const provider = new ethers.providers.Web3Provider(window.ethereum); 
   const value = useContext(NFTStorageContext);
   const formdata = value.labelInfo.formData; 
- 
- 
-  async function switchNetwork(chainId) { 
-    try {
-      // check if the chain ID is already available in MetaMask
-      const chainData = await window.ethereum.request({
-        method: "eth_chainId",
-        params: [],
-      }); 
- 
-      if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-        });
-        document.location.reload();
-      }
+  const web3Context = React.useContext(Web3Context);
+  const { switchNetwork } = web3Context;
 
-      if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
+ 
+ 
+  // async function switchNetwork(chainId) { 
+  //   try {
+  //     // check if the chain ID is already available in MetaMask
+  //     const chainData = await window.ethereum.request({
+  //       method: "eth_chainId",
+  //       params: [],
+  //     }); 
+ 
+  //     if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
+  //       await window.ethereum.request({
+  //         method: "wallet_switchEthereumChain",
+  //         params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //       });
+  //       document.location.reload();
+  //     }
+
+  //     if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
         
-        // chain ID is not available, add the chain to MetaMask
-        const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
-        const chainName = "Filecoin Mainnet"; // replace with your chain name
-        const symbol = "FIL"; // replace with your chain symbol
-        const decimals = 18; // replace with your token's decimals
-        const chainParams = {
-          chainId: chainId,
-          chainName: chainName,
-          nativeCurrency: {
-            name: chainName,
-            symbol: symbol,
-            decimals: decimals,
-          },
-          rpcUrls: [rpcUrl],
-        };
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [chainParams],
-        });
-      } else {
+  //       // chain ID is not available, add the chain to MetaMask
+  //       const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
+  //       const chainName = "Filecoin Mainnet"; // replace with your chain name
+  //       const symbol = "FIL"; // replace with your chain symbol
+  //       const decimals = 18; // replace with your token's decimals
+  //       const chainParams = {
+  //         chainId: chainId,
+  //         chainName: chainName,
+  //         nativeCurrency: {
+  //           name: chainName,
+  //           symbol: symbol,
+  //           decimals: decimals,
+  //         },
+  //         rpcUrls: [rpcUrl],
+  //       };
+  //       await window.ethereum.request({
+  //         method: "wallet_addEthereumChain",
+  //         params: [chainParams],
+  //       });
+  //     } else {
         
-        // chain ID is not available, add the chain to MetaMask
-        const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
-        const chainName = "Filecoin hyperspace"; // replace with your chain name
-        const symbol = "tFIL"; // replace with your chain symbol
-        const decimals = 18; // replace with your token's decimals
-        const chainParams = {
-          chainId: chainId,
-          chainName: chainName,
-          nativeCurrency: {
-            name: chainName,
-            symbol: symbol,
-            decimals: decimals,
-          },
-          rpcUrls: [rpcUrl],
-        };
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [chainParams],
-        });
-      }
-      await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-      });
-      document.location.reload();
-    } catch (error) {
-      toast.error(error.message);
-    }
-  }
+  //       // chain ID is not available, add the chain to MetaMask
+  //       const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
+  //       const chainName = "Filecoin hyperspace"; // replace with your chain name
+  //       const symbol = "tFIL"; // replace with your chain symbol
+  //       const decimals = 18; // replace with your token's decimals
+  //       const chainParams = {
+  //         chainId: chainId,
+  //         chainName: chainName,
+  //         nativeCurrency: {
+  //           name: chainName,
+  //           symbol: symbol,
+  //           decimals: decimals,
+  //         },
+  //         rpcUrls: [rpcUrl],
+  //       };
+  //       await window.ethereum.request({
+  //         method: "wallet_addEthereumChain",
+  //         params: [chainParams],
+  //       });
+  //     }
+  //     await window.ethereum.request({
+  //       method: "wallet_switchEthereumChain",
+  //       params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //     });
+  //     document.location.reload();
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // }
 
 
   return (

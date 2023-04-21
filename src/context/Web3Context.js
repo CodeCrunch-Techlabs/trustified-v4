@@ -59,7 +59,6 @@ export const Web3ContextProvider = (props) => {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
-
       setAddress(accounts[0]);
     };
 
@@ -67,6 +66,109 @@ export const Web3ContextProvider = (props) => {
       initialize();
     }
   }, [add]);
+
+
+  // async function switchNetwork(chainId) {
+  //   await window.ethereum.request({
+  //     method: "wallet_switchEthereumChain",
+  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //   });
+  //   await window.ethereum.request({ method: "eth_chainId" });
+  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //   const signer = provider.getSigner();
+  //   setProvider(provider);
+  //   setSigner(signer);
+
+  // }
+
+  async function switchNetwork(chainId) {
+    try {
+      // check if the chain ID is already available in MetaMask
+      const chainData = await window.ethereum.request({
+        method: "eth_chainId",
+        params: [],
+      });
+
+      if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
+        await window.ethereum.request({
+          method: "wallet_switchEthereumChain",
+          params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+        });
+        await window.ethereum.request({ method: "eth_chainId" });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        setProvider(provider);
+        setSigner(signer);
+      }
+
+      if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
+
+        // chain ID is not available, add the chain to MetaMask
+        const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
+        const chainName = "Filecoin Mainnet"; // replace with your chain name
+        const symbol = "FIL"; // replace with your chain symbol
+        const decimals = 18; // replace with your token's decimals
+        const chainParams = {
+          chainId: chainId,
+          chainName: chainName,
+          nativeCurrency: {
+            name: chainName,
+            symbol: symbol,
+            decimals: decimals,
+          },
+          rpcUrls: [rpcUrl],
+        };
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [chainParams],
+        });
+        await window.ethereum.request({ method: "eth_chainId" });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        setProvider(provider);
+        setSigner(signer);
+      } else if (chainData !== chainId && chainId === ethers.utils.hexValue(3141)) {
+
+        // chain ID is not available, add the chain to MetaMask
+        const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
+        const chainName = "Filecoin hyperspace"; // replace with your chain name
+        const symbol = "tFIL"; // replace with your chain symbol
+        const decimals = 18; // replace with your token's decimals
+        const chainParams = {
+          chainId: chainId,
+          chainName: chainName,
+          nativeCurrency: {
+            name: chainName,
+            symbol: symbol,
+            decimals: decimals,
+          },
+          rpcUrls: [rpcUrl],
+        };
+        await window.ethereum.request({
+          method: "wallet_addEthereumChain",
+          params: [chainParams],
+        });
+        await window.ethereum.request({ method: "eth_chainId" });
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        setProvider(provider);
+        setSigner(signer);
+      }
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+      });
+      await window.ethereum.request({ method: "eth_chainId" });
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      setProvider(provider);
+      setSigner(signer);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+
 
   const connectWallet = async (issuerName) => {
     const { ethereum } = window;
@@ -318,11 +420,11 @@ export const Web3ContextProvider = (props) => {
           parseInt(csvdata.length),
           1,
           formData.Nontransferable == "on" ? true : false
-        ); 
+        );
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait(); 
+            let txm = await transactionMint.wait();
             var eventId = eventId;
             formData.contract = trustifiedContract.address;
             formData.userId = userId;
@@ -740,7 +842,7 @@ export const Web3ContextProvider = (props) => {
           }
         }
       } catch (error) {
-        console.log(error,"error");
+        console.log(error, "error");
         toast.error(
           "You don't have enough balance to claim!"
         );
@@ -772,6 +874,7 @@ export const Web3ContextProvider = (props) => {
         claimer,
         userId,
         aLoading,
+        switchNetwork,
       }}
       {...props}
     >

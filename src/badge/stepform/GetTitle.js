@@ -12,19 +12,23 @@ import {
 } from "@mui/material";
 import { ethers } from "ethers";
 import { BadgeContext } from "../../context/BadgeContext";
+import { Web3Context } from "../../context/Web3Context";
 
 function GetTitle() {
   const value = useContext(BadgeContext);
   const formdata = value.labelInfo.formData;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const web3Context = React.useContext(Web3Context);
+  const { switchNetwork } = web3Context;
 
-  async function switchNetwork(chainId) {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-    });
-    document.location.reload();
-  }
+
+  // async function switchNetwork(chainId) {
+  //   await window.ethereum.request({
+  //     method: "wallet_switchEthereumChain",
+  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //   });
+  //   document.location.reload();
+  // }
 
   return (
     <div>

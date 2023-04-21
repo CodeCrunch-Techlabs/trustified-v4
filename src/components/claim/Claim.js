@@ -20,6 +20,7 @@ export default function Claim() {
     address,
     claimUploadedCertificate,
     claimBadges,
+    switchNetwork
   } = web3Context;
 
   const firebaseContext = React.useContext(firebaseDataContext);
@@ -38,13 +39,13 @@ export default function Claim() {
     getUrl();
   }, [token]);
 
-  async function switchNetwork(chainId) {
-    await window.ethereum.request({
-      method: "wallet_switchEthereumChain",
-      params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-    });
-    document.location.reload();
-  }
+  // async function switchNetwork(chainId) {
+  //   await window.ethereum.request({
+  //     method: "wallet_switchEthereumChain",
+  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //   });
+  //   document.location.reload();
+  // }
 
   const getUrl = (chain) => {
     const url =
