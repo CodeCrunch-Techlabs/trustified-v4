@@ -462,10 +462,8 @@ export const Web3ContextProvider = (props) => {
               obj.description = formData.description;
               obj.expireDate = formData.expireDate;
               obj.issueDate = formData.issueDate;
-              obj.position = previewUrl ? position : "";
-
-              obj.uploadCertData = previewUrl ? uploadObj.name : "";
-              console.log( uploadObj," uploadObj");
+              obj.position = previewUrl ? position : ""; 
+              obj.uploadCertData = previewUrl ? uploadObj.name : ""; 
               obj.txHash = txm.transactionHash;
               obj.createdBy = txm.from;
               obj.platforms = links; 
@@ -530,6 +528,8 @@ export const Web3ContextProvider = (props) => {
     textFamily
   ) => {
     setClaimLoading(true);
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
@@ -653,7 +653,8 @@ export const Web3ContextProvider = (props) => {
     height
   ) => {
     setClaimLoading(true);
-
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
     const input = document.getElementById("certificateX");
     const pdfWidth = width;
     const pdfHeight = height;
@@ -784,6 +785,8 @@ export const Web3ContextProvider = (props) => {
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
     );
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
 
     const querySnapshot = await getDocs(q);
 
