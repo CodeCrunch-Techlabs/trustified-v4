@@ -419,7 +419,7 @@ export const Web3ContextProvider = (props) => {
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false
+          formData.Nontransferable === "on" ? true : false
         );
         await trustifiedContract.once(
           "TokensMinted",
@@ -435,6 +435,7 @@ export const Web3ContextProvider = (props) => {
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
             formData.platforms = links;
+            console.log(formData,"formData");
             await addCollection(formData);
 
             var array = [];
@@ -466,9 +467,11 @@ export const Web3ContextProvider = (props) => {
               obj.issueDate = formData.issueDate;
               obj.position = previewUrl ? position : "";
               obj.uploadCertData = previewUrl ? uploadObj.name : "";
+              console.log( uploadObj," uploadObj");
               obj.txHash = txm.transactionHash;
               obj.createdBy = txm.from;
               obj.platforms = links;
+              console.log(obj,"obj");
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {

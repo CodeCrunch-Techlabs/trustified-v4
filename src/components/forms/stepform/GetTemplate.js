@@ -46,7 +46,7 @@ function GetTemplate() {
   const [colors, setColor] = useState("");
   const [docId, setDocId] = useState("");
   const [bold, setBold] = useState(500);
-  const [selectedElement, setSelectedElement] = useState(null);
+  const [selectedElement, setSelectedElement] = useState("certText");
   const [show, setShow] = useState(false);
   const [height, setHeight] = useState(600);
   const [width, setWidth] = useState(800);
@@ -162,14 +162,14 @@ function GetTemplate() {
     }
   };
   useEffect(() => {
-    if (selectedElement === "certText") {
+    if (selectedElement === "certText") { 
       setUsername({ ...username });
-      value.setUploadObj(textName);
+      value.setUploadObj(textName); 
     }
-  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight, alignment])
+  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight, alignment,selectedElement])
 
 
-  const handleDivClick = (event) => {
+  const handleDivClick = (event) => { 
     event.stopPropagation();
     setSelectedElement(event.currentTarget.id);
   };
@@ -478,6 +478,7 @@ function GetTemplate() {
                   width={imageWidth}
                   height={imageHeight}
                   src={value.previewUrl}
+                  alt=""
                 />
                 <Draggable
                   position={username}
