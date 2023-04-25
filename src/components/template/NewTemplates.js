@@ -79,7 +79,7 @@ const NewTemplates = () => {
                                                     <>
                                                         <CircularProgress />
                                                         <div id="cover-spin"></div>
-                                                        <p id="cover-spin-text">Certificates are being minted! Please don't refresh!  😎 </p>
+                                                        <p id="cover-spin-text">Certificates are being minted! Please do not refresh!😎 </p>
                                                     </>
                                                 ) : (
                                                     <span>Create NFT</span>

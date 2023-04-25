@@ -64,7 +64,7 @@ const BadgeTemplate = () => {
                 formdatavalue.loading &&
                 <>
                     <div id="cover-spin"></div>
-                    <p id="cover-spin-text">Badges are being minted! Please don't refresh! 😎 </p>
+                    <p id="cover-spin-text">Badges are being minted! Please do not refresh!😎 </p>
                 </>
 
             }
