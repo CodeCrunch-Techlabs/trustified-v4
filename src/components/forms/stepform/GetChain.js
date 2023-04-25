@@ -25,6 +25,26 @@ function GetChain() {
   const [upload, setUpload] = useState(false);
   const [fileName, setFileName] = useState("");
 
+  const generateCsv = () => {
+    const rows = [["Display Name"], ["John Doe"]];
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    rows.forEach((row) => {
+      csvContent += row.join(",") + "\r\n";
+    });
+
+    return encodeURI(csvContent);
+  };
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.setAttribute("href", generateCsv());
+    link.setAttribute("download", "sample.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <div>
       <Stack spacing={3} sx={{ margin: "20px" }}>
@@ -141,9 +161,16 @@ function GetChain() {
                 }}
               />
             </Button>
-            {fileName && (
+            <a href="#" onClick={handleDownload}>
+              Download sample file
+            </a>
+            {fileName ? (
               <FormHelperText sx={{ fontWeight: "bold" }}>
                 {fileName}
+              </FormHelperText>
+            ) : (
+              <FormHelperText sx={{ fontWeight: "bold" }}>
+                Make sure the first column should be the Display Name
               </FormHelperText>
             )}
           </Box>
