@@ -763,12 +763,21 @@ export const Web3ContextProvider = (props) => {
             setClaimLoading(false);
           }
         }
-      } catch (error) {
-        toast.error(
-          "Something went wrong! or This certificate is already claimed!"
-        );
+      } catch (error) { 
         setClaimLoading(false);
-        console.log(error);
+        if (error.message === "Internal JSON-RPC error.") {
+          toast.error(
+            "You don't have enough balance to claim certificate!"
+          );
+        } else if (error.code === "ACTION_REJECTED") {
+          toast.error(
+            "MetaMask Tx Signature: User denied transaction signature!"
+          );
+        } else {
+          toast.error(
+            "Something went wrong!"
+          );
+        }
       }
     });
   };
@@ -841,13 +850,21 @@ export const Web3ContextProvider = (props) => {
             setClaimLoading(false);
           }
         }
-      } catch (error) {
-        console.log(error, "error");
-        toast.error(
-          "You don't have enough balance to claim!"
-        );
-        setClaimLoading(false);
-        console.log(error);
+      } catch (error) { 
+        setClaimLoading(false); 
+        if (error.message === "Internal JSON-RPC error.") {
+          toast.error(
+            "You don't have enough balance to claim certificate!"
+          );
+        } else if (error.code === "ACTION_REJECTED") {
+          toast.error(
+            "MetaMask Tx Signature: User denied transaction signature!"
+          );
+        } else {
+          toast.error(
+            "Something went wrong!"
+          );
+        }
       }
     });
   };

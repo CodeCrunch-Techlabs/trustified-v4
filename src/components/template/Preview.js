@@ -11,7 +11,7 @@ const Preview = () => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             setdata(doc.data());
-            array.push(doc.data()); screenTop
+            array.push(doc.data());
         })
         setdata(array);
     }

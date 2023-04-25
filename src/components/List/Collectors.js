@@ -109,7 +109,7 @@ function Collectors() {
               <TableBody>
                 {collectors
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {  
+                  .map((row, index) => {   
                     return (
                       <TableRow
                         hover
@@ -118,7 +118,7 @@ function Collectors() {
                         key={row.code}
                       >
                         {columns.map((column) => {
-                          const value = row[column.id];
+                          const value = row[column.id];  
                           return (
                             <TableRowComponent
                               event={params.token}
@@ -127,6 +127,8 @@ function Collectors() {
                               url={row.ipfsurl}
                               index={index}
                               type={type}
+                              token={row.claimToken}
+                              status={row.claimed}
                             />
                           );
                         })}
