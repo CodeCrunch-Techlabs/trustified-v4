@@ -12,8 +12,7 @@ import { db } from "../../firebase";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const UploadPreview = ({ claimer, id }) => {
-  const [loaded, setLoaded] = useState(false);
-
+  const [loaded, setLoaded] = useState(false); 
   return (
     <>
       <div

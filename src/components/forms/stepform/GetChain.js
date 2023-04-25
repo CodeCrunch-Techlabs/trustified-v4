@@ -148,11 +148,13 @@ function GetChain() {
                   setUpload(true);
 
                   data.shift();
-                  var result = data.map(function (row) {
-                    return {
-                      name: row[0],
-                    };
-                  });
+                  var result = data
+                    .map(function (row) {
+                      return {
+                        name: row[0],
+                      };
+                    })
+                    .filter((row) => row.name !== "");
                   await setCsvData(result);
                   setTimeout(function () {
                     setUpload(false);
