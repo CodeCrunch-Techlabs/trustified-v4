@@ -10,6 +10,7 @@ import UploadPreview from "./UploadPreview";
 import Chip from "@mui/material/Chip";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "react-toastify";
+import Iconify from "../../components/utils/Iconify";
 
 export default function Claim() {
   const web3Context = React.useContext(Web3Context);
@@ -20,7 +21,7 @@ export default function Claim() {
     address,
     claimUploadedCertificate,
     claimBadges,
-    switchNetwork
+    switchNetwork,
   } = web3Context;
 
   const firebaseContext = React.useContext(firebaseDataContext);
@@ -114,7 +115,6 @@ export default function Claim() {
                 <CircularProgress />
               )}
 
-
               {claimer && (
                 <div
                   className="justify-content-center"
@@ -126,7 +126,6 @@ export default function Claim() {
                     </div>
                     <p className="card-p claim-des">{claimer?.description}</p>
                     <div>
-                  
                       {claimer?.platforms.map((link) => (
                         <div>
                           <Link to={link} target="_blank">
@@ -168,6 +167,21 @@ export default function Claim() {
                     >
                       View Transaction <OpenInNewIcon />
                     </a>
+                    {claimer.status == "Yes" && (
+                      <div className="mt-4">
+                        <a className="thm-btn header__cta-btn">
+                          <span>
+                            Claimed
+                            <Iconify
+                              icon={"material-symbols:done"}
+                              width={30}
+                              height={30}
+                              sx={{color:"green"}}
+                            />
+                          </span>
+                        </a>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -176,77 +190,82 @@ export default function Claim() {
         </div>
         <div className="row mt-4">
           <div className="col-12 col-xl-8 col-lg-8 col-md-8 col-sm-10  mx-auto text-center">
-            <div className="d-flex justify-content-start">
-              <TextField
-                name="Address"
-                label="Wallet Address"
-                fullWidth
-                className="address mr-2"
-                onChange={(e) => setAddress(e.target.value)}
-                sx={{ background: "white" }}
-              />
-              <a
-                className="thm-btn header__cta-btn"
-                onClick={async () => {
-                  if(claimer.status === "Yes"){
-                    toast.error('This certificate is already claimed!');
-                    return;
-                  }
-                  if (add === "") {
-                    toast.error("Please Enter Address!");
-                    return;
-                  }
-                  const { chainId } = await provider.getNetwork();
-                  if (claimer.chain == "fvm" && chainId !== 314) {
-                    await switchNetwork(ethers.utils.hexValue(314));
-                  } else if (
-                    claimer.chain == "fvmtestnet" &&
-                    chainId !== 3141
-                  ) {
-                    await switchNetwork(ethers.utils.hexValue(3141));
-                  } else if (claimer.chain == "mumbai" && chainId !== 80001) {
-                    await switchNetwork(ethers.utils.hexValue(80001));
-                  } else if (claimer.chain == "goerli" && chainId !== 5) {
-                    await switchNetwork(ethers.utils.hexValue(5));
-                  } else if (claimer.chain == "bsc" && chainId !== 97) {
-                    await switchNetwork(ethers.utils.hexValue(97));
-                  }
-
-                  if (claimer?.type == "badge") {
-                    await claimBadges(token, add);
-                  } else {
-                    if (
-                      claimer?.position != "" &&
-                      claimer?.position != undefined
-                    ) {
-                      await claimUploadedCertificate(
-                        token,
-                        add,
-                        claimer,
-                        claimer?.uploadObj.style.color,
-                        claimer?.uploadObj.width,
-                        claimer?.uploadObj.height
-                      );
-                    } else {
-                      await claimCertificate(
-                        token,
-                        add,
-                        claimer,
-                        claimer?.template.name.style.color,
-                        claimer?.template.name.style.fontFamily
-                      );
+            {claimer?.status == "Yes" ? (
+              ""
+            ) : (
+              <div className="d-flex justify-content-start">
+                <TextField
+                  name="Address"
+                  label="Wallet Address"
+                  fullWidth
+                  className="address mr-2"
+                  onChange={(e) => setAddress(e.target.value)}
+                  sx={{ background: "white" }}
+                />
+                <a
+                  className="thm-btn header__cta-btn"
+                  onClick={async () => {
+                    if (claimer.status === "Yes") {
+                      toast.error("This certificate is already claimed!");
+                      return;
                     }
-                  }
-                }}
-              >
-                <span> Claim</span>
-              </a>
-            </div>
+                    if (add === "") {
+                      toast.error("Please Enter Address!");
+                      return;
+                    }
+                    const { chainId } = await provider.getNetwork();
+                    if (claimer.chain == "fvm" && chainId !== 314) {
+                      await switchNetwork(ethers.utils.hexValue(314));
+                    } else if (
+                      claimer.chain == "fvmtestnet" &&
+                      chainId !== 3141
+                    ) {
+                      await switchNetwork(ethers.utils.hexValue(3141));
+                    } else if (claimer.chain == "mumbai" && chainId !== 80001) {
+                      await switchNetwork(ethers.utils.hexValue(80001));
+                    } else if (claimer.chain == "goerli" && chainId !== 5) {
+                      await switchNetwork(ethers.utils.hexValue(5));
+                    } else if (claimer.chain == "bsc" && chainId !== 97) {
+                      await switchNetwork(ethers.utils.hexValue(97));
+                    }
+
+                    if (claimer?.type == "badge") {
+                      await claimBadges(token, add);
+                    } else {
+                      if (
+                        claimer?.position != "" &&
+                        claimer?.position != undefined
+                      ) {
+                        await claimUploadedCertificate(
+                          token,
+                          add,
+                          claimer,
+                          claimer?.uploadObj.style.color,
+                          claimer?.uploadObj.width,
+                          claimer?.uploadObj.height
+                        );
+                      } else {
+                        await claimCertificate(
+                          token,
+                          add,
+                          claimer,
+                          claimer?.template.name.style.color,
+                          claimer?.template.name.style.fontFamily
+                        );
+                      }
+                    }
+                  }}
+                >
+                  <span> Claim</span>
+                </a>
+              </div>
+            )}
+
             {claimLoading && (
               <>
                 <div id="cover-spin"></div>
                 <p id="cover-spin-text">
-                  Please don't refresh! {claimer?.type} is being claimed! 😎
+                  {claimer?.type} is being claimed! Please do not refresh!😎
                 </p>
               </>
             )}

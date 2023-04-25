@@ -32,7 +32,6 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
       "ipfs://",
       "https://nftstorage.link/ipfs/"
     );
-
     setImage(rep);
   };
 
@@ -59,5 +58,4 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
     </TableCell >
   );
 };
-
 export default TableRowComponent;

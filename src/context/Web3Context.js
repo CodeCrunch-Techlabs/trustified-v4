@@ -67,7 +67,6 @@ export const Web3ContextProvider = (props) => {
     }
   }, [add]);
 
-
   // async function switchNetwork(chainId) {
   //   await window.ethereum.request({
   //     method: "wallet_switchEthereumChain",
@@ -102,7 +101,6 @@ export const Web3ContextProvider = (props) => {
       }
 
       if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
-
         // chain ID is not available, add the chain to MetaMask
         const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
         const chainName = "Filecoin Mainnet"; // replace with your chain name
@@ -127,8 +125,10 @@ export const Web3ContextProvider = (props) => {
         const signer = provider.getSigner();
         setProvider(provider);
         setSigner(signer);
-      } else if (chainData !== chainId && chainId === ethers.utils.hexValue(3141)) {
-
+      } else if (
+        chainData !== chainId &&
+        chainId === ethers.utils.hexValue(3141)
+      ) {
         // chain ID is not available, add the chain to MetaMask
         const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
         const chainName = "Filecoin hyperspace"; // replace with your chain name
@@ -167,8 +167,6 @@ export const Web3ContextProvider = (props) => {
       toast.error(error.message);
     }
   }
-
-
 
   const connectWallet = async (issuerName) => {
     const { ethereum } = window;
@@ -434,8 +432,7 @@ export const Web3ContextProvider = (props) => {
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
-            formData.platforms = links;
-            console.log(formData,"formData");
+            formData.platforms = links; 
             await addCollection(formData);
 
             var array = [];
@@ -466,12 +463,12 @@ export const Web3ContextProvider = (props) => {
               obj.expireDate = formData.expireDate;
               obj.issueDate = formData.issueDate;
               obj.position = previewUrl ? position : "";
+
               obj.uploadCertData = previewUrl ? uploadObj.name : "";
               console.log( uploadObj," uploadObj");
               obj.txHash = txm.transactionHash;
               obj.createdBy = txm.from;
-              obj.platforms = links;
-              console.log(obj,"obj");
+              obj.platforms = links; 
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {
@@ -766,20 +763,16 @@ export const Web3ContextProvider = (props) => {
             setClaimLoading(false);
           }
         }
-      } catch (error) { 
+      } catch (error) {
         setClaimLoading(false);
         if (error.message === "Internal JSON-RPC error.") {
-          toast.error(
-            "You don't have enough balance to claim certificate!"
-          );
+          toast.error("You don't have enough balance to claim certificate!");
         } else if (error.code === "ACTION_REJECTED") {
           toast.error(
             "MetaMask Tx Signature: User denied transaction signature!"
           );
         } else {
-          toast.error(
-            "Something went wrong!"
-          );
+          toast.error("Something went wrong!");
         }
       }
     });
@@ -853,20 +846,16 @@ export const Web3ContextProvider = (props) => {
             setClaimLoading(false);
           }
         }
-      } catch (error) { 
-        setClaimLoading(false); 
+      } catch (error) {
+        setClaimLoading(false);
         if (error.message === "Internal JSON-RPC error.") {
-          toast.error(
-            "You don't have enough balance to claim certificate!"
-          );
+          toast.error("You don't have enough balance to claim certificate!");
         } else if (error.code === "ACTION_REJECTED") {
           toast.error(
             "MetaMask Tx Signature: User denied transaction signature!"
           );
         } else {
-          toast.error(
-            "Something went wrong!"
-          );
+          toast.error("Something went wrong!");
         }
       }
     });

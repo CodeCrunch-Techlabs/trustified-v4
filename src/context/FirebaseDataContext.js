@@ -111,6 +111,7 @@ export const FirebaseDataContextProvider = (props) => {
       platforms: data.platforms,
     } 
     setLoading(true);
+ 
     await addDoc(collection(db, "Collections"), {
       userId: data.userId,
       name: data.title,

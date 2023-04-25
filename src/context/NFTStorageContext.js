@@ -95,6 +95,7 @@ export const NFTStorageContextProvider = (props) => {
   };
 
   const createCertificateNFT = async () => {
+    
     try {
       setUploading(true);
       if (ipfsurl) {
