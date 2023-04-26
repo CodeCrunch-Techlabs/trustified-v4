@@ -26,23 +26,21 @@ function GetChain() {
   const [fileName, setFileName] = useState("");
 
   const generateCsv = () => {
-    const rows = [["Display Name"], ["John Doe"]];
+    const rows = [["John Doe"]];
 
-    let csvContent = "data:text/csv;charset=utf-8,";
-    rows.forEach((row) => {
-      csvContent += row.join(",") + "\r\n";
+    var csv = "Display Name\n";
+    
+    rows.forEach(function (row) {
+      csv += row.join(",");
+      csv += "\n";
     });
 
-    return encodeURI(csvContent);
-  };
+    const blob = new Blob([csv], { type: "text/csv" });
 
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.setAttribute("href", generateCsv());
-    link.setAttribute("download", "sample.csv");
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    const downloadLink = document.createElement("a");
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = `sample.csv`;
+    downloadLink.click();
   };
 
   return (
@@ -155,6 +153,7 @@ function GetChain() {
                       };
                     })
                     .filter((row) => row.name !== "");
+                    console.log(result)
                   await setCsvData(result);
                   setTimeout(function () {
                     setUpload(false);
@@ -163,7 +162,7 @@ function GetChain() {
                 }}
               />
             </Button>
-            <a href="#" onClick={handleDownload}>
+            <a href="#" onClick={generateCsv}>
               Download sample file
             </a>
             {fileName ? (
