@@ -156,11 +156,15 @@ export default function MyCollection({ show }) {
     const url =
       (chain === "fvm" && "https://filfox.info/en/tx") ||
       (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
       (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "bsc" && "https://bscscan.com/tx");
+      (chain === "celotestnet" &&
+        "https://alfajores-blockscout.celo-testnet.org/tx") ||
+      (chain === "arbitrumtestnet" &&
+        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
+      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
     return url;
   };
+
 
   return (
     <div

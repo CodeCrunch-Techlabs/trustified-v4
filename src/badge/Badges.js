@@ -10,6 +10,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const Badges = () => {
   const navigate = useNavigate();
+  
   const firebaseContext = React.useContext(firebaseDataContext);
   const { getNFTCollections, badgesData, generateClaimersExcellSheet } =
     firebaseContext;
@@ -19,8 +20,8 @@ const Badges = () => {
     Array(badges.length).fill(false)
   );
 
-  const navigateTo = (id) => {
-    navigate(`/dashboard/collectors/${id}`);
+  const navigateTo = (id, chain) => {
+    navigate(`/dashboard/collectors/${id}`, { state: { chain } });
   };
 
   useEffect(() => {
@@ -35,9 +36,12 @@ const Badges = () => {
     const url =
       (chain === "fvm" && "https://filfox.info/en/tx") ||
       (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
       (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "bsc" && "https://bscscan.com/tx");
+      (chain === "celotestnet" &&
+        "https://alfajores-blockscout.celo-testnet.org/tx") ||
+      (chain === "arbitrumtestnet" &&
+        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
+      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
     return url;
   };
 
@@ -55,7 +59,7 @@ const Badges = () => {
                   <div className="fact-one__single">
                     <div className="fact-one__inner">
                       <img
-                        onClick={() => navigateTo(item.eventId)}
+                        onClick={() => navigateTo(item.eventId, item.chain)}
                         style={{ cursor: "pointer" }}
                         src={
                           item?.ipfsUrl
@@ -89,7 +93,8 @@ const Badges = () => {
                             await generateClaimersExcellSheet(
                               item.eventId,
                               item.name,
-                              "badge"
+                              "badge",
+                              item.chain
                             );
                             newLoadingStates[index] = false;
                             setLoadingStates(newLoadingStates);

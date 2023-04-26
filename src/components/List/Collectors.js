@@ -6,14 +6,16 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow"; 
+import TableRow from "@mui/material/TableRow";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import TableRowComponent from "./TableRow";
 
-function Collectors() {
+function Collectors(props) {
   const params = useParams();
+  const { state } = useLocation();
+  const chain = state?.chain;
   const fireDataContext = React.useContext(firebaseDataContext);
   const { claim, getClaimers, type } = fireDataContext;
   const [page, setPage] = React.useState(0);
@@ -31,7 +33,7 @@ function Collectors() {
   };
 
   useEffect(() => {
-    getClaimers(params.token);
+    getClaimers(params.token, chain);
   }, [params.token]);
 
   useEffect(() => {
@@ -79,7 +81,7 @@ function Collectors() {
       ]);
     }
   }, [type]);
- 
+
   return (
     <div className="footer-position">
       {/* <div className="container">
@@ -109,7 +111,7 @@ function Collectors() {
               <TableBody>
                 {collectors
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => {   
+                  .map((row, index) => {
                     return (
                       <TableRow
                         hover
@@ -118,7 +120,7 @@ function Collectors() {
                         key={row.code}
                       >
                         {columns.map((column) => {
-                          const value = row[column.id];  
+                          const value = row[column.id];
                           return (
                             <TableRowComponent
                               event={params.token}

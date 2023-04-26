@@ -80,7 +80,7 @@ export default function NftList() {
                     style={{ cursor: "pointer" }}
                   >
                     {columns.map((column) => {
-                      const value = row[column.id]; 
+                      const value = row[column.id];
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.format && typeof value === "number"
@@ -89,16 +89,16 @@ export default function NftList() {
                         </TableCell>
                       );
                     })}
-                    <TableCell>
+                    {/* <TableCell>
                       <Button
                         onClick={(e) => {
                           e.stopPropagation();
-                          generateClaimersExcellSheet(row.eventId, row.name);
+                          generateClaimersExcellSheet(row.eventId, row.name, item.chain);
                         }}
                       >
                         Download
                       </Button>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                 );
               })}

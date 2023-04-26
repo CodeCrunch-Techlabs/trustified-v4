@@ -9,7 +9,7 @@ const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
 module.exports = {
   solidity: "0.8.4",
   etherscan: {
-    apiKey: process.env.REACT_APPA_POLYGONSCAN_API_KEY
+    apiKey: process.env.REACT_APPA_POLYGONSCAN_API_KEY,
   },
   settings: {
     optimizer: {
@@ -39,6 +39,26 @@ module.exports = {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
       accounts: [PRIVATE_KEY],
+    },
+    celo: {
+      url: `https://alfajores-forno.celo-testnet.org`,
+      accounts: [PRIVATE_KEY],
+      chainId: 44787,
+    },
+    arbitrumtestnet: {
+      url: "https://goerli-rollup.arbitrum.io/rpc",
+      accounts: [PRIVATE_KEY],
+      chainId: 421613,
+    },
+    chiado: {
+      url: "https://rpc.chiadochain.net",
+      accounts: [PRIVATE_KEY],
+      chainId: 10200,
+    },
+    sepolia: {
+      url: "https://eth-sepolia.g.alchemy.com/v2/1KY8SXPno-ao61fhLtpTBD4mBZvesVIC",
+      accounts: [PRIVATE_KEY],
+      chainId: 11155111,
     },
   },
   mocha: {

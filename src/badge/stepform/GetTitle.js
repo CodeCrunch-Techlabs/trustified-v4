@@ -21,7 +21,6 @@ function GetTitle() {
   const web3Context = React.useContext(Web3Context);
   const { switchNetwork } = web3Context;
 
-
   // async function switchNetwork(chainId) {
   //   await window.ethereum.request({
   //     method: "wallet_switchEthereumChain",
@@ -73,11 +72,20 @@ function GetTitle() {
                 await switchNetwork(ethers.utils.hexValue(3141));
               } else if (e.target.value == "mumbai" && chainId !== 80001) {
                 await switchNetwork(ethers.utils.hexValue(80001));
-              } else if (e.target.value == "goerli" && chainId !== 5) {
-                await switchNetwork(ethers.utils.hexValue(5));
-              } else if (e.target.value == "bsc" && chainId !== 97) {
-                await switchNetwork(ethers.utils.hexValue(97));
+              } else if (e.target.value == "celotestnet" && chainId !== 44787) {
+                await switchNetwork(ethers.utils.hexValue(44787));
+              } else if (
+                e.target.value == "arbitrumtestnet" &&
+                chainId !== 421613
+              ) {
+                await switchNetwork(ethers.utils.hexValue(421613));
+              } else if (
+                e.target.value == "ethereumtestnet" &&
+                chainId !== 11155111
+              ) {
+                await switchNetwork(ethers.utils.hexValue(11155111));
               }
+
               // setChain(e.target.value)
             }}
           >
@@ -99,24 +107,36 @@ function GetTitle() {
                 label="FVM Testnet(Hyperspace)"
                 onChange={value.setFormdata("chain")}
               />
-              {/* <FormControlLabel
+              <FormControlLabel
                 value="mumbai"
                 control={<Radio />}
                 label="Polygon Mumbai"
                 onChange={value.setFormdata("chain")}
               />
               <FormControlLabel
-                value="goerli"
+                value="celotestnet"
                 control={<Radio />}
-                label="Goerli"
+                label="Alfajores Testnet(Celo)"
                 onChange={value.setFormdata("chain")}
               />
               <FormControlLabel
-                value="bsc"
+                value="arbitrumtestnet"
                 control={<Radio />}
-                label="BSC"
+                label="Arbitrum Goerli"
+                onChange={value.setFormdata("chain")}
+              />
+              {/* <FormControlLabel
+                value="arbitrumtestnet"
+                control={<Radio />}
+                label="Arbitrum Goerli"
                 onChange={value.setFormdata("chain")}
               /> */}
+              <FormControlLabel
+                value="ethereumtestnet"
+                control={<Radio />}
+                label="Ethereum Sepolia"
+                onChange={value.setFormdata("chain")}
+              />
             </Stack>
           </RadioGroup>
         </FormControl>

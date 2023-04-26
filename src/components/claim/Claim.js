@@ -21,16 +21,16 @@ export default function Claim() {
     address,
     claimUploadedCertificate,
     claimBadges,
-    switchNetwork, 
+    switchNetwork,
   } = web3Context;
 
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { getMyCollection, getClaimer, claimer } = firebaseContext; 
+  const { getMyCollection, getClaimer, claimer } = firebaseContext;
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
   const [id, setId] = useState("");
-  const [show, setShow] = useState(false); 
-  const { token } = useParams(); 
+  const [show, setShow] = useState(false);
+  const { token } = useParams();
   const [add, setAddress] = useState("");
 
   useEffect(() => {
@@ -49,10 +49,13 @@ export default function Claim() {
   const getUrl = (chain) => {
     const url =
       (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://mumbai.polygonscan.com/tx") ||
-      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
+      (chain === "mumbai" && "https://polygonscan.com/tx") ||
       (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "bsc" && "https://bscscan.com/tx");
+      (chain === "celotestnet" &&
+        "https://alfajores-blockscout.celo-testnet.org/tx") ||
+      (chain === "arbitrumtestnet" &&
+        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
+      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
     return url;
   };
 
@@ -159,6 +162,7 @@ export default function Claim() {
                         </p>
                       </div>
                     </div>
+
                     <a
                       href={`${getUrl(claimer?.chain)}/${claimer.txHash}`}
                       target="_blank"
@@ -175,7 +179,7 @@ export default function Claim() {
                               icon={"material-symbols:done"}
                               width={30}
                               height={30}
-                              sx={{color:"green"}}
+                              sx={{ color: "green" }}
                             />
                           </span>
                         </button>
@@ -202,7 +206,6 @@ export default function Claim() {
                   sx={{ background: "white" }}
                 />
                 <button
-                 
                   className="thm-btn header__cta-btn"
                   onClick={async () => {
                     if (claimer.status === "Yes") {
@@ -221,12 +224,26 @@ export default function Claim() {
                       chainId !== 3141
                     ) {
                       await switchNetwork(ethers.utils.hexValue(3141));
-                    } else if (claimer.chain === "mumbai" && chainId !== 80001) {
+                    } else if (
+                      claimer.chain === "mumbai" &&
+                      chainId !== 80001
+                    ) {
                       await switchNetwork(ethers.utils.hexValue(80001));
-                    } else if (claimer.chain === "goerli" && chainId !== 5) {
-                      await switchNetwork(ethers.utils.hexValue(5));
-                    } else if (claimer.chain === "bsc" && chainId !== 97) {
-                      await switchNetwork(ethers.utils.hexValue(97));
+                    } else if (
+                      claimer.chain == "celotestnet" &&
+                      chainId !== 44787
+                    ) {
+                      await switchNetwork(ethers.utils.hexValue(44787));
+                    } else if (
+                      claimer.chain == "arbitrumtestnet" &&
+                      chainId !== 421613
+                    ) {
+                      await switchNetwork(ethers.utils.hexValue(421613));
+                    } else if (
+                      claimer.chain == "ethereumtestnet" &&
+                      chainId !== 11155111
+                    ) {
+                      await switchNetwork(ethers.utils.hexValue(11155111));
                     }
 
                     if (claimer?.type === "badge") {
