@@ -129,21 +129,15 @@ function GetNFTDetails() {
                 name="controlled-radio-buttons-group"
                 value={formdata.chain}
                 onChange={async (e) => {
-                  const { chainId } = await provider.getNetwork();
-                  console.log(chainId, "=>", e.target.value, "chainId chainId");
-                  if (e.target.value == "fvm" && chainId !== 314) {
-                    console.log("call main");
-                    await switchNetwork(ethers.utils.hexValue(314));
-
+                  const { chainId } = await provider.getNetwork(); 
+                  if (e.target.value == "fvm" && chainId !== 314) { 
+                    await switchNetwork(ethers.utils.hexValue(314)); 
                   } else if (
                     e.target.value == "fvmtestnet" &&
                     chainId !== 3141
-                  ) {
-                    console.log("call test");
-                    await switchNetwork(ethers.utils.hexValue(3141));
-
-                  } else if (e.target.value == "mumbai" && chainId !== 80001) {
-                    console.log("call mumbai");
+                  ) { 
+                    await switchNetwork(ethers.utils.hexValue(3141)); 
+                  } else if (e.target.value == "mumbai" && chainId !== 80001) { 
                     await switchNetwork(ethers.utils.hexValue(80001));
                   } else if (e.target.value == "goerli" && chainId !== 5) {
                     await switchNetwork(ethers.utils.hexValue(5));

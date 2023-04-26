@@ -417,7 +417,7 @@ export const Web3ContextProvider = (props) => {
           "",
           parseInt(csvdata.length),
           1,
-          formData.Nontransferable == "on" ? true : false
+          formData.Nontransferable === "on" ? true : false
         );
         await trustifiedContract.once(
           "TokensMinted",
@@ -432,8 +432,7 @@ export const Web3ContextProvider = (props) => {
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
-            formData.platforms = links;
-
+            formData.platforms = links; 
             await addCollection(formData);
 
             var array = [];
@@ -463,13 +462,11 @@ export const Web3ContextProvider = (props) => {
               obj.description = formData.description;
               obj.expireDate = formData.expireDate;
               obj.issueDate = formData.issueDate;
-              obj.position = previewUrl ? position : "";
-
-              obj.uploadCertData = previewUrl ? uploadObj.name : "";
+              obj.position = previewUrl ? position : ""; 
+              obj.uploadCertData = previewUrl ? uploadObj.name : ""; 
               obj.txHash = txm.transactionHash;
               obj.createdBy = txm.from;
-              obj.platforms = links;
-
+              obj.platforms = links; 
               await addCollectors(obj);
             } // Generating CSV file with unique link and storing data in firebase.
             let obj = {
@@ -531,6 +528,8 @@ export const Web3ContextProvider = (props) => {
     textFamily
   ) => {
     setClaimLoading(true);
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
     const input = document.getElementById("create-temp");
     const pdfWidth = 800;
     const pdfHeight = 600;
@@ -654,7 +653,8 @@ export const Web3ContextProvider = (props) => {
     height
   ) => {
     setClaimLoading(true);
-
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
     const input = document.getElementById("certificateX");
     const pdfWidth = width;
     const pdfHeight = height;
@@ -785,6 +785,8 @@ export const Web3ContextProvider = (props) => {
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
     );
+    const provider = await new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
 
     const querySnapshot = await getDocs(q);
 

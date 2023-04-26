@@ -21,18 +21,16 @@ export default function Claim() {
     address,
     claimUploadedCertificate,
     claimBadges,
-    switchNetwork,
+    switchNetwork, 
   } = web3Context;
 
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { getMyCollection, getClaimer, claimer } = firebaseContext;
-
+  const { getMyCollection, getClaimer, claimer } = firebaseContext; 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
+
   const [id, setId] = useState("");
-  const [show, setShow] = useState(false);
-
-  const { token } = useParams();
-
+  const [show, setShow] = useState(false); 
+  const { token } = useParams(); 
   const [add, setAddress] = useState("");
 
   useEffect(() => {
@@ -164,12 +162,13 @@ export default function Claim() {
                     <a
                       href={`${getUrl(claimer?.chain)}/${claimer.txHash}`}
                       target="_blank"
+                      rel="noreferrer"
                     >
                       View Transaction <OpenInNewIcon />
                     </a>
                     {claimer.status == "Yes" && (
                       <div className="mt-4">
-                        <a className="thm-btn header__cta-btn">
+                        <button className="thm-btn header__cta-btn">
                           <span>
                             Claimed
                             <Iconify
@@ -179,7 +178,7 @@ export default function Claim() {
                               sx={{color:"green"}}
                             />
                           </span>
-                        </a>
+                        </button>
                       </div>
                     )}
                   </div>
@@ -202,7 +201,8 @@ export default function Claim() {
                   onChange={(e) => setAddress(e.target.value)}
                   sx={{ background: "white" }}
                 />
-                <a
+                <button
+                 
                   className="thm-btn header__cta-btn"
                   onClick={async () => {
                     if (claimer.status === "Yes") {
@@ -214,27 +214,27 @@ export default function Claim() {
                       return;
                     }
                     const { chainId } = await provider.getNetwork();
-                    if (claimer.chain == "fvm" && chainId !== 314) {
+                    if (claimer.chain === "fvm" && chainId !== 314) {
                       await switchNetwork(ethers.utils.hexValue(314));
                     } else if (
-                      claimer.chain == "fvmtestnet" &&
+                      claimer.chain === "fvmtestnet" &&
                       chainId !== 3141
                     ) {
                       await switchNetwork(ethers.utils.hexValue(3141));
-                    } else if (claimer.chain == "mumbai" && chainId !== 80001) {
+                    } else if (claimer.chain === "mumbai" && chainId !== 80001) {
                       await switchNetwork(ethers.utils.hexValue(80001));
-                    } else if (claimer.chain == "goerli" && chainId !== 5) {
+                    } else if (claimer.chain === "goerli" && chainId !== 5) {
                       await switchNetwork(ethers.utils.hexValue(5));
-                    } else if (claimer.chain == "bsc" && chainId !== 97) {
+                    } else if (claimer.chain === "bsc" && chainId !== 97) {
                       await switchNetwork(ethers.utils.hexValue(97));
                     }
 
-                    if (claimer?.type == "badge") {
+                    if (claimer?.type === "badge") {
                       await claimBadges(token, add);
                     } else {
                       if (
-                        claimer?.position != "" &&
-                        claimer?.position != undefined
+                        claimer?.position !== "" &&
+                        claimer?.position !== undefined
                       ) {
                         await claimUploadedCertificate(
                           token,
@@ -257,7 +257,7 @@ export default function Claim() {
                   }}
                 >
                   <span> Claim</span>
-                </a>
+                </button>
               </div>
             )}
 
@@ -270,7 +270,7 @@ export default function Claim() {
               </>
             )}
             <div className="mt-4">
-              <a
+              <button
                 className="thm-btn header__cta-btn"
                 onClick={() => {
                   getMyCollection(add);
@@ -278,7 +278,7 @@ export default function Claim() {
                 }}
               >
                 <span>Browse Collection</span>
-              </a>
+              </button>
             </div>
           </div>
         </div>
