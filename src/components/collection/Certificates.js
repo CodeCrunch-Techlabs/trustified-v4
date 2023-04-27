@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +7,7 @@ import Iconify from "../utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { IconButton } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { logos } from "../../config";
 
 export default function Certificates() {
   const navigate = useNavigate();
@@ -44,14 +46,14 @@ export default function Certificates() {
   return (
     <div className="container">
       <div className="row">
-        {certificates.length != 0 ? (
+        {certificates.length !== 0 ? (
           certificates.map((item, index) => {
             return (
               <div
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
                 key={index}
               >
-                <div className="card-root">
+                <div className="card-root" style={{ position: 'relative' }}>
                   <img
                     style={{ cursor: "pointer" }}
                     onClick={() => navigateTo(item.eventId)}
@@ -59,7 +61,26 @@ export default function Certificates() {
                       item?.ipfsUrl ? item?.ipfsUrl : "/images/placeholder.jpg"
                     }
                     width="100%"
+                    alt=""
                   />
+
+                  <div style={{
+                    position:'absolute',
+                    bottom:'15px',
+                    right:'15px',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    textAlign: 'center'
+                  }}>
+                    <img style={{
+                      width: '22px',
+                      height: '22px',
+                      marginTop: '-5px'
+                    }} src={`${logos[item.chain]}`} alt="" />
+                  </div>
+
                   <div className="card-body-cert">
                     <div className="d-flex justify-content-between">
                       <div>
@@ -119,12 +140,17 @@ export default function Certificates() {
                     </div>
                   </div>
 
-                  <a
-                    href={`${getUrl(item?.chain)}/${item.txHash}`}
-                    target="_blank"
-                  >
-                    View Transaction <OpenInNewIcon />
-                  </a>
+                  <div className="card-body-cert d-flex justify-content-center">
+                    <a
+                      href={`${getUrl(item?.chain)}/${item.txHash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ fontSize: '16px' }}
+                    >
+                      View Transaction <OpenInNewIcon fontSize="16" />
+                    </a>
+                  </div>
+
                 </div>
               </div>
             );
@@ -133,7 +159,7 @@ export default function Certificates() {
           <div className="col-12">
             <p>
               No certificates has been issued by you till now. Click on "Create"
-              to issue certificates. 
+              to issue certificates.
             </p>
           </div>
         )}

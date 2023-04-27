@@ -19,3 +19,13 @@ export const chain = {
   80001: "mumbai",
   97: "bsc",
 };
+
+export const logos={
+  mumbai:'/assets/logo/mumbai.png',
+  ether:'/assets/logo/ethereum.png',
+  celo:'/assets/logo/celo.png',
+  fvm:'/assets/logo/fvm.png',
+  fvmtestnet:'/assets/logo/fvm.png',
+  gnosis:'/assets/logo/gnosis.png',
+  arbitrum:'/assets/logo/arbitrum.png',
+}

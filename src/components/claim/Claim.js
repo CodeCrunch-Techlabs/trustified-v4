@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { TextField, Divider, CircularProgress } from "@mui/material";
+import { TextField,CircularProgress } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import MyCollection from "../myCollection";
 import { ethers } from "ethers";
 import TemplatePreview from "./Preview";
-import UploadPreview from "./UploadPreview";
-import Chip from "@mui/material/Chip";
+import UploadPreview from "./UploadPreview"; 
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "react-toastify";
 import Iconify from "../../components/utils/Iconify";
@@ -16,9 +15,7 @@ export default function Claim() {
   const web3Context = React.useContext(Web3Context);
   const {
     claimCertificate,
-    claimLoading,
-    connectWallet,
-    address,
+    claimLoading, 
     claimUploadedCertificate,
     claimBadges,
     switchNetwork, 
@@ -36,6 +33,7 @@ export default function Claim() {
   useEffect(() => {
     getClaimer(token);
     getUrl();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // async function switchNetwork(chainId) {
@@ -63,17 +61,18 @@ export default function Claim() {
   }
   useEffect(() => {
     getCertId();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimer]);
 
   const getNetworkToken = (network) => {
     var net;
-    if (network == "fvmtestnet") {
+    if (network === "fvmtestnet") {
       net = "fvmtestnet";
-    } else if (network == "fvm") {
+    } else if (network === "fvm") {
       net = "fvm";
-    } else if (network == "mumbai") {
+    } else if (network === "mumbai") {
       net = "mumbai";
-    } else if (network == "goerli") {
+    } else if (network === "goerli") {
       net = "goerli";
     } else {
       net = "bsc";
@@ -91,12 +90,12 @@ export default function Claim() {
                   className="py-4"
                   style={{ justifyContent: "center", display: "flex" }}
                 >
-                  {claimer?.type == "badge" ? (
-                    <img className="claimBadge" src={claimer?.ipfsurl} />
+                  {claimer?.type === "badge" ? (
+                    <img className="claimBadge" src={claimer?.ipfsurl} alt="" />
                   ) : (
                     <>
-                      {claimer?.position != "" &&
-                      claimer?.position != undefined ? (
+                      {claimer?.position !=="" &&
+                      claimer?.position !== undefined ? (
                         <UploadPreview claimer={claimer} id={id} />
                       ) : (
                         <TemplatePreview
@@ -153,7 +152,7 @@ export default function Claim() {
                       <div>
                         <h4>Type</h4>
                         <p>
-                          {claimer?.nfttype == "on"
+                          {claimer?.nfttype === "on"
                             ? "Non-Transferrable"
                             : "Transferrable"}
                         </p>
@@ -166,7 +165,7 @@ export default function Claim() {
                     >
                       View Transaction <OpenInNewIcon />
                     </a>
-                    {claimer.status == "Yes" && (
+                    {claimer.status === "Yes" && (
                       <div className="mt-4">
                         <button className="thm-btn header__cta-btn">
                           <span>
@@ -189,7 +188,7 @@ export default function Claim() {
         </div>
         <div className="row mt-4">
           <div className="col-12 col-xl-8 col-lg-8 col-md-8 col-sm-10  mx-auto text-center">
-            {claimer?.status == "Yes" ? (
+            {claimer?.status === "Yes" ? (
               ""
             ) : (
               <div className="d-flex justify-content-start">

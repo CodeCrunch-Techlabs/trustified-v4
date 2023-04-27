@@ -253,16 +253,24 @@ export const FirebaseDataContextProvider = (props) => {
       data: arr,
     };
 
+  
+    if(obj.data.length === 0){
+      toast.error("There is no data available!");
+      return;
+    } 
+    // const api = await axios.create({
+    //   baseURL: "https://trustified-backend.onrender.com/trustified/api",
+    // });
     const api = await axios.create({
-      baseURL: "https://trustified-backend.onrender.com/trustified/api",
+      baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
     });
     let response = await api
       .post("/export/csv", obj)
-      .then((res) => {
+      .then((res) => { 
         return res;
       })
       .catch((error) => {
-        console.log(error);
+        console.log(error); 
       });
 
     setExportLoading(false);

@@ -7,6 +7,7 @@ import Iconify from "../components/utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { Button } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { logos } from "../config";
 
 const Badges = () => {
   const navigate = useNavigate();
@@ -44,14 +45,14 @@ const Badges = () => {
   return (
     <div className="container">
       <div className="row">
-        {badges.length != 0 ? (
+        {badges.length !== 0 ? (
           badges.map((item, index) => {
             return (
               <div
                 key={index}
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
               >
-                <div className="badge-root">
+                <div className="badge-root" style={{position:'relative'}}>
                   <div className="fact-one__single">
                     <div className="fact-one__inner">
                       <img
@@ -63,8 +64,27 @@ const Badges = () => {
                             : "/images/placeholder.jpg"
                         }
                         width="100%"
+                        alt=""
                       />
                     </div>
+                  </div>
+
+                  <div style={{
+                    position:'absolute',
+                    bottom:'15px',
+                    right:'15px',
+                    backgroundColor: 'rgba(0,0,0,0.1)',
+                    borderRadius: '50%',
+                    width: '30px',
+                    height: '30px',
+                    textAlign: 'center'
+                  }}>
+                    <img style={{
+                      width: '22px',
+                      height: '22px',
+                      marginTop: '-5px',
+                      marginBottom:'0'
+                    }} src={`${logos[item.chain]}`} alt="" />
                   </div>
                   <div className="badge-body mb-0">
                     <h4>{item.name}</h4>
@@ -75,7 +95,7 @@ const Badges = () => {
                     color="primary"
                     variant="outlined"
                   />
-                  <div className="badge-footer">
+                  <div className="badge-footer mt-2">
                     {loadingStates[index] ? (
                       <CircularProgress />
                     ) : (
@@ -108,12 +128,16 @@ const Badges = () => {
                       </Tooltip>
                     )}
                   </div>
-                  <a
+                 <div className="d-flex justify-content-center">
+                 <a
                     href={`${getUrl(item?.chain)}/${item.txHash}`}
                     target="_blank"
+                    rel="noreferrer"
+                    style={{fontSize:'16px'}}
                   >
-                    View Transaction <OpenInNewIcon />
+                    View Transaction <OpenInNewIcon fontSize="16" />
                   </a>
+                 </div>
                 </div>
               </div>
             );

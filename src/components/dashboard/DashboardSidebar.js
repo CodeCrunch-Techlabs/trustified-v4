@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 
@@ -6,12 +7,8 @@ import { Link as RouterLink, useLocation } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import {
   Box,
-  Link,
-  Button,
-  Drawer,
-  Typography,
-  Avatar,
-  Stack,
+  Link, 
+  Drawer 
 } from "@mui/material";
 import sidebarConfig from "../utils/SidebarConfig";
 import useResponsive from "../utils/useResponsive";
@@ -27,16 +24,7 @@ const RootStyle = styled("div")(({ theme }) => ({
   },
 }));
 
-const AccountStyle = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  padding: theme.spacing(2, 2.5),
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.grey[500_12],
-}));
-
-// ----------------------------------------------------------------------
-
+  
 DashboardSidebar.propTypes = {
   isOpenSidebar: PropTypes.bool,
   onCloseSidebar: PropTypes.func,
