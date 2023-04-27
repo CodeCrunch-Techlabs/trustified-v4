@@ -29,17 +29,20 @@ export default function Certificates() {
     setCertificates(certificatesData);
   }, [certificatesData]);
 
-  const navigateTo = (id) => {
-    navigate(`/dashboard/collectors/${id}`);
+  const navigateTo = (id, chain) => {
+    navigate(`/dashboard/collectors/${id}`, { state: { chain } });
   };
 
   const getUrl = (chain) => {
     const url =
       (chain === "fvm" && "https://filfox.info/en/tx") ||
       (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "goerli" && "https://goerli.etherscan.io/tx") ||
       (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "bsc" && "https://bscscan.com/tx");
+      (chain === "celotestnet" &&
+        "https://alfajores-blockscout.celo-testnet.org/tx") ||
+      (chain === "arbitrumtestnet" &&
+        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
+      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
     return url;
   };
 
@@ -56,7 +59,7 @@ export default function Certificates() {
                 <div className="card-root" style={{ position: 'relative' }}>
                   <img
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigateTo(item.eventId)}
+                    onClick={() => navigateTo(item.eventId, item.chain)}
                     src={
                       item?.ipfsUrl ? item?.ipfsUrl : "/images/placeholder.jpg"
                     }
@@ -104,7 +107,8 @@ export default function Certificates() {
                                 await generateClaimersExcellSheet(
                                   item.eventId,
                                   item.name,
-                                  "certificate"
+                                  "certificate",
+                                  item.chain
                                 );
                                 newLoadingStates[index] = false;
                                 setLoadingStates(newLoadingStates);

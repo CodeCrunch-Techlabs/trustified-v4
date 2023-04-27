@@ -93,7 +93,7 @@ export const FirebaseDataContextProvider = (props) => {
     getNFTCollections();
   }, []);
 
-  async function addCollection(data) {  
+  async function addCollection(data) {
     const dd = {
       userId: data.userId,
       name: data.title,
@@ -109,9 +109,9 @@ export const FirebaseDataContextProvider = (props) => {
       txHash: data.txHash,
       createdBy: data.createdBy,
       platforms: data.platforms,
-    } 
+    };
     setLoading(true);
- 
+
     await addDoc(collection(db, "Collections"), {
       userId: data.userId,
       name: data.title,
@@ -197,14 +197,16 @@ export const FirebaseDataContextProvider = (props) => {
     }
   }
 
-  async function getClaimers(eventId) {
+  async function getClaimers(eventId, chain) {
     const arry = [];
     try {
       setLoading(true);
       const collectors = query(
         collection(db, "Collectors"),
-        where("eventId", "==", parseInt(eventId))
+        where("eventId", "==", parseInt(eventId)),
+        where("chain", "==", chain)
       );
+
       const collectorsSnapshot = await getDocs(collectors);
       collectorsSnapshot.forEach((e) => {
         setType(e.data().type);
@@ -232,9 +234,9 @@ export const FirebaseDataContextProvider = (props) => {
     }
   }
 
-  async function generateClaimersExcellSheet(eventId, eventTitle, type) {
+  async function generateClaimersExcellSheet(eventId, eventTitle, type, chain) {
     setExportLoading(true);
-    let claimers = await getClaimers(eventId);
+    let claimers = await getClaimers(eventId, chain);
     var arr = [];
     for (let i = 0; i < claimers.length; i++) {
       if (type == "badge") {
@@ -366,8 +368,6 @@ export const FirebaseDataContextProvider = (props) => {
     //   setRowsIssuer(arry);
     // });
   }
-
-
 
   async function getNFTCollections() {
     const add = window.localStorage.getItem("address");
