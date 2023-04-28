@@ -1,11 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Radio,
-  RadioGroup,
+  Box, 
   Stack,
   Button,
   TextField,
@@ -14,14 +9,11 @@ import {
 } from "@mui/material";
 import CSVReader from "react-csv-reader";
 
-import { NFTStorageContext } from "../../../context/NFTStorageContext";
-import { async } from "@firebase/util";
+import { NFTStorageContext } from "../../../context/NFTStorageContext"; 
 
 function GetChain() {
-  const value = useContext(NFTStorageContext);
-  const formdata = value.labelInfo.formData;
-  const setCsvData = value.setCsvData;
-  const [validity, setValidity] = useState("lifetime");
+  const value = useContext(NFTStorageContext); 
+  const setCsvData = value.setCsvData; 
   const [upload, setUpload] = useState(false);
   const [fileName, setFileName] = useState("");
 

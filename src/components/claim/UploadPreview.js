@@ -1,11 +1,4 @@
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+ 
 import React, { useState } from "react";
 import placeholderImage from "../../assets/jk-placeholder-image-768x518.jpg";
 import { db } from "../../firebase";
@@ -33,7 +26,7 @@ const UploadPreview = ({ claimer, id }) => {
           effect="blur"
         />
 
-        {loaded == true && claimer.status !== "Yes" && (
+        {loaded === true && claimer.status !== "Yes" && (
           <>
             <div style={claimer.uploadObj.style}>{claimer?.claimer}</div>
             <div
@@ -50,8 +43,7 @@ const UploadPreview = ({ claimer, id }) => {
             </div>
           </>
         )}
-        {/* <button onClick={updateFvmdata}>Update</button> */}
-        {/* <img width="800" height="600" src={claimer.ipfsurl} /> */}
+        
       </div>
     </>
   );

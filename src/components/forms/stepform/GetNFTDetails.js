@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext  } from "react";
 import {
   TextField,
   Box,
@@ -15,8 +15,7 @@ import airbitrum from "../../../assets/airbitrum.png";
 
 import { ethers } from "ethers";
 
-import { NFTStorageContext } from "../../../context/NFTStorageContext";
-import { toast } from "react-toastify";
+import { NFTStorageContext } from "../../../context/NFTStorageContext"; 
 import { Web3Context } from "../../../context/Web3Context";
 
 const useStyles = makeStyles((theme) => ({

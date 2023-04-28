@@ -6,9 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
-import TableRow from "@mui/material/TableRow";
-import { collection, getDocs, query, where } from "firebase/firestore";
-import { db } from "../../firebase";
+import TableRow from "@mui/material/TableRow"; 
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "react-bootstrap";
@@ -31,8 +29,7 @@ const columns = [
 export default function NftList() {
   const navigate = useNavigate();
   const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [collections, setCollections] = React.useState([]);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5); 
 
   const fireDataContext = React.useContext(firebaseDataContext);
   const { rowsCollection, generateClaimersExcellSheet } = fireDataContext;

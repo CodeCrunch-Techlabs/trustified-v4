@@ -35,3 +35,13 @@ export const chain = {
   10200: "gnosistestnet",
   11155111: "ethereumtestnet", //SEPOLIA
 };
+
+export const logos={
+  mumbai:'/assets/logo/mumbai.png',
+  ether:'/assets/logo/ethereum.png',
+  celo:'/assets/logo/celo.png',
+  fvm:'/assets/logo/fvm.png',
+  fvmtestnet:'/assets/logo/fvm.png',
+  gnosis:'/assets/logo/gnosis.png',
+  arbitrum:'/assets/logo/arbitrum.png',
+}

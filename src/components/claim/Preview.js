@@ -24,7 +24,7 @@ const TemplatePreview = ({ id, data, name, issueDate }) => {
             height: data.height,
           }}
         >
-          <img src={data.bgImage} width={data.width} height={data.height} />
+          <img src={data.bgImage} width={data.width} height={data.height} alt="" />
           <div className="claim-margin" style={data.title.style} >{data.title.text}</div>
           <div style={data.subTitle.style}>{data.subTitle.text}</div>
           <div style={data.certName.style}>{data.certName.text}</div>
@@ -38,7 +38,7 @@ const TemplatePreview = ({ id, data, name, issueDate }) => {
           </div>
 
           <label htmlFor="upload-button" style={data.logo.style}>
-            <img src={data.logo.img} style={{ cursor: "pointer" }} width="80" />
+            <img src={data.logo.img} style={{ cursor: "pointer" }} width="80"  alt=""/>
           </label>
 
           <label htmlFor="upload-sign" style={data.sign.style}>
@@ -46,6 +46,7 @@ const TemplatePreview = ({ id, data, name, issueDate }) => {
               src={data.sign.img}
               style={{ cursor: "pointer" }}
               width="100"
+              alt=""
             />
           </label>
           <div style={{

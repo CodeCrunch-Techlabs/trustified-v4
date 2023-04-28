@@ -222,12 +222,17 @@ export const Web3ContextProvider = (props) => {
       chain: currentChain,
       userAddress: accounts[0],
     };
+    
+    // const api = await axios.create({
+    //   baseURL: "https://trustified-api-o5zg.onrender.com/trustified/api",
+    // });
 
     const api = await axios.create({
-      baseURL: "https://trustified-api-o5zg.onrender.com/trustified/api",
+      baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
     });
+
     let response = await api
-      .post("/login", obj)
+      .post("/login", obj) 
       .then((res) => {
         return res;
       })
@@ -412,6 +417,7 @@ export const Web3ContextProvider = (props) => {
           trustifiedContractAbi.abi,
           signer
         );
+ 
 
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
@@ -419,10 +425,11 @@ export const Web3ContextProvider = (props) => {
           1,
           formData.Nontransferable === "on" ? true : false
         );
+        console.log(transactionMint,"transactionMint");
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait();
+            let txm = await transactionMint.wait(); 
             var eventId = eventId;
             formData.contract = trustifiedContract.address;
             formData.userId = userId;
@@ -473,9 +480,10 @@ export const Web3ContextProvider = (props) => {
               type: type,
               data: array,
             };
+ 
 
             const api = await axios.create({
-              baseURL: "https://trustified-backend.onrender.com/trustified/api",
+              baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
             });
             let response = await api
               .post("/export/csv", obj)
@@ -485,6 +493,7 @@ export const Web3ContextProvider = (props) => {
               .catch((error) => {
                 console.log(error);
               });
+ 
 
             const blob = new Blob([response.data], { type: "text/csv" });
 
@@ -504,21 +513,7 @@ export const Web3ContextProvider = (props) => {
     });
   };
 
-  const getNetworkToken = (network) => {
-    var net;
-    if (network == "fvmtestnet") {
-      net = "fvmtestnet";
-    } else if (network == "fvm") {
-      net = "fvm";
-    } else if (network == "mumbai") {
-      net = "mumbai";
-    } else if (network == "goerli") {
-      net = "goerli";
-    } else {
-      net = "bsc";
-    }
-    return net;
-  };
+  
 
   const claimCertificate = async (
     claimToken,

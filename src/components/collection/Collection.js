@@ -2,10 +2,8 @@ import React from "react";
 import { Box } from "@mui/material";
 
 import Certificates from "./Certificates";
-import { useNavigate } from "react-router-dom";
-import SearchIcon from "@mui/icons-material/Search";
-import AddIcon from "@mui/icons-material/Add";
-import { IconButton, InputBase, Paper } from "@mui/material";
+import { useNavigate } from "react-router-dom"; 
+import AddIcon from "@mui/icons-material/Add"; 
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { toast } from "react-toastify";
@@ -45,14 +43,14 @@ function Collections() {
               </div>
 
               <div>
-                <a
+                <button
                   className="thm-btn header__cta-btn"
-                  onClick={handleClickNavigate}
+                  onClick={handleClickNavigate} 
                 >
                   <span>
                     <AddIcon /> Create Certificates{" "}
                   </span>
-                </a>
+                </button>
               </div>
             </div>
           </Box>
