@@ -3642,3 +3642,22 @@ a:hover {
   -webkit-animation: spin .8s linear infinite;
   animation: spin .8s linear infinite;
 }
+
+.chainChip{
+  padding: 0px 5px 0px 5px;
+    background-color: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-color: #E4E4E4;
+    cursor: pointer;
+    user-select: none;
+    font-size: 0.8125rem;
+    box-sizing: border-box;
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    align-items: center;
+    font-family: Sohne, Helvetica, Arial, sans-serif;
+    white-space: nowrap;
+    border-radius: 10px;
+    vertical-align: middle;
+    justify-content: center;
+    text-decoration: none;
+}

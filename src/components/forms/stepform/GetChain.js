@@ -153,7 +153,6 @@ function GetChain() {
                       };
                     })
                     .filter((row) => row.name !== "");
-                    console.log(result)
                   await setCsvData(result);
                   setTimeout(function () {
                     setUpload(false);

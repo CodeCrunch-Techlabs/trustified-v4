@@ -8,6 +8,7 @@
     "@emotion/styled": "^11.10.5",
     "@glif/filecoin-address": "^2.0.20",
     "@iconify/react": "^4.0.1",
+    "@material-ui/styles": "^4.11.5",
     "@mui/icons-material": "^5.11.0",
     "@nomicfoundation/hardhat-toolbox": "^2.0.1",
     "@openzeppelin/contracts": "^4.8.1",
