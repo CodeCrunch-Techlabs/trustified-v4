@@ -5,8 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
-  const navigate = useNavigate();
-  const [pdf, setPdf] = useState("");
+  const navigate = useNavigate(); 
   const [image, setImage] = useState("");
 
   useEffect(() => {
@@ -14,7 +13,7 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
       // getUserSMetadata(url);
       getUserSMetadataImg(url);
     }
-  }, [event, url]); 
+  }, [event, url,id, status]); 
 
   // const getUserSMetadata = async (url) => {
   //   console.log(url,"url");
@@ -42,7 +41,7 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
   return (
     <TableCell key={id}>
       {status === 'Yes' && id === "ipfsurl" ?  (
-        <a target="_blank" href={image}>
+        <a target="_blank" href={image} rel="noreferrer">
           Preview
         </a>
       ) : ( 

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+import React from "react";
 import Box from "@mui/material/Box";
 import Badges from "./Badges";
 import { useNavigate } from "react-router-dom";
@@ -31,11 +32,7 @@ const Index = () => {
               <div className="cert-coll">
                 <span>Trustified</span>
                 <p>Badges</p>
-              </div>
-
-              {/* <h2 className="block-title__title">
-                <span>Badges</span>
-              </h2>  */}
+              </div> 
               <div>
                 <a className="thm-btn header__cta-btn" onClick={handleNavigate}>
                   <span>

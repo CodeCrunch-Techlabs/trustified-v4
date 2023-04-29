@@ -13,6 +13,7 @@ import {
 import { ethers } from "ethers";
 import { BadgeContext } from "../../context/BadgeContext";
 import { Web3Context } from "../../context/Web3Context";
+import { networkIds } from "../../config";
 
 function GetTitle() {
   const value = useContext(BadgeContext);
@@ -20,14 +21,7 @@ function GetTitle() {
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const web3Context = React.useContext(Web3Context);
   const { switchNetwork } = web3Context;
-
-  // async function switchNetwork(chainId) {
-  //   await window.ethereum.request({
-  //     method: "wallet_switchEthereumChain",
-  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-  //   });
-  //   document.location.reload();
-  // }
+ 
 
   return (
     <div>
@@ -65,28 +59,12 @@ function GetTitle() {
             name="controlled-radio-buttons-group"
             value={formdata.chain}
             onChange={async (e) => {
-              const { chainId } = await provider.getNetwork();
-              if (e.target.value == "fvm" && chainId !== 314) {
-                await switchNetwork(ethers.utils.hexValue(314));
-              } else if (e.target.value == "fvmtestnet" && chainId !== 3141) {
-                await switchNetwork(ethers.utils.hexValue(3141));
-              } else if (e.target.value == "mumbai" && chainId !== 80001) {
-                await switchNetwork(ethers.utils.hexValue(80001));
-              } else if (e.target.value == "celotestnet" && chainId !== 44787) {
-                await switchNetwork(ethers.utils.hexValue(44787));
-              } else if (
-                e.target.value == "arbitrumtestnet" &&
-                chainId !== 421613
-              ) {
-                await switchNetwork(ethers.utils.hexValue(421613));
-              } else if (
-                e.target.value == "ethereumtestnet" &&
-                chainId !== 11155111
-              ) {
-                await switchNetwork(ethers.utils.hexValue(11155111));
+              const { chainId } = await provider.getNetwork();  
+              const selectedNetworkId = networkIds[e.target.value]; 
+              if (selectedNetworkId && chainId !== selectedNetworkId) {
+                await switchNetwork(ethers.utils.hexValue(selectedNetworkId));
               }
-
-              // setChain(e.target.value)
+            
             }}
           >
             <Stack
@@ -125,12 +103,7 @@ function GetTitle() {
                 label="Arbitrum Goerli"
                 onChange={value.setFormdata("chain")}
               />
-              {/* <FormControlLabel
-                value="arbitrumtestnet"
-                control={<Radio />}
-                label="Arbitrum Goerli"
-                onChange={value.setFormdata("chain")}
-              /> */}
+              
               <FormControlLabel
                 value="ethereumtestnet"
                 control={<Radio />}

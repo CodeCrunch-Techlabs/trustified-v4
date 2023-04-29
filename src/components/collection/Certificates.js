@@ -7,7 +7,7 @@ import Iconify from "../utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { IconButton } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { logos } from "../../config";
+import { logos, networkURL } from "../../config";
 
 export default function Certificates() {
   const navigate = useNavigate();
@@ -33,16 +33,8 @@ export default function Certificates() {
     navigate(`/dashboard/collectors/${id}`, { state: { chain } });
   };
 
-  const getUrl = (chain) => {
-    const url =
-      (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "celotestnet" &&
-        "https://alfajores-blockscout.celo-testnet.org/tx") ||
-      (chain === "arbitrumtestnet" &&
-        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
-      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
+  const getUrl = (chain) => { 
+    const url = networkURL[chain];  
     return url;
   };
 

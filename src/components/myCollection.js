@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  CircularProgress,
-  TextField,
+import { 
+  CircularProgress, 
   Typography,
   Box,
 } from "@mui/material";
@@ -18,6 +16,7 @@ import { IconButton } from "@mui/material";
 import jsPDF from "jspdf";
 import { toast } from "react-toastify";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { networkURL } from "../config";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -153,18 +152,10 @@ export default function MyCollection({ show }) {
   };
 
   const getUrl = (chain) => {
-    const url =
-      (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "celotestnet" &&
-        "https://alfajores-blockscout.celo-testnet.org/tx") ||
-      (chain === "arbitrumtestnet" &&
-        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
-      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
+    const url = networkURL[chain];
     return url;
   };
-
+ 
 
   return (
     <div
@@ -268,6 +259,7 @@ export default function MyCollection({ show }) {
                                 ? item?.ipfsurl
                                 : "/images/placeholder.jpg"
                             }
+                            alt=""
                             width="100%"
                           />
                         </Link>
@@ -341,6 +333,7 @@ export default function MyCollection({ show }) {
                           <a
                             href={`${getUrl(item?.chain)}/${item.txHash}`}
                             target="_blank"
+                            rel="noreferrer"
                           >
                             View Transaction <OpenInNewIcon />
                           </a>

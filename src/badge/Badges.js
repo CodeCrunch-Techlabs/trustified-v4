@@ -1,13 +1,13 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./badge.css";
-import { Paper, Chip, CircularProgress } from "@mui/material";
+import {  Chip, CircularProgress } from "@mui/material";
 import { firebaseDataContext } from "../context/FirebaseDataContext";
 import Iconify from "../components/utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { Button } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
-import { logos } from "../config";
+import { logos, networkURL } from "../config";
 
 const Badges = () => {
   const navigate = useNavigate();
@@ -33,16 +33,8 @@ const Badges = () => {
     setBadges(badgesData);
   }, [badgesData]);
 
-  const getUrl = (chain) => {
-    const url =
-      (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "celotestnet" &&
-        "https://alfajores-blockscout.celo-testnet.org/tx") ||
-      (chain === "arbitrumtestnet" &&
-        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
-      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
+  const getUrl = (chain) => { 
+    const url = networkURL[chain];  
     return url;
   };
 

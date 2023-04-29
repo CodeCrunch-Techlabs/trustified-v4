@@ -1,11 +1,29 @@
- 
+
 import React, { useState } from "react";
 import placeholderImage from "../../assets/jk-placeholder-image-768x518.jpg";
 import { db } from "../../firebase";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { collection, deleteDoc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 const UploadPreview = ({ claimer, id }) => {
-  const [loaded, setLoaded] = useState(false); 
+  const [loaded, setLoaded] = useState(false);
+
+  // async function deleteData() {
+  //   const docref = query(
+  //     collection(db, "Collections"),
+  //     where("chain", "==", 'mumbai')
+  //   );
+  //   const querySnapshot = await getDocs(docref);
+  //   querySnapshot.forEach((doc) => {  
+  //     deleteDoc(doc.ref).then(() => {
+  //       console.log("Document with ID " + doc.id + " has been deleted successfully.");
+  //     }).catch((error) => {
+  //       console.error("Error deleting document with ID " + doc.id + ": ", error);
+  //     });
+  //   })
+  // }
+
+
   return (
     <>
       <div
@@ -43,7 +61,9 @@ const UploadPreview = ({ claimer, id }) => {
             </div>
           </>
         )}
-        
+
+        {/* <button onClick={deleteData}>delete</button> */}
+
       </div>
     </>
   );

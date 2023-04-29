@@ -8,8 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow"; 
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
-import { useNavigate } from "react-router-dom";
-import { Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom"; 
 
 const columns = [
   { id: "name", label: "Name" },
@@ -32,7 +31,7 @@ export default function NftList() {
   const [rowsPerPage, setRowsPerPage] = React.useState(5); 
 
   const fireDataContext = React.useContext(firebaseDataContext);
-  const { rowsCollection, generateClaimersExcellSheet } = fireDataContext;
+  const { rowsCollection } = fireDataContext;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

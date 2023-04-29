@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Stack } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {

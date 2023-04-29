@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useContext, useState } from "react";
 import {
   Box, 
@@ -36,92 +37,7 @@ function GetChain() {
   };
 
   return (
-    <div>
-      <Stack spacing={3} sx={{ margin: "20px" }}>
-        {/* {validity == "limited" ? (
-          <Box sx={{ display: "flex", justifyContent: "start", m: 2 }}>
-            <TextField
-              id="date"
-              label="Expire Date"
-              type="date"
-              InputLabelProps={{
-                shrink: true,
-              }}
-              name="expireDate"
-              onChange={value.setFormdata("expireDate")}
-              value={formdata.expireDate}
-            />
-          </Box>
-        ) : (
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <FormLabel id="demo-controlled-radio-buttons-group">
-                Validity
-              </FormLabel>
-              <RadioGroup
-                aria-labelledby="demo-controlled-radio-buttons-group"
-                name="controlled-radio-buttons-group"
-                value={validity}
-              >
-                <Stack
-                  direction="row"
-                  justifyContent="start"
-                  alignItems="center"
-                  spacing={2}
-                >
-                  <FormControlLabel
-                    value="limited"
-                    control={<Radio />}
-                    label="Limited"
-                    onChange={(e) => setValidity(e.target.value)}
-                  />
-                  <FormControlLabel
-                    value="lifetime"
-                    control={<Radio />}
-                    label="Lifetime"
-                    onChange={(e) => setValidity(e.target.value)}
-                  />
-                </Stack>
-              </RadioGroup>
-            </FormControl>
-          </Box>
-        )} */}
-        {/* <Divider /> */}
-
-        {/* <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <FormLabel id="demo-controlled-radio-buttons-group">
-              NFT Type
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby="demo-controlled-radio-buttons-group"
-              name="controlled-radio-buttons-group"
-              value={formdata.Nontransferable}
-            >
-              <Stack
-                direction="row"
-                justifyContent="start"
-                alignItems="center"
-                spacing={2}
-              >
-                <FormControlLabel
-                  value="off"
-                  control={<Radio />}
-                  label="Transferable"
-                  onChange={value.setFormdata("Nontransferable")}
-                />
-                <FormControlLabel
-                  value="on"
-                  control={<Radio />}
-                  label="Non-transferable(Soulbound NFT)"
-                  onChange={value.setFormdata("Nontransferable")}
-                />
-              </Stack>
-            </RadioGroup>
-            <FormHelperText>Make your NFT non-transferable</FormHelperText>
-          </FormControl>
-        </Box> */}
-
+    <div>  
         <Stack spacing={3} sx={{ margin: "20px" }}>
           <span>Upload excel sheet of collectors data</span>
           <Box sx={{ m: 1 }}>
@@ -144,8 +60,7 @@ function GetChain() {
                         name: row[0],
                       };
                     })
-                    .filter((row) => row.name !== "");
-                    console.log(result)
+                    .filter((row) => row.name !== ""); 
                   await setCsvData(result);
                   setTimeout(function () {
                     setUpload(false);
@@ -197,7 +112,7 @@ function GetChain() {
             />
           ))}
         </Box>
-      </Stack>
+      
     </div>
   );
 }
