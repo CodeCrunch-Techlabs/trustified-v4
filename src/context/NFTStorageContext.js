@@ -63,6 +63,13 @@ export const NFTStorageContextProvider = (props) => {
     });
   };
 
+  const setAutoCompleteData = (selectedchain) => {
+    setlabelInfo({
+      ...labelInfo,
+      formData: { ...labelInfo.formData, chain: selectedchain },
+    });
+  };
+
   const selectTemplate = (id) => {
     setSelectedTemplateId(id);
     getTemplate(id);
@@ -188,6 +195,7 @@ export const NFTStorageContextProvider = (props) => {
         links,
         handleAddLink,
         handleLinkChange,
+        setAutoCompleteData
       }}
       {...props}
     >

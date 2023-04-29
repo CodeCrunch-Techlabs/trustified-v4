@@ -52,6 +52,13 @@ export const BadgeContextProvider = (props) => {
     });
   };
 
+  const setAutoCompleteData = (selectedchain) => {
+    setlabelInfo({
+      ...labelInfo,
+      formData: { ...labelInfo.formData, chain: selectedchain },
+    });
+  };
+
   const switchHandler = (event) => {
     setChecked(event.target.checked);
   };
@@ -176,6 +183,7 @@ export const BadgeContextProvider = (props) => {
         handleAddLink,
         handleLinkChange,
         links,
+        setAutoCompleteData,
       }}
       {...props}
     >

@@ -60,7 +60,7 @@ function GetChain() {
                         name: row[0],
                       };
                     })
-                    .filter((row) => row.name !== ""); 
+                    .filter((row) => row.name !== "");  
                   await setCsvData(result);
                   setTimeout(function () {
                     setUpload(false);
