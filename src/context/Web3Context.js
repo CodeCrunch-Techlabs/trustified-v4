@@ -222,17 +222,18 @@ export const Web3ContextProvider = (props) => {
       chain: currentChain,
       userAddress: accounts[0],
     };
-    
+
     // const api = await axios.create({
     //   baseURL: "https://trustified-api-o5zg.onrender.com/trustified/api",
     // });
 
     const api = await axios.create({
-      baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+      baseURL:
+        "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
     });
 
     let response = await api
-      .post("/login", obj) 
+      .post("/login", obj)
       .then((res) => {
         return res;
       })
@@ -337,45 +338,57 @@ export const Web3ContextProvider = (props) => {
             firebasedata.platforms = links;
             await addCollection(firebasedata);
 
-            var array = [];
-            for (let i = 0; i < tokenIds.length; i++) {
-              let obj = {};
-              let claimToken = generateClaimToken(20);
-              if (type == "badge") {
-                array.push({
-                  ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
-                });
-              }
-              obj.token = claimToken;
-              obj.tokenContract = trustifiedContract.address;
-              obj.tokenId = parseInt(Number(tokenIds[i]));
-              obj.claimerAddress = "";
-              obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
-              obj.chain = firebasedata.chain;
-              obj.name = "";
-              obj.type = type;
-              obj.claimed = "No";
-              obj.eventId = parseInt(Number(eventId));
-              obj.templateId = "";
-              obj.Nontransferable = checked == true ? "on" : "off";
-              obj.templateId = "";
-              obj.title = firebasedata.title;
-              obj.description = firebasedata.description;
-              obj.expireDate = firebasedata.expireDate;
-              obj.issueDate = firebasedata.issueDate;
-              obj.position = "";
-              obj.uploadCertData = "";
-              obj.txHash = txm.transactionHash;
-              obj.createdBy = txm.from;
-              obj.platforms = links;
-              await addCollectors(obj);
-            } // Generating CSV file with unique link and storing data in firebase.
+            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
+
+            let object = {
+              tokenContract: trustifiedContract.address,
+              claimerAddress: "",
+              ipfsurl: `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`,
+              chain: firebasedata.chain,
+              name: "",
+              type: type,
+              claimed: "No",
+              eventId: parseInt(Number(eventId)),
+              templateId: "",
+              Nontransferable: checked == true ? "on" : "off",
+              templateId: "",
+              title: firebasedata.title,
+              description: firebasedata.description,
+              expireDate: firebasedata.expireDate,
+              issueDate: firebasedata.issueDate,
+              position: "",
+              uploadObj: "",
+              txHash: txm.transactionHash,
+              createdBy: txm.from,
+              platforms: links,
+            };
+
+            const firebaseObj = {
+              tokenIds: nftTokenIds,
+              eventId: parseInt(Number(eventId)),
+              object: object,
+              type: type,
+            };
+
+            const createApi = await axios.create({
+              baseURL: "http://localhost:8000/trustified/api",
+            });
+            let createApiResponse = await createApi
+              .post("/create/collector", firebaseObj)
+              .then((res) => {
+                return res;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+
             let obj = {
               type: type,
-              data: array,
+              data: createApiResponse.data.array,
             };
             const api = await axios.create({
-              baseURL: "https://trustified-backend.onrender.com/trustified/api",
+              baseURL:
+                "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
             });
             let response = await api
               .post("/export/csv", obj)
@@ -417,7 +430,6 @@ export const Web3ContextProvider = (props) => {
           trustifiedContractAbi.abi,
           signer
         );
- 
 
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
@@ -425,11 +437,11 @@ export const Web3ContextProvider = (props) => {
           1,
           formData.Nontransferable === "on" ? true : false
         );
-        console.log(transactionMint,"transactionMint");
+        console.log(transactionMint, "transactionMint");
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait(); 
+            let txm = await transactionMint.wait();
             var eventId = eventId;
             formData.contract = trustifiedContract.address;
             formData.userId = userId;
@@ -439,51 +451,61 @@ export const Web3ContextProvider = (props) => {
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
-            formData.platforms = links; 
+            formData.platforms = links;
             await addCollection(formData);
 
-            var array = [];
+            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
 
-            for (let i = 0; i < tokenIds.length; i++) {
-              let obj = {};
-              let claimToken = generateClaimToken(20);
+            let object = {
+              tokenContract: trustifiedContract.address,
+              claimerAddress: "",
+              ipfsurl: previewUrl ? previewUrl : "",
+              chain: formData.chain,
+              type: type,
+              claimed: "No",
+              eventId: parseInt(Number(eventId)),
+              templateId: previewUrl ? "" : formData.templateId,
+              Nontransferable: formData.Nontransferable,
+              templateId: "",
+              title: formData.title,
+              description: formData.description,
+              expireDate: formData.expireDate,
+              issueDate: formData.issueDate,
+              position: previewUrl ? position : "",
+              uploadObj: previewUrl ? uploadObj.name : "",
+              txHash: txm.transactionHash,
+              createdBy: txm.from,
+              platforms: links,
+            };
 
-              array.push({
-                Name: csvdata[i].name,
-                ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+            const firebaseObj = {
+              tokenIds: nftTokenIds,
+              type: type,
+              eventId: parseInt(Number(eventId)),
+              csvdata: csvdata,
+              object: object,
+            };
+
+            const createApi = await axios.create({
+              baseURL: "http://localhost:8000/trustified/api",
+            });
+            let createApiResponse = await createApi
+              .post("/create/collector", firebaseObj)
+              .then((res) => {
+                return res;
+              })
+              .catch((error) => {
+                console.log(error);
               });
 
-              obj.token = claimToken;
-              obj.tokenContract = trustifiedContract.address;
-              obj.tokenId = parseInt(Number(tokenIds[i]));
-              obj.claimerAddress = "";
-              obj.ipfsurl = previewUrl ? previewUrl : "";
-              obj.chain = formData.chain;
-              obj.name = csvdata[i].name;
-              obj.type = type;
-              obj.claimed = "No";
-              obj.eventId = parseInt(Number(eventId));
-              obj.Nontransferable = formData.Nontransferable;
-              obj.templateId = previewUrl ? "" : templateId;
-              obj.title = formData.title;
-              obj.description = formData.description;
-              obj.expireDate = formData.expireDate;
-              obj.issueDate = formData.issueDate;
-              obj.position = previewUrl ? position : ""; 
-              obj.uploadCertData = previewUrl ? uploadObj.name : ""; 
-              obj.txHash = txm.transactionHash;
-              obj.createdBy = txm.from;
-              obj.platforms = links; 
-              await addCollectors(obj);
-            } // Generating CSV file with unique link and storing data in firebase.
             let obj = {
               type: type,
-              data: array,
+              data: createApiResponse.data.array,
             };
- 
 
             const api = await axios.create({
-              baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+              baseURL:
+                "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
             });
             let response = await api
               .post("/export/csv", obj)
@@ -493,7 +515,6 @@ export const Web3ContextProvider = (props) => {
               .catch((error) => {
                 console.log(error);
               });
- 
 
             const blob = new Blob([response.data], { type: "text/csv" });
 
@@ -512,8 +533,6 @@ export const Web3ContextProvider = (props) => {
       }
     });
   };
-
-  
 
   const claimCertificate = async (
     claimToken,

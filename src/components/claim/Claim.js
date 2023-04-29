@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { TextField,CircularProgress } from "@mui/material";
+import { TextField, CircularProgress } from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import MyCollection from "../myCollection";
 import { ethers } from "ethers";
 import TemplatePreview from "./Preview";
-import UploadPreview from "./UploadPreview"; 
+import UploadPreview from "./UploadPreview";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "react-toastify";
 import Iconify from "../../components/utils/Iconify";
@@ -15,7 +15,7 @@ export default function Claim() {
   const web3Context = React.useContext(Web3Context);
   const {
     claimCertificate,
-    claimLoading, 
+    claimLoading,
     claimUploadedCertificate,
     claimBadges,
     switchNetwork,
@@ -33,7 +33,7 @@ export default function Claim() {
   useEffect(() => {
     getClaimer(token);
     getUrl();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // async function switchNetwork(chainId) {
@@ -59,12 +59,13 @@ export default function Claim() {
 
   async function getCertId() {
     let network = getNetworkToken(claimer?.chain);
+
     var certId = `${network}#${claimer?.eventId}#${claimer?.tokenId}`;
     setId(certId);
   }
   useEffect(() => {
     getCertId();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [claimer]);
 
   const getNetworkToken = (network) => {
@@ -82,6 +83,7 @@ export default function Claim() {
     }
     return net;
   };
+
   return (
     <section className="footer-position" id="banner">
       <div className="bannercontainer container">
@@ -97,7 +99,7 @@ export default function Claim() {
                     <img className="claimBadge" src={claimer?.ipfsurl} alt="" />
                   ) : (
                     <>
-                      {claimer?.position !=="" &&
+                      {claimer?.position !== "" &&
                       claimer?.position !== undefined ? (
                         <UploadPreview claimer={claimer} id={id} />
                       ) : (
@@ -115,6 +117,7 @@ export default function Claim() {
                 <CircularProgress />
               )}
 
+              {console.log(claimer)}
               {claimer && (
                 <div
                   className="justify-content-center"
@@ -138,10 +141,12 @@ export default function Claim() {
                       className="card-body-cert d-flex"
                       style={{ justifyContent: "space-evenly" }}
                     >
-                      <div>
-                        <h4>Certificate Id</h4>
-                        <p>{id}</p>
-                      </div>
+                      {claimer.type == "certificate" && (
+                        <div>
+                          <h4>Certificate Id</h4>
+                          <p>{id}</p>
+                        </div>
+                      )}
                       <div>
                         <h4>TokenId</h4>
                         <p>#{claimer?.tokenId}</p>

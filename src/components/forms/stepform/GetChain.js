@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import {
-  Box, 
+  Box,
   Stack,
   Button,
   TextField,
@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import CSVReader from "react-csv-reader";
 
-import { NFTStorageContext } from "../../../context/NFTStorageContext"; 
+import { NFTStorageContext } from "../../../context/NFTStorageContext";
 
 function GetChain() {
-  const value = useContext(NFTStorageContext); 
-  const setCsvData = value.setCsvData; 
+  const value = useContext(NFTStorageContext);
+  const setCsvData = value.setCsvData;
   const [upload, setUpload] = useState(false);
   const [fileName, setFileName] = useState("");
 
@@ -21,7 +21,7 @@ function GetChain() {
     const rows = [["John Doe"]];
 
     var csv = "Display Name\n";
-    
+
     rows.forEach(function (row) {
       csv += row.join(",");
       csv += "\n";
@@ -145,6 +145,7 @@ function GetChain() {
                       };
                     })
                     .filter((row) => row.name !== "");
+
                   await setCsvData(result);
                   setTimeout(function () {
                     setUpload(false);
