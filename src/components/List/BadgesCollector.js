@@ -1,10 +1,6 @@
-import { Divider, Typography } from "@mui/material";
-import React, { useEffect, useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { Button, Paper, Chip } from "@mui/material";
-import Iconify from "../../components/utils/Iconify";
-import { firebaseDataContext } from "../../context/FirebaseDataContext";
+ 
+import React, { useEffect  } from "react"; 
+import {  Paper } from "@mui/material"; 
 
 const Badges = ({ data }) => {
   const [badges, setBadges] = React.useState([]);
@@ -32,6 +28,7 @@ const Badges = ({ data }) => {
               <span className="optionspan">
                 <a
                   target="_blank"
+                  rel="noreferrer"
                   href={item?.ipfsurl?.replace(
                     "ipfs://",
                     "https://nftstorage.link/ipfs/"

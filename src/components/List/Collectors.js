@@ -8,8 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
-import { useParams, useLocation } from "react-router-dom";
-import axios from "axios";
+import { useParams, useLocation } from "react-router-dom"; 
 import TableRowComponent from "./TableRow";
 
 function Collectors(props) {
@@ -34,6 +33,7 @@ function Collectors(props) {
 
   useEffect(() => {
     getClaimers(params.token, chain);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.token]);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ function Collectors(props) {
   }, [claim]);
 
   useEffect(() => {
-    if (type == "badge") {
+    if (type === "badge") {
       setColumns([
         {
           id: "tokenContract",

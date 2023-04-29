@@ -44,4 +44,27 @@ export const logos={
   fvmtestnet:'/assets/logo/fvm.png',
   gnosis:'/assets/logo/gnosis.png',
   arbitrum:'/assets/logo/arbitrum.png',
+  bsc:'/assets/logo/bsc.png',
 }
+
+export const networkURL = {
+  fvm: "https://filfox.info/en/tx",
+  fvmtestnet: "https://hyperspace.filfox.info/en/tx",
+  mumbai:  "https://polygonscan.com/tx",
+  celotestnet: "https://alfajores-blockscout.celo-testnet.org/tx",
+  arbitrumtestnet: "https://goerli-rollup-explorer.arbitrum.io/tx",
+  ethereumtestnet: "https://sepolia.etherscan.io/tx",
+  gnosistestnet:"https://gnosisscan.io/tx",
+  bsc:"https://testnet.bscscan.com/tx"
+}; 
+
+export const  networkIds = {
+  fvm: 314,
+  fvmtestnet: 3141,
+  mumbai: 80001,
+  celotestnet: 44787,
+  arbitrumtestnet: 421613,
+  ethereumtestnet: 11155111,
+  gnosistestnet:10200,
+  bsc:97
+}; 

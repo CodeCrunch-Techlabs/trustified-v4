@@ -3,12 +3,9 @@ import { PhotoCamera } from "@mui/icons-material";
 import {
   Avatar,
   Badge,
-  Box,
-  Button,
-  CardActions,
+  Box, 
   CardContent,
-  CircularProgress,
-  Divider,
+  CircularProgress, 
   IconButton,
   Input,
   Stack,
@@ -28,8 +25,7 @@ import {
 import { db } from "../../firebase";
 import { toast } from "react-toastify";
 import { Web3Context } from "../../context/Web3Context";
-import MyCollection from "../myCollection";
-import Chip from "@mui/material/Chip";
+import MyCollection from "../myCollection"; 
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 
 import { Card, Container, Row, Col } from "react-bootstrap";
@@ -37,8 +33,7 @@ import web3 from "web3";
 
 function User() {
   const web3Context = React.useContext(Web3Context);
-  const { shortAddress, setUpdate, update } = web3Context;
-  const [open, setOpen] = useState(false);
+  const { shortAddress, setUpdate, update } = web3Context; 
   const [loading, setLoading] = useState(false);
   const storage = getStorage();
   const [profileData, setProfileData] = useState({
@@ -81,11 +76,7 @@ function User() {
     init();
   }, [update]);
 
-  const handleEditProfile = () => {
-    setOpen(!open);
-  };
-
-  // console.log(profileData, "profileData");
+ 
 
   async function onChangeAvatar(e) {
     setLoading(true);
@@ -286,9 +277,9 @@ function User() {
                 </Box>
               </Card.Body>
               <Card.Footer>
-                <a className="thm-btn header__cta-btn" onClick={updateProfile}>
+                <button className="thm-btn header__cta-btn" onClick={updateProfile}>
                   <span> Save Profile</span>
-                </a>
+                </button>
               </Card.Footer>
             </Card>
           </Col>

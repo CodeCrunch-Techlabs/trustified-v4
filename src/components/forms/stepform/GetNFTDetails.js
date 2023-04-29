@@ -17,6 +17,7 @@ import { ethers } from "ethers";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext"; 
 import { Web3Context } from "../../../context/Web3Context";
+import { networkIds } from "../../../config";
 
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {

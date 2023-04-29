@@ -10,6 +10,7 @@ import UploadPreview from "./UploadPreview";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "react-toastify";
 import Iconify from "../../components/utils/Iconify";
+import { networkIds, networkURL } from "../../config";
 
 export default function Claim() {
   const web3Context = React.useContext(Web3Context);
@@ -33,27 +34,12 @@ export default function Claim() {
   useEffect(() => {
     getClaimer(token);
     getUrl();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]);
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]); 
+ 
 
-  // async function switchNetwork(chainId) {
-  //   await window.ethereum.request({
-  //     method: "wallet_switchEthereumChain",
-  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-  //   });
-  //   document.location.reload();
-  // }
-
-  const getUrl = (chain) => {
-    const url =
-      (chain === "fvm" && "https://filfox.info/en/tx") ||
-      (chain === "mumbai" && "https://polygonscan.com/tx") ||
-      (chain === "fvmtestnet" && "https://hyperspace.filfox.info/en/tx") ||
-      (chain === "celotestnet" &&
-        "https://alfajores-blockscout.celo-testnet.org/tx") ||
-      (chain === "arbitrumtestnet" &&
-        "https://goerli-rollup-explorer.arbitrum.io/tx") ||
-      (chain === "ethereumtestnet" && "https://sepolia.etherscan.io/tx");
+  const getUrl = (chain) => { 
+    const url = networkURL[chain];  
     return url;
   };
 
@@ -220,35 +206,11 @@ export default function Claim() {
                       toast.error("Please Enter Address!");
                       return;
                     }
-                    const { chainId } = await provider.getNetwork();
-                    if (claimer.chain === "fvm" && chainId !== 314) {
-                      await switchNetwork(ethers.utils.hexValue(314));
-                    } else if (
-                      claimer.chain === "fvmtestnet" &&
-                      chainId !== 3141
-                    ) {
-                      await switchNetwork(ethers.utils.hexValue(3141));
-                    } else if (
-                      claimer.chain === "mumbai" &&
-                      chainId !== 80001
-                    ) {
-                      await switchNetwork(ethers.utils.hexValue(80001));
-                    } else if (
-                      claimer.chain == "celotestnet" &&
-                      chainId !== 44787
-                    ) {
-                      await switchNetwork(ethers.utils.hexValue(44787));
-                    } else if (
-                      claimer.chain == "arbitrumtestnet" &&
-                      chainId !== 421613
-                    ) {
-                      await switchNetwork(ethers.utils.hexValue(421613));
-                    } else if (
-                      claimer.chain == "ethereumtestnet" &&
-                      chainId !== 11155111
-                    ) {
-                      await switchNetwork(ethers.utils.hexValue(11155111));
-                    }
+                    const { chainId } = await provider.getNetwork();  
+                    const selectedNetworkId = networkIds[claimer.chain]; 
+                    if (selectedNetworkId && chainId !== selectedNetworkId) {
+                      await switchNetwork(ethers.utils.hexValue(selectedNetworkId));
+                    } 
 
                     if (claimer?.type === "badge") {
                       await claimBadges(token, add);

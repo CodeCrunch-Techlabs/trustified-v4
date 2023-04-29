@@ -133,7 +133,7 @@ export const FirebaseDataContextProvider = (props) => {
     setUpdated(!updated);
   }
 
-  async function addCollectors(data) {
+  async function addCollectors(data) { 
     setLoading(true);
     await addDoc(collection(db, "Collectors"), {
       claimToken: data.token,

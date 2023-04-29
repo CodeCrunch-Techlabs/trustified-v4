@@ -80,93 +80,188 @@ export const Web3ContextProvider = (props) => {
 
   // }
 
+  // async function switchNetwork(chainId) {
+  //   try {
+  //     // check if the chain ID is already available in MetaMask
+  //     const chainData = await window.ethereum.request({
+  //       method: "eth_chainId",
+  //       params: [],
+  //     });
+
+  //     if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
+  //       await window.ethereum.request({
+  //         method: "wallet_switchEthereumChain",
+  //         params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //       });
+  //       await window.ethereum.request({ method: "eth_chainId" });
+  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //       const signer = provider.getSigner();
+  //       setProvider(provider);
+  //       setSigner(signer);
+  //     }
+
+  //     if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
+  //       // chain ID is not available, add the chain to MetaMask
+  //       const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
+  //       const chainName = "Filecoin Mainnet"; // replace with your chain name
+  //       const symbol = "FIL"; // replace with your chain symbol
+  //       const decimals = 18; // replace with your token's decimals
+  //       const chainParams = {
+  //         chainId: chainId,
+  //         chainName: chainName,
+  //         nativeCurrency: {
+  //           name: chainName,
+  //           symbol: symbol,
+  //           decimals: decimals,
+  //         },
+  //         rpcUrls: [rpcUrl],
+  //       };
+  //       await window.ethereum.request({
+  //         method: "wallet_addEthereumChain",
+  //         params: [chainParams],
+  //       });
+  //       await window.ethereum.request({ method: "eth_chainId" });
+  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //       const signer = provider.getSigner();
+  //       setProvider(provider);
+  //       setSigner(signer);
+  //     } else if (
+  //       chainData !== chainId &&
+  //       chainId === ethers.utils.hexValue(3141)
+  //     ) {
+  //       // chain ID is not available, add the chain to MetaMask
+  //       const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
+  //       const chainName = "Filecoin hyperspace"; // replace with your chain name
+  //       const symbol = "tFIL"; // replace with your chain symbol
+  //       const decimals = 18; // replace with your token's decimals
+  //       const chainParams = {
+  //         chainId: chainId,
+  //         chainName: chainName,
+  //         nativeCurrency: {
+  //           name: chainName,
+  //           symbol: symbol,
+  //           decimals: decimals,
+  //         },
+  //         rpcUrls: [rpcUrl],
+  //       };
+  //       await window.ethereum.request({
+  //         method: "wallet_addEthereumChain",
+  //         params: [chainParams],
+  //       });
+  //       await window.ethereum.request({ method: "eth_chainId" });
+  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //       const signer = provider.getSigner();
+  //       setProvider(provider);
+  //       setSigner(signer);
+  //     }
+  //     await window.ethereum.request({
+  //       method: "wallet_switchEthereumChain",
+  //       params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+  //     });
+  //     await window.ethereum.request({ method: "eth_chainId" });
+  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
+  //     const signer = provider.getSigner();
+  //     setProvider(provider);
+  //     setSigner(signer);
+  //   } catch (error) {
+  //     toast.error(error.message);
+  //   }
+  // }
+
   async function switchNetwork(chainId) {
-    try {
-      // check if the chain ID is already available in MetaMask
-      const chainData = await window.ethereum.request({
-        method: "eth_chainId",
-        params: [],
-      });
+  try {
+    const chainParams = [
+      {
+        chainId: ethers.utils.hexValue(80001),
+        rpcUrl: "https://rpc-mumbai.maticvigil.com/",
+        chainName: "Matic Mumbai",
+        symbol: "MATIC",
+        decimals: 18,
+      },
+      {
+        chainId: ethers.utils.hexValue(314),
+        rpcUrl: "https://api.node.glif.io/rpc/v1",
+        chainName: "Filecoin Mainnet",
+        symbol: "FIL",
+        decimals: 18,
+      },
+      {
+        chainId: ethers.utils.hexValue(3141),
+        rpcUrl: "https://api.hyperspace.node.glif.io/rpc/v1",
+        chainName: "Filecoin Hyperspace",
+        symbol: "tFIL",
+        decimals: 18,
+      },
+      {
+        chainId: ethers.utils.hexValue(44787),
+        rpcUrl: "https://alfajores-forno.celo-testnet.org",
+        chainName: "Celo Testnet",
+        symbol: "CELO",
+        decimals: 18,
+      },
+      {
+        chainId: ethers.utils.hexValue(421613),
+        rpcUrl: "https://goerli-rollup.arbitrum.io/rpc",
+        chainName: "Arbitrum Goerli",
+        symbol: "AGOR",
+        decimals: 18,
+      },
+      {
+        chainId: ethers.utils.hexValue(11155111),
+        rpcUrl: "https://rpc2.sepolia.org",
+        chainName: "Ethereum Sepolia",
+        symbol: "ETH",
+        decimals: 18,
+      },
+    ];
 
-      if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
-        await window.ethereum.request({
-          method: "wallet_switchEthereumChain",
-          params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-        });
-        await window.ethereum.request({ method: "eth_chainId" });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        setProvider(provider);
-        setSigner(signer);
-      }
+    const chainData = await window.ethereum.request({
+      method: "eth_chainId",
+      params: [],
+    });
 
-      if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
-        // chain ID is not available, add the chain to MetaMask
-        const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
-        const chainName = "Filecoin Mainnet"; // replace with your chain name
-        const symbol = "FIL"; // replace with your chain symbol
-        const decimals = 18; // replace with your token's decimals
-        const chainParams = {
-          chainId: chainId,
-          chainName: chainName,
-          nativeCurrency: {
-            name: chainName,
-            symbol: symbol,
-            decimals: decimals,
-          },
-          rpcUrls: [rpcUrl],
-        };
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [chainParams],
-        });
-        await window.ethereum.request({ method: "eth_chainId" });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        setProvider(provider);
-        setSigner(signer);
-      } else if (
-        chainData !== chainId &&
-        chainId === ethers.utils.hexValue(3141)
-      ) {
-        // chain ID is not available, add the chain to MetaMask
-        const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
-        const chainName = "Filecoin hyperspace"; // replace with your chain name
-        const symbol = "tFIL"; // replace with your chain symbol
-        const decimals = 18; // replace with your token's decimals
-        const chainParams = {
-          chainId: chainId,
-          chainName: chainName,
-          nativeCurrency: {
-            name: chainName,
-            symbol: symbol,
-            decimals: decimals,
-          },
-          rpcUrls: [rpcUrl],
-        };
-        await window.ethereum.request({
-          method: "wallet_addEthereumChain",
-          params: [chainParams],
-        });
-        await window.ethereum.request({ method: "eth_chainId" });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        setProvider(provider);
-        setSigner(signer);
-      }
+    const selectedChain = chainParams.find(
+      (chain) => chain.chainId === chainId
+    );
+
+    if (chainData !== chainId && selectedChain) {
+      const methodName = selectedChain.chainId === chainId
+        ? "wallet_addEthereumChain"
+        : "wallet_switchEthereumChain";
+ 
+      
       await window.ethereum.request({
-        method: "wallet_switchEthereumChain",
-        params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
+        method: methodName,
+        params: [
+          selectedChain.chainId === chainId
+            ? {
+                chainId: selectedChain.chainId,
+                chainName: selectedChain.chainName,
+                nativeCurrency: {
+                  name: selectedChain.chainName,
+                  symbol: selectedChain.symbol,
+                  decimals: selectedChain.decimals,
+                },
+                rpcUrls: [selectedChain.rpcUrl],
+              }
+            : { chainId: `${chainId}` },
+        ],
       });
       await window.ethereum.request({ method: "eth_chainId" });
+
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      setProvider(provider);
-      setSigner(signer);
-    } catch (error) {
-      toast.error(error.message);
+      setProviderAndSigner(provider, signer);
     }
+  } catch (error) {
+    toast.error(error.message);
   }
+}
+
+function setProviderAndSigner(provider, signer) {
+  setProvider(provider);
+  setSigner(signer);
+}
 
   const connectWallet = async (issuerName) => {
     const { ethereum } = window;
@@ -306,6 +401,233 @@ export const Web3ContextProvider = (props) => {
     return result;
   }
 
+  // const createBadges = function (data, firebasedata, checked, type, links) {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const trustifiedContract = new ethers.Contract(
+  //         trustifiedContracts[firebasedata.chain].trustified,
+  //         trustifiedContractAbi.abi,
+  //         signer
+  //       );
+
+  //       var transactionMint = await trustifiedContract.bulkMintERC721(
+  //         data.tokenUris[0],
+  //         parseInt(firebasedata.quantity),
+  //         0,
+  //         checked
+  //       ); // Bulk Mint NFT collection.
+
+  //       console.log(transactionMint,"transactionMint");
+
+  //       await trustifiedContract.once(
+  //         "TokensMinted",
+  //         async (eventId, tokenIds, issuer) => {
+  //           let txm = await transactionMint.wait();
+  //           console.log(txm,"txm");
+  //           firebasedata.contract = trustifiedContract.address;
+  //           firebasedata.userId = userId;
+  //           firebasedata.eventId = parseInt(Number(eventId));
+  //           firebasedata.type = type;
+  //           firebasedata.image = data.tokenUris[0];
+  //           firebasedata.templateId = "";
+  //           firebasedata.Nontransferable = checked == true ? "on" : "off";
+  //           firebasedata.txHash = txm.transactionHash;
+  //           firebasedata.createdBy = txm.from;
+  //           firebasedata.platforms = links;
+  //           await addCollection(firebasedata);
+
+  //           var array = [];
+  //           for (let i = 0; i < tokenIds.length; i++) {
+  //             let obj = {};
+  //             let claimToken = generateClaimToken(20);
+  //             if (type == "badge") {
+  //               array.push({
+  //                 ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+  //               });
+  //             }
+  //             obj.token = claimToken;
+  //             obj.tokenContract = trustifiedContract.address;
+  //             obj.tokenId = parseInt(Number(tokenIds[i]));
+  //             obj.claimerAddress = "";
+  //             obj.ipfsurl = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
+  //             obj.chain = firebasedata.chain;
+  //             obj.name = "";
+  //             obj.type = type;
+  //             obj.claimed = "No";
+  //             obj.eventId = parseInt(Number(eventId));
+  //             obj.templateId = "";
+  //             obj.Nontransferable = checked == true ? "on" : "off";
+  //             obj.templateId = "";
+  //             obj.title = firebasedata.title;
+  //             obj.description = firebasedata.description;
+  //             obj.expireDate = firebasedata.expireDate;
+  //             obj.issueDate = firebasedata.issueDate;
+  //             obj.position = "";
+  //             obj.uploadCertData = "";
+  //             obj.txHash = txm.transactionHash;
+  //             obj.createdBy = txm.from;
+  //             obj.platforms = links;
+  //             await addCollectors(obj);
+  //           } // Generating CSV file with unique link and storing data in firebase.
+  //           let obj = {
+  //             type: type,
+  //             data: array,
+  //           };
+  //           console.log(obj,"obj");
+  //           const api = await axios.create({
+  //             baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+  //           }); 
+  //           let response = await api
+  //             .post("/export/csv", obj)
+  //             .then((res) => {
+  //               console.log(res,"res");
+  //               return res;
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //             });
+  //           const blob = new Blob([response.data], { type: "text/csv" });
+  //           const downloadLink = document.createElement("a");
+  //           downloadLink.href = URL.createObjectURL(blob);
+  //           downloadLink.download = `${firebasedata.title}.csv`;
+  //           downloadLink.click();
+  //           toast.success("Badges successfully issued!");
+  //           resolve({ isResolved: true });
+  //         }
+  //       );
+  //     } catch (err) {
+  //       return reject(err);
+  //     }
+  //   });
+  // };
+
+
+
+
+  // const createNftFunction = function (
+  //   csvdata,
+  //   formData,
+  //   type,
+  //   templateId,
+  //   position,
+  //   previewUrl,
+  //   uploadObj,
+  //   links
+  // ) {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const trustifiedContract = new ethers.Contract(
+  //         trustifiedContracts[formData.chain].trustified,
+  //         trustifiedContractAbi.abi,
+  //         signer
+  //       );
+
+
+  //       let transactionMint = await trustifiedContract.bulkMintERC721(
+  //         "",
+  //         parseInt(csvdata.length),
+  //         1,
+  //         formData.Nontransferable === "on" ? true : false
+  //       );
+  //       console.log(transactionMint, "transactionMint");
+  //       await trustifiedContract.once(
+  //         "TokensMinted",
+  //         async (eventId, tokenIds, issuer) => {
+  //           let txm = await transactionMint.wait();
+  //           console.log(txm, "txm done");
+  //           var eventId = eventId;
+  //           formData.contract = trustifiedContract.address;
+  //           formData.userId = userId;
+  //           formData.eventId = parseInt(Number(eventId));
+  //           formData.type = type;
+  //           formData.image = previewUrl ? previewUrl : template.preview;
+  //           formData.templateId = templateId;
+  //           formData.txHash = txm.transactionHash;
+  //           formData.createdBy = issuer;
+  //           formData.platforms = links;
+  //           await addCollection(formData);
+
+  //           var array = [];
+
+  //           for (let i = 0; i < tokenIds.length; i++) {
+  //             let obj = {};
+  //             let claimToken = generateClaimToken(20);
+
+  //             array.push({
+  //               Name: csvdata[i].name,
+  //               ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+  //             });
+
+  //             obj.token = claimToken;
+  //             obj.tokenContract = trustifiedContract.address;
+  //             obj.tokenId = parseInt(Number(tokenIds[i]));
+  //             obj.claimerAddress = "";
+  //             obj.ipfsurl = previewUrl ? previewUrl : "";
+  //             obj.chain = formData.chain;
+  //             obj.name = csvdata[i].name;
+  //             obj.type = type;
+  //             obj.claimed = "No";
+  //             obj.eventId = parseInt(Number(eventId));
+  //             obj.Nontransferable = formData.Nontransferable;
+  //             obj.templateId = previewUrl ? "" : templateId;
+  //             obj.title = formData.title;
+  //             obj.description = formData.description;
+  //             obj.expireDate = formData.expireDate;
+  //             obj.issueDate = formData.issueDate;
+  //             obj.position = previewUrl ? position : "";
+  //             obj.uploadCertData = previewUrl ? uploadObj.name : "";
+  //             obj.txHash = txm.transactionHash;
+  //             obj.createdBy = txm.from;
+  //             obj.platforms = links;
+  //             await addCollectors(obj);
+  //           } // Generating CSV file with unique link and storing data in firebase.
+  //           let obj = {
+  //             type: type,
+  //             data: array,
+  //           };
+  //           console.log(obj, "obj");
+
+  //           const api = await axios.create({
+  //             baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+  //           });
+
+  //           let response = await api
+  //             .post("/export/csv", obj)
+  //             .then((res) => {
+  //               return res;
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //             });
+
+  //             console.log(response,"response");
+
+  //           const blob = new Blob([response.data], { type: "text/csv" });
+
+  //           const downloadLink = document.createElement("a");
+  //           downloadLink.href = URL.createObjectURL(blob);
+  //           downloadLink.download = `${formData.title}.csv`;
+  //           downloadLink.click();
+  //           toast.success("Certificate Successfully issued!");
+  //           resolve({ isResolved: true });
+  //         }
+  //       );
+  //     } catch (err) {
+  //       // console.log(err);
+  //       // toast.error("Something want wrong!!", err);
+  //       return reject(err);
+  //     }
+  //   });
+  // };
+
+  async function addCollectorsBatch(collectorObjects) {
+    var promises = [];
+    for (let obj of collectorObjects) {
+      promises.push(addCollectors(obj));
+    }
+    await Promise.all(promises);
+  }
+
   const createBadges = function (data, firebasedata, checked, type, links) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -321,11 +643,11 @@ export const Web3ContextProvider = (props) => {
           0,
           checked
         ); // Bulk Mint NFT collection.
-
+  
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait();
+            let txm = await transactionMint.wait(); 
             firebasedata.contract = trustifiedContract.address;
             firebasedata.userId = userId;
             firebasedata.eventId = parseInt(Number(eventId));
@@ -386,9 +708,9 @@ export const Web3ContextProvider = (props) => {
               type: type,
               data: createApiResponse.data.array,
             };
+
             const api = await axios.create({
-              baseURL:
-                "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+              baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
             });
             let response = await api
               .post("/export/csv", obj)
@@ -412,6 +734,122 @@ export const Web3ContextProvider = (props) => {
       }
     });
   };
+
+  // const createNftFunction = function (
+  //   csvdata,
+  //   formData,
+  //   type,
+  //   templateId,
+  //   position,
+  //   previewUrl,
+  //   uploadObj,
+  //   links
+  // ) {
+  //   return new Promise(async (resolve, reject) => {
+  //     try {
+  //       const trustifiedContract = new ethers.Contract(
+  //         trustifiedContracts[formData.chain].trustified,
+  //         trustifiedContractAbi.abi,
+  //         signer
+  //       );
+
+
+  //       let transactionMint = await trustifiedContract.bulkMintERC721(
+  //         "",
+  //         parseInt(csvdata.length),
+  //         1,
+  //         formData.Nontransferable === "on" ? true : false
+  //       );
+  //       console.log(transactionMint, "transactionMint");
+  //       await trustifiedContract.once(
+  //         "TokensMinted",
+  //         async (eventId, tokenIds, issuer) => {
+  //           let txm = await transactionMint.wait();
+  //           console.log(txm, "txm done");
+  //           var eventId = eventId;
+  //           formData.contract = trustifiedContract.address;
+  //           formData.userId = userId;
+  //           formData.eventId = parseInt(Number(eventId));
+  //           formData.type = type;
+  //           formData.image = previewUrl ? previewUrl : template.preview;
+  //           formData.templateId = templateId;
+  //           formData.txHash = txm.transactionHash;
+  //           formData.createdBy = issuer;
+  //           formData.platforms = links;
+  //           await addCollection(formData);
+
+  //           var array = [];
+
+  //           for (let i = 0; i < tokenIds.length; i++) {
+  //             let obj = {};
+  //             let claimToken = generateClaimToken(20);
+
+  //             array.push({
+  //               Name: csvdata[i].name,
+  //               ClaimUrl: `https://trustified.xyz/claim/${claimToken}`,
+  //             });
+
+  //             obj.token = claimToken;
+  //             obj.tokenContract = trustifiedContract.address;
+  //             obj.tokenId = parseInt(Number(tokenIds[i]));
+  //             obj.claimerAddress = "";
+  //             obj.ipfsurl = previewUrl ? previewUrl : "";
+  //             obj.chain = formData.chain;
+  //             obj.name = csvdata[i].name;
+  //             obj.type = type;
+  //             obj.claimed = "No";
+  //             obj.eventId = parseInt(Number(eventId));
+  //             obj.Nontransferable = formData.Nontransferable;
+  //             obj.templateId = previewUrl ? "" : templateId;
+  //             obj.title = formData.title;
+  //             obj.description = formData.description;
+  //             obj.expireDate = formData.expireDate;
+  //             obj.issueDate = formData.issueDate;
+  //             obj.position = previewUrl ? position : "";
+  //             obj.uploadCertData = previewUrl ? uploadObj.name : "";
+  //             obj.txHash = txm.transactionHash;
+  //             obj.createdBy = txm.from;
+  //             obj.platforms = links;
+  //             await addCollectors(obj);
+  //           } // Generating CSV file with unique link and storing data in firebase.
+  //           let obj = {
+  //             type: type,
+  //             data: array,
+  //           };
+  //           console.log(obj, "obj");
+
+  //           const api = await axios.create({
+  //             baseURL: "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+  //           });
+
+  //           let response = await api
+  //             .post("/export/csv", obj)
+  //             .then((res) => {
+  //               return res;
+  //             })
+  //             .catch((error) => {
+  //               console.log(error);
+  //             });
+
+  //           console.log(response, "response");
+
+  //           const blob = new Blob([response.data], { type: "text/csv" });
+
+  //           const downloadLink = document.createElement("a");
+  //           downloadLink.href = URL.createObjectURL(blob);
+  //           downloadLink.download = `${formData.title}.csv`;
+  //           downloadLink.click();
+  //           toast.success("Certificate Successfully issued!");
+  //           resolve({ isResolved: true });
+  //         }
+  //       );
+  //     } catch (err) {
+  //       // console.log(err);
+  //       // toast.error("Something want wrong!!", err);
+  //       return reject(err);
+  //     }
+  //   });
+  // };
 
   const createNftFunction = function (
     csvdata,
@@ -437,7 +875,7 @@ export const Web3ContextProvider = (props) => {
           1,
           formData.Nontransferable === "on" ? true : false
         );
-        console.log(transactionMint, "transactionMint");
+     
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
@@ -507,6 +945,7 @@ export const Web3ContextProvider = (props) => {
               baseURL:
                 "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
             });
+
             let response = await api
               .post("/export/csv", obj)
               .then((res) => {
