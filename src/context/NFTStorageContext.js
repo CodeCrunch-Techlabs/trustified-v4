@@ -6,7 +6,6 @@ import html2canvas from "html2canvas";
 
 import { Web3Context } from "./Web3Context";
 import { firebaseDataContext } from "./FirebaseDataContext";
-import axios from "axios";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
 
@@ -32,7 +31,7 @@ export const NFTStorageContextProvider = (props) => {
     formData: {
       title: "",
       description: "",
-      chain: "fvm",
+      chain: "",
       expireDate: "",
       issueDate: new Date(),
       Nontransferable: "on",
@@ -102,7 +101,6 @@ export const NFTStorageContextProvider = (props) => {
   };
 
   const createCertificateNFT = async () => {
-    
     try {
       setUploading(true);
       if (ipfsurl) {
@@ -195,7 +193,7 @@ export const NFTStorageContextProvider = (props) => {
         links,
         handleAddLink,
         handleLinkChange,
-        setAutoCompleteData
+        setAutoCompleteData,
       }}
       {...props}
     >

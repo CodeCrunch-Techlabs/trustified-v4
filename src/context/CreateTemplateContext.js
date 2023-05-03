@@ -11,7 +11,6 @@ import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase';
 
 import { NFTStorage, File } from "nft.storage";
-import axios from 'axios';
 
 
 const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;

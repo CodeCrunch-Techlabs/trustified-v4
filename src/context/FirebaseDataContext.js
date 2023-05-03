@@ -133,7 +133,7 @@ export const FirebaseDataContextProvider = (props) => {
     setUpdated(!updated);
   }
 
-  async function addCollectors(data) { 
+  async function addCollectors(data) {
     setLoading(true);
     await addDoc(collection(db, "Collectors"), {
       claimToken: data.token,
@@ -264,7 +264,7 @@ export const FirebaseDataContextProvider = (props) => {
     // });
     const api = await axios.create({
       baseURL:
-        "https://ivdzjnxoqh.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+        "https://us-central1-trustified-fvm.cloudfunctions.net/api",
     });
     let response = await api
       .post("/export/csv", obj)

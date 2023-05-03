@@ -1,4 +1,4 @@
-import React, { useContext  } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TextField,
   Box,
@@ -15,7 +15,7 @@ import airbitrum from "../../../assets/airbitrum.png";
 
 import { ethers } from "ethers";
 
-import { NFTStorageContext } from "../../../context/NFTStorageContext"; 
+import { NFTStorageContext } from "../../../context/NFTStorageContext";
 import { Web3Context } from "../../../context/Web3Context";
 import { networkIds } from "../../../config";
 
@@ -89,8 +89,6 @@ function GetNFTDetails() {
       priority: 0,
     },
   ];
-
- 
 
   return (
     <div className="container mt-5">

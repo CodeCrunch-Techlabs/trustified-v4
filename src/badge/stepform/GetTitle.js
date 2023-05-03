@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import {
   TextareaAutosize,
   TextField,
@@ -8,7 +8,7 @@ import {
   Box,
   Dialog,
 } from "@mui/material";
-import { makeStyles } from "@material-ui/styles"; 
+import { makeStyles } from "@material-ui/styles";
 import filecoinImage from "../../assets/filecoin.png";
 import polygonImage from "../../assets/coin.png";
 import celoImage from "../../assets/celo.png";
@@ -34,7 +34,6 @@ function GetTitle() {
   const web3Context = React.useContext(Web3Context);
   const { switchNetwork } = web3Context;
   const [open, setOpen] = React.useState(false);
-
 
   const [selectedChain, setSelectedChain] = React.useState({
     label: "",
