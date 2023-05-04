@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material';
 import { NFTStorageContext } from '../../context/NFTStorageContext';
 import GetNFTDetails from '../forms/stepform/GetNFTDetails';
@@ -38,6 +38,39 @@ const NewTemplates = () => {
     const [csvMessage, setCsvMessage] = useState("");
     const [certMessage, setCertMessage] = useState("");
     const [network, setNetwork] = useState("");
+
+
+    useEffect(() => {
+        getUpdateErrors();
+      }, [formdata.title, formdata.description, formdata.chain, formdatavalue.csvData, formdatavalue.previewUrl])
+      
+      const getUpdateErrors = () => {
+        switch (activeStep) {
+          case 0:
+            if (formdata.title !== "") {
+              setTmessage("");
+            }
+            if (formdata.description !== "") {
+              setDmessage("");
+            }
+            if (formdata.chain !== "")  {
+              setNetwork("");
+            }
+            break;
+          case 1:
+            if (formdatavalue.csvData !== 0){
+              setCsvMessage("");
+            }
+            break;
+          case 2:
+            if (formdatavalue.previewUrl !== "") {
+              setCertMessage("");
+            }
+            break;
+          default:
+            break;
+        }
+      }
 
     const handleNext = () => {
         if (activeStep === 0) {
