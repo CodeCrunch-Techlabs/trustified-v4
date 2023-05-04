@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
 import {
   Box,
-  Button, 
-  IconButton, 
-  Stack, 
+  Button,
+  IconButton,
+  Stack,
   FormHelperText,
-} from "@mui/material"; 
-import { BadgeContext } from "../../context/BadgeContext"; 
+} from "@mui/material";
+import { BadgeContext } from "../../context/BadgeContext";
 import CloseIcon from "@mui/icons-material/Close";
 
-const GetBadgeTemlate = () => {
+const GetBadgeTemlate = ({ message }) => {
   const value = useContext(BadgeContext);
   const formdata = value.labelInfo.formData;
   const [fileName, setFileName] = useState("");
@@ -55,6 +55,12 @@ const GetBadgeTemlate = () => {
                     {fileName}
                   </FormHelperText>
                 )}
+
+                {
+                  message && <FormHelperText sx={{ fontWeight: "bold", color: 'red' }}>
+                    {message}
+                  </FormHelperText>
+                }
               </Box>
             )}
 
@@ -82,11 +88,11 @@ const GetBadgeTemlate = () => {
                   alt=""
                 />
               </div>
-            )} 
-             
+            )}
+
           </Stack>
         </div>
-      </div> 
+      </div>
     </div>
   );
 };

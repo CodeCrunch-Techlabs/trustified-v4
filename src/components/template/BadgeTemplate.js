@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -33,24 +33,51 @@ const BadgeTemplate = () => {
 
     const [activeStep, setActiveStep] = React.useState(0);
 
-    const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
+    const [tmessage, setTmessage] = useState("");
+    const [dmessage, setDmessage] = useState(""); 
+    const [certMessage, setCertMessage] = useState("");
+    const [network, setNetwork] = useState("");
+    const [csvMessage, setCsvMessage] = useState("");
 
+    const handleNext = () => {
+        if (activeStep === 0) {
+          if (formdata.title === "") {
+            setTmessage("Title is required");
+          } else if (formdata.description === "") {
+            setDmessage("Description is required");
+          } else if(formdata.chain === ""){
+            setNetwork("Please select network");
+          } else {
+            setTmessage("");
+            setDmessage("");
+            setNetwork("");
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          }
+        } else if (activeStep === 1) {
+          if (formdata.quantity === 0) {
+            setCsvMessage("This field is require");
+          } else {
+            setCsvMessage("");
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          }
+        }
+      };
+ 
+
+     const handleCreateNft = () => {
+        if (activeStep === 2) {
+            if (!formdatavalue.previewUrl) {
+                setCertMessage("Please upload badge");
+                return;
+            } else {
+                setCertMessage("");
+                formdatavalue.createBadge();
+            }
+        }
+    }
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    };
-
-    const handleReset = () => {
-        setActiveStep(0);
-    };
-
-    const btnDisbaled =
-        formdata.title.length > 0 &&
-        formdata.chain.length > 0 &&
-        formdata.description.length > 0 &&
-        formdata.quantity > 0;
-
+    }; 
 
 
     return (
@@ -78,19 +105,18 @@ const BadgeTemplate = () => {
                                 {step.label}
                             </StepLabel>
                             <StepContent>
-                                {activeStep === 0 && <GetTitle />}
-                                {activeStep === 1 && <GetCsvFile />}
-                                {activeStep === 2 && <GetBadgeTemlate />}
+                                {activeStep === 0 && <GetTitle tMsg={tmessage} dMsg={dmessage}  net={network} />}
+                                {activeStep === 1 && <GetCsvFile  message={csvMessage}/>}
+                                {activeStep === 2 && <GetBadgeTemlate message={certMessage} />}
                                 <Box sx={{ mb: 2, mt: 3 }}>
                                     <div>
 
                                         {index === steps.length - 1 ?
-                                            <a onClick={formdatavalue.createBadge}
-                                                className="thm-btn header__cta-btn"
-                                                style={{ pointerEvents: !btnDisbaled && "none" }}
+                                            <button onClick={handleCreateNft}
+                                                className="thm-btn header__cta-btn" 
                                             >
                                                 <span>Create NFT</span>
-                                            </a>
+                                            </button>
                                             : <Button
                                                 variant="contained"
                                                 style={{ color: 'white' }}

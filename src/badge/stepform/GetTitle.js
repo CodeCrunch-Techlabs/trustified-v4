@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function GetTitle() {
+function GetTitle({ tMsg, dMsg, net }) {
   const classes = useStyles();
   const value = useContext(BadgeContext);
   const formdata = value.labelInfo.formData;
@@ -102,13 +102,7 @@ function GetTitle() {
     },
   ];
 
-  // async function switchNetwork(chainId) {
-  //   await window.ethereum.request({
-  //     method: "wallet_switchEthereumChain",
-  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-  //   });
-  //   document.location.reload();
-  // }
+
 
   return (
     <div>
@@ -121,19 +115,18 @@ function GetTitle() {
           type="title"
           onChange={value.setFormdata("title")}
           value={formdata.title}
+          error={tMsg !== "" ? tMsg : ""}
+          helperText={tMsg !== "" ? tMsg : ""}
         />
-        <TextareaAutosize
-          fullwidth={"true"}
-          name="description"
-          id="description"
-          type="text"
+        <TextField
+          id="outlined-multiline-static"
           label="Description"
-          placeholder="Description"
-          aria-label="minimum height"
-          minRows={5}
-          maxRows={6}
+          multiline
+          rows={4}
           onChange={value.setFormdata("description")}
           value={formdata.description}
+          error={dMsg !== "" ? dMsg : ""}
+          helperText={dMsg !== "" ? dMsg : ""}
         />
       </Stack>
 
@@ -275,6 +268,12 @@ function GetTitle() {
           </div>
         </div>
 
+        {
+          net && <FormLabel id="demo-controlled-radio-buttons-group" style={{ color: 'red' }}>
+            please Select Your Network
+          </FormLabel>
+        }
+
         <Dialog
           classes={{ paper: classes.dialogPaper }}
           onClose={() => setOpen(false)}
@@ -331,9 +330,9 @@ function GetTitle() {
               //   await switchNetwork(ethers.utils.hexValue(11155111));
               // }
 
-              
+
               value.setAutoCompleteData(selectedchain);
-              setSelectedChain(newValue); 
+              setSelectedChain(newValue);
               setOpen(false);
             }}
             openOnFocus={true}

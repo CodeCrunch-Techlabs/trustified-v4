@@ -8,7 +8,7 @@ import {
 import { Box, Stack } from "@mui/system";
 import { BadgeContext } from "../../context/BadgeContext";
 
-const GetCsvFile = () => {
+const GetCsvFile = ({message}) => {
   const value = useContext(BadgeContext);
   const formdata = value.labelInfo.formData; 
   return (
@@ -24,6 +24,8 @@ const GetCsvFile = () => {
                 type="number"
                 onChange={value.setFormdata("quantity")}
                 value={formdata.quantity}
+                error={message !== "" ? message : ""}
+                helperText={message !== "" ? message : ""}
               />
             </Box>
 
