@@ -11,6 +11,7 @@ import {
 import CSVReader from "react-csv-reader";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
+import { toast } from "react-toastify";
 
 function GetChain({ message }) {
   const value = useContext(NFTStorageContext);
@@ -51,22 +52,28 @@ function GetChain({ message }) {
             <CSVReader
               inputStyle={{ display: "none" }}
               onFileLoaded={async (data, file) => {
-                setUpload(true);
+                if (
+                  data[0].indexOf("Display Name") > -1 ||
+                  data[0].indexOf("Name") > -1
+                ) {
+                  setUpload(true);
+                  data.shift();
+                  var result = data
+                    .map(function (row) {
+                      return {
+                        name: row[0],
+                      };
+                    })
+                    .filter((row) => row.name !== "");
 
-                data.shift();
-                var result = data
-                  .map(function (row) {
-                    return {
-                      name: row[0],
-                    };
-                  })
-                  .filter((row) => row.name !== "");
-
-                await setCsvData(result);
-                setTimeout(function () {
-                  setUpload(false);
-                  setFileName(file.name);
-                }, 2000);
+                  await setCsvData(result);
+                  setTimeout(function () {
+                    setUpload(false);
+                    setFileName(file.name);
+                  }, 2000);
+                } else {
+                  toast.error("Display Name column is required in csv file!");
+                }
               }}
             />
           </Button>
@@ -83,14 +90,13 @@ function GetChain({ message }) {
             </FormHelperText>
           )}
 
-          {
-            message && <FormHelperText sx={{ fontWeight: "bold", color: 'red' }}>
+          {message && (
+            <FormHelperText sx={{ fontWeight: "bold", color: "red" }}>
               {message}
             </FormHelperText>
-          }
+          )}
         </Box>
       </Stack>
-
     </div>
   );
 }
