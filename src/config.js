@@ -1,3 +1,5 @@
+import { ethers } from "ethers";
+
 export const trustifiedContracts = {
   fvmtestnet: {
     trustified: "0xAe743cd66102D46a11Bd27CfABf6Fc1840f8978b",
@@ -68,3 +70,48 @@ export const  networkIds = {
   gnosistestnet:10200,
   bsc:97
 }; 
+
+export const  chainParams = [
+  {
+    chainId: ethers.utils.hexValue(80001),
+    rpcUrl: "https://rpc-mumbai.maticvigil.com/",
+    chainName: "Matic Mumbai",
+    symbol: "MATIC",
+    decimals: 18,
+  },
+  {
+    chainId: ethers.utils.hexValue(314),
+    rpcUrl: "https://api.node.glif.io/rpc/v1",
+    chainName: "Filecoin Mainnet",
+    symbol: "FIL",
+    decimals: 18,
+  },
+  {
+    chainId: ethers.utils.hexValue(3141),
+    rpcUrl: "https://api.hyperspace.node.glif.io/rpc/v1",
+    chainName: "Filecoin Hyperspace",
+    symbol: "tFIL",
+    decimals: 18,
+  },
+  {
+    chainId: ethers.utils.hexValue(44787),
+    rpcUrl: "https://alfajores-forno.celo-testnet.org",
+    chainName: "Celo Testnet",
+    symbol: "CELO",
+    decimals: 18,
+  },
+  {
+    chainId: ethers.utils.hexValue(421613),
+    rpcUrl: "https://goerli-rollup.arbitrum.io/rpc",
+    chainName: "Arbitrum Goerli",
+    symbol: "AGOR",
+    decimals: 18,
+  },
+  {
+    chainId: ethers.utils.hexValue(11155111),
+    rpcUrl: "https://rpc2.sepolia.org",
+    chainName: "Ethereum Sepolia",
+    symbol: "ETH",
+    decimals: 18,
+  },
+];

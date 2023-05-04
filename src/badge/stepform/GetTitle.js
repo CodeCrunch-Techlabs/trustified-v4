@@ -290,30 +290,15 @@ function GetTitle() {
             onChange={async (e, newValue) => {
               const selectedchain = newValue !== null ? newValue?.value : "";
 
-              const { chainId } = await provider.getNetwork();
-              if (selectedchain == "fvm" && chainId !== 314) {
-                await switchNetwork(ethers.utils.hexValue(314));
-              } else if (selectedchain == "fvmtestnet" && chainId !== 3141) {
-                await switchNetwork(ethers.utils.hexValue(3141));
-              } else if (selectedchain == "mumbai" && chainId !== 80001) {
-                await switchNetwork(ethers.utils.hexValue(80001));
-              } else if (selectedchain == "celotestnet" && chainId !== 44787) {
-                await switchNetwork(ethers.utils.hexValue(44787));
-              } else if (
-                selectedchain == "arbitrumtestnet" &&
-                chainId !== 421613
-              ) {
-                await switchNetwork(ethers.utils.hexValue(421613));
-              } else if (
-                selectedchain == "ethereumtestnet" &&
-                chainId !== 11155111
-              ) {
-                await switchNetwork(ethers.utils.hexValue(11155111));
-              }
+              const { chainId } = await provider.getNetwork(); 
+
+              const selectedNetworkId = networkIds[selectedchain]; 
+              if (selectedNetworkId && chainId !== selectedNetworkId) {
+                await switchNetwork(ethers.utils.hexValue(selectedNetworkId));
+              }  
 
               value.setAutoCompleteData(selectedchain);
-              setSelectedChain(newValue);
-
+              setSelectedChain(newValue); 
               setOpen(false);
             }}
             openOnFocus={true}
