@@ -302,27 +302,8 @@ export const Web3ContextProvider = (props) => {
       setData(fire.data());
       setUserId(fire.id);
     });
-  };
-
-  function generateClaimToken(length) {
-    var result = "";
-    var characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678910";
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
-
-  async function addCollectorsBatch(collectorObjects) {
-    var promises = [];
-    for (let obj of collectorObjects) {
-      promises.push(addCollectors(obj));
-    }
-    await Promise.all(promises);
-  }
-
+  }; 
+ 
   const createBadges = function (data, firebasedata, checked, type) {
     return new Promise(async (resolve, reject) => {
       try {
