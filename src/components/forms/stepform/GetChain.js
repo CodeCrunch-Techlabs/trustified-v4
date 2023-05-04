@@ -13,7 +13,7 @@ import CSVReader from "react-csv-reader";
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
 import { toast } from "react-toastify";
 
-function GetChain() {
+function GetChain({ message }) {
   const value = useContext(NFTStorageContext);
   const setCsvData = value.setCsvData;
   const [upload, setUpload] = useState(false);
@@ -89,9 +89,14 @@ function GetChain() {
               Make sure the first column should be the Display Name
             </FormHelperText>
           )}
+
+          {message && (
+            <FormHelperText sx={{ fontWeight: "bold", color: "red" }}>
+              {message}
+            </FormHelperText>
+          )}
         </Box>
       </Stack>
-      <Divider />
     </div>
   );
 }
