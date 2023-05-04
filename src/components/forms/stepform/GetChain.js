@@ -11,6 +11,7 @@ import {
 import CSVReader from "react-csv-reader";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
+import { toast } from "react-toastify";
 
 function GetChain() {
   const value = useContext(NFTStorageContext);
@@ -37,22 +38,25 @@ function GetChain() {
   };
 
   return (
-    <div>  
-        <Stack spacing={3} sx={{ margin: "20px" }}>
-          <span>Upload excel sheet of collectors data</span>
-          <Box sx={{ m: 1 }}>
-            <Button
-              sx={{ m: 1, color: "white" }}
-              variant="contained"
-              component="label"
-              disabled={upload}
-            >
-              {upload ? "Uploading..." : "Upload File"}
-              <CSVReader
-                inputStyle={{ display: "none" }}
-                onFileLoaded={async (data, file) => {
+    <div>
+      <Stack spacing={3} sx={{ margin: "20px" }}>
+        <span>Upload excel sheet of collectors data</span>
+        <Box sx={{ m: 1 }}>
+          <Button
+            sx={{ m: 1, color: "white" }}
+            variant="contained"
+            component="label"
+            disabled={upload}
+          >
+            {upload ? "Uploading..." : "Upload File"}
+            <CSVReader
+              inputStyle={{ display: "none" }}
+              onFileLoaded={async (data, file) => {
+                if (
+                  data[0].indexOf("Display Name") > -1 ||
+                  data[0].indexOf("Name") > -1
+                ) {
                   setUpload(true);
-
                   data.shift();
                   var result = data
                     .map(function (row) {
@@ -67,53 +71,27 @@ function GetChain() {
                     setUpload(false);
                     setFileName(file.name);
                   }, 2000);
-                }}
-              />
-            </Button>
-            <a href="#" onClick={generateCsv}>
-              Download sample file
-            </a>
-            {fileName ? (
-              <FormHelperText sx={{ fontWeight: "bold" }}>
-                {fileName}
-              </FormHelperText>
-            ) : (
-              <FormHelperText sx={{ fontWeight: "bold" }}>
-                Make sure the first column should be the Display Name
-              </FormHelperText>
-            )}
-          </Box>
-        </Stack>
-        <Divider />
-        <Box sx={{ m: 1 }}>
-          <Button
-            variant="contained"
-            style={{ color: "white" }}
-            onClick={value.handleAddLink}
-            sx={{ mt: 1, mr: 1 }}
-            disabled={value.links.length > 2 ? true : false}
-          >
-            Add Links
-          </Button>
-          <FormHelperText>Where people can find you?</FormHelperText>
-        </Box>
-
-        <Box>
-          {value.links.map((link, index) => (
-            <TextField
-              key={index}
-              sx={{ marginRight: "5px" }}
-              id="outlined-size-small"
-              size="small"
-              label="Link"
-              name="link"
-              type="text"
-              onChange={(e) => value.handleLinkChange(e, index)}
-              value={link}
+                } else {
+                  toast.error("Display Name column is required in csv file!");
+                }
+              }}
             />
-          ))}
+          </Button>
+          <a href="#" onClick={generateCsv}>
+            Download sample file
+          </a>
+          {fileName ? (
+            <FormHelperText sx={{ fontWeight: "bold" }}>
+              {fileName}
+            </FormHelperText>
+          ) : (
+            <FormHelperText sx={{ fontWeight: "bold" }}>
+              Make sure the first column should be the Display Name
+            </FormHelperText>
+          )}
         </Box>
-      
+      </Stack>
+      <Divider />
     </div>
   );
 }
