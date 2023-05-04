@@ -70,6 +70,50 @@ export const Web3ContextProvider = (props) => {
 
   async function switchNetwork(chainId) {
     try {
+      const chainParams = [
+        {
+          chainId: ethers.utils.hexValue(80001),
+          rpcUrl: "https://rpc-mumbai.maticvigil.com/",
+          chainName: "Matic Mumbai",
+          symbol: "MATIC",
+          decimals: 18,
+        },
+        {
+          chainId: ethers.utils.hexValue(314),
+          rpcUrl: "https://api.node.glif.io/rpc/v1",
+          chainName: "Filecoin Mainnet",
+          symbol: "FIL",
+          decimals: 18,
+        },
+        {
+          chainId: ethers.utils.hexValue(3141),
+          rpcUrl: "https://api.hyperspace.node.glif.io/rpc/v1",
+          chainName: "Filecoin Hyperspace",
+          symbol: "tFIL",
+          decimals: 18,
+        },
+        {
+          chainId: ethers.utils.hexValue(44787),
+          rpcUrl: "https://alfajores-forno.celo-testnet.org",
+          chainName: "Celo Testnet",
+          symbol: "CELO",
+          decimals: 18,
+        },
+        {
+          chainId: ethers.utils.hexValue(421613),
+          rpcUrl: "https://goerli-rollup.arbitrum.io/rpc",
+          chainName: "Arbitrum Goerli",
+          symbol: "AGOR",
+          decimals: 18,
+        },
+        {
+          chainId: ethers.utils.hexValue(11155111),
+          rpcUrl: "https://rpc2.sepolia.org",
+          chainName: "Ethereum Sepolia",
+          symbol: "ETH",
+          decimals: 18,
+        },
+      ];
 
       const chainData = await window.ethereum.request({
         method: "eth_chainId",
@@ -81,25 +125,25 @@ export const Web3ContextProvider = (props) => {
       );
 
       if (chainData !== chainId && selectedChain) {
-        const methodName = selectedChain.chainId === chainId
-          ? "wallet_addEthereumChain"
-          : "wallet_switchEthereumChain";
-
+        const methodName =
+          selectedChain.chainId === chainId
+            ? "wallet_addEthereumChain"
+            : "wallet_switchEthereumChain";
 
         await window.ethereum.request({
           method: methodName,
           params: [
             selectedChain.chainId === chainId
               ? {
-                chainId: selectedChain.chainId,
-                chainName: selectedChain.chainName,
-                nativeCurrency: {
-                  name: selectedChain.chainName,
-                  symbol: selectedChain.symbol,
-                  decimals: selectedChain.decimals,
-                },
-                rpcUrls: [selectedChain.rpcUrl],
-              }
+                  chainId: selectedChain.chainId,
+                  chainName: selectedChain.chainName,
+                  nativeCurrency: {
+                    name: selectedChain.chainName,
+                    symbol: selectedChain.symbol,
+                    decimals: selectedChain.decimals,
+                  },
+                  rpcUrls: [selectedChain.rpcUrl],
+                }
               : { chainId: `${chainId}` },
           ],
         });
@@ -246,6 +290,25 @@ export const Web3ContextProvider = (props) => {
     });
   };
 
+  function generateClaimToken(length) {
+    var result = "";
+    var characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz012345678910";
+    var charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
+  }
+
+  async function addCollectorsBatch(collectorObjects) {
+    var promises = [];
+    for (let obj of collectorObjects) {
+      promises.push(addCollectors(obj));
+    }
+    await Promise.all(promises);
+  }
+
   const createBadges = function (data, firebasedata, checked, type, links) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -262,12 +325,10 @@ export const Web3ContextProvider = (props) => {
           checked 
         ); // Bulk Mint NFT collection.
 
-        console.log(transactionMint, "transactionMint");
         await trustifiedContract.once(
           "TokensMinted",
           async (eventId, tokenIds, issuer) => {
             let txm = await transactionMint.wait();
-            console.log(txm, "txm");
             firebasedata.contract = trustifiedContract.address;
             firebasedata.userId = userId;
             firebasedata.eventId = parseInt(Number(eventId));
@@ -312,10 +373,18 @@ export const Web3ContextProvider = (props) => {
               type: type,
             };
 
-            console.log(firebaseObj, "firebaseObj");
+            const config = {
+              headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                // "Access-Control-Allow-Headers":
+                //   "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+              },
+            };
 
             const createApi = await axios.create({
-              baseURL: "https://us-central1-trustified-fvm.cloudfunctions.net/api",
+              baseURL:
+                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
             let createApiResponse = await createApi.post("/create/collector", firebaseObj).then((res) => {
               return res;
@@ -334,7 +403,8 @@ export const Web3ContextProvider = (props) => {
             console.log(obj, "obj");
 
             const api = await axios.create({
-              baseURL: "https://us-central1-trustified-fvm.cloudfunctions.net/api",
+              baseURL:
+                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
 
             let response = await api
@@ -434,7 +504,8 @@ export const Web3ContextProvider = (props) => {
             };
 
             const createApi = await axios.create({
-              baseURL: "https://okx40fz83e.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+              baseURL:
+                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
             let createApiResponse = await createApi
               .post("/create/collector", firebaseObj)
@@ -452,7 +523,7 @@ export const Web3ContextProvider = (props) => {
 
             const api = await axios.create({
               baseURL:
-                "https://okx40fz83e.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
+                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
 
             let response = await api
