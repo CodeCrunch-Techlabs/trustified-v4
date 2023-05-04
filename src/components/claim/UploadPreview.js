@@ -3,14 +3,14 @@ import React, { useState } from "react";
 import placeholderImage from "../../assets/jk-placeholder-image-768x518.jpg";
 import { db } from "../../firebase";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { collection, deleteDoc, getDoc, getDocs, query, where } from "firebase/firestore";
+// import { collection, deleteDoc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 const UploadPreview = ({ claimer, id }) => {
   const [loaded, setLoaded] = useState(false);
 
   // async function deleteData() {
   //   const docref = query(
-  //     collection(db, "Collections"),
+  //     collection(db, "Collectors"),
   //     where("chain", "==", 'mumbai')
   //   );
   //   const querySnapshot = await getDocs(docref);

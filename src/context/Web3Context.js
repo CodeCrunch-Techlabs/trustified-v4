@@ -1,7 +1,7 @@
 import React, { createContext, useEffect, useState } from "react";
 import { collection, db, getDocs, query, where } from "../firebase";
 import { ethers } from "ethers";
-import { chain, trustifiedContracts } from "../config";
+import { chain, chainParams, trustifiedContracts } from "../config";
 import trustifiedContractAbi from "../abi/Trustified.json";
 import { toast } from "react-toastify";
 import { firebaseDataContext } from "./FirebaseDataContext";
@@ -67,106 +67,6 @@ export const Web3ContextProvider = (props) => {
     }
   }, [add]);
 
-  // async function switchNetwork(chainId) {
-  //   await window.ethereum.request({
-  //     method: "wallet_switchEthereumChain",
-  //     params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-  //   });
-  //   await window.ethereum.request({ method: "eth_chainId" });
-  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //   const signer = provider.getSigner();
-  //   setProvider(provider);
-  //   setSigner(signer);
-
-  // }
-
-  // async function switchNetwork(chainId) {
-  //   try {
-  //     // check if the chain ID is already available in MetaMask
-  //     const chainData = await window.ethereum.request({
-  //       method: "eth_chainId",
-  //       params: [],
-  //     });
-
-  //     if (chainData !== chainId && chainId === ethers.utils.hexValue(80001)) {
-  //       await window.ethereum.request({
-  //         method: "wallet_switchEthereumChain",
-  //         params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-  //       });
-  //       await window.ethereum.request({ method: "eth_chainId" });
-  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //       const signer = provider.getSigner();
-  //       setProvider(provider);
-  //       setSigner(signer);
-  //     }
-
-  //     if (chainData !== chainId && chainId === ethers.utils.hexValue(314)) {
-  //       // chain ID is not available, add the chain to MetaMask
-  //       const rpcUrl = "https://api.node.glif.io/rpc/v1"; // replace with your RPC URL
-  //       const chainName = "Filecoin Mainnet"; // replace with your chain name
-  //       const symbol = "FIL"; // replace with your chain symbol
-  //       const decimals = 18; // replace with your token's decimals
-  //       const chainParams = {
-  //         chainId: chainId,
-  //         chainName: chainName,
-  //         nativeCurrency: {
-  //           name: chainName,
-  //           symbol: symbol,
-  //           decimals: decimals,
-  //         },
-  //         rpcUrls: [rpcUrl],
-  //       };
-  //       await window.ethereum.request({
-  //         method: "wallet_addEthereumChain",
-  //         params: [chainParams],
-  //       });
-  //       await window.ethereum.request({ method: "eth_chainId" });
-  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //       const signer = provider.getSigner();
-  //       setProvider(provider);
-  //       setSigner(signer);
-  //     } else if (
-  //       chainData !== chainId &&
-  //       chainId === ethers.utils.hexValue(3141)
-  //     ) {
-  //       // chain ID is not available, add the chain to MetaMask
-  //       const rpcUrl = "https://api.hyperspace.node.glif.io/rpc/v1"; // replace with your RPC URL
-  //       const chainName = "Filecoin hyperspace"; // replace with your chain name
-  //       const symbol = "tFIL"; // replace with your chain symbol
-  //       const decimals = 18; // replace with your token's decimals
-  //       const chainParams = {
-  //         chainId: chainId,
-  //         chainName: chainName,
-  //         nativeCurrency: {
-  //           name: chainName,
-  //           symbol: symbol,
-  //           decimals: decimals,
-  //         },
-  //         rpcUrls: [rpcUrl],
-  //       };
-  //       await window.ethereum.request({
-  //         method: "wallet_addEthereumChain",
-  //         params: [chainParams],
-  //       });
-  //       await window.ethereum.request({ method: "eth_chainId" });
-  //       const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //       const signer = provider.getSigner();
-  //       setProvider(provider);
-  //       setSigner(signer);
-  //     }
-  //     await window.ethereum.request({
-  //       method: "wallet_switchEthereumChain",
-  //       params: [{ chainId: `${chainId}` }], // chainId must be in HEX with 0x in front
-  //     });
-  //     await window.ethereum.request({ method: "eth_chainId" });
-  //     const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //     const signer = provider.getSigner();
-  //     setProvider(provider);
-  //     setSigner(signer);
-  //   } catch (error) {
-  //     toast.error(error.message);
-  //   }
-  // }
 
   async function switchNetwork(chainId) {
     try {
@@ -430,13 +330,13 @@ export const Web3ContextProvider = (props) => {
           trustifiedContracts[firebasedata.chain].trustified,
           trustifiedContractAbi.abi,
           signer
-        );
+        ); 
 
         var transactionMint = await trustifiedContract.bulkMintERC721(
           data.tokenUris[0],
           parseInt(firebasedata.quantity),
           0,
-          checked
+          checked 
         ); // Bulk Mint NFT collection.
 
         await trustifiedContract.once(
@@ -456,7 +356,7 @@ export const Web3ContextProvider = (props) => {
             await addCollection(firebasedata);
 
             let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
-
+            console.log(nftTokenIds, "nftTokenIds");
             let object = {
               tokenContract: trustifiedContract.address,
               claimerAddress: "",
@@ -493,24 +393,27 @@ export const Web3ContextProvider = (props) => {
               baseURL:
                 "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
-            let createApiResponse = await createApi
-              .post("/create/collector", firebaseObj)
-              .then((res) => {
-                return res;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
+            let createApiResponse = await createApi.post("/create/collector", firebaseObj).then((res) => {
+              return res;
+            }).catch((error) => {
+              console.log(error);
+            });
+
+            console.log(createApiResponse, "createApiResponse");
+
 
             let obj = {
               type: type,
               data: createApiResponse.data,
             };
 
+            console.log(obj, "obj");
+
             const api = await axios.create({
               baseURL:
                 "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
+
             let response = await api
               .post("/export/csv", obj)
               .then((res) => {
@@ -621,7 +524,7 @@ export const Web3ContextProvider = (props) => {
 
             let obj = {
               type: type,
-              data: createApiResponse.data.array,
+              data: createApiResponse.data,
             };
 
             const api = await axios.create({

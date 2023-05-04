@@ -20,7 +20,7 @@ import { networkIds } from "../../config";
 
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
-    height: "45vh",
+    height: "50vh",
     Width: "41vw",
     padding: "10px",
   },
@@ -331,9 +331,9 @@ function GetTitle() {
               //   await switchNetwork(ethers.utils.hexValue(11155111));
               // }
 
+              
               value.setAutoCompleteData(selectedchain);
-              setSelectedChain(newValue);
-
+              setSelectedChain(newValue); 
               setOpen(false);
             }}
             openOnFocus={true}

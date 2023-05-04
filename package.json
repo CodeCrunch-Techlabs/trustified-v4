@@ -2,6 +2,7 @@
   "name": "trustified_fevm",
   "version": "0.1.0",
   "private": true,
+  "proxy":"https://bg26hulzpl.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
   "dependencies": {
     "@creds-protocol/contracts": "^0.1.9",
     "@emotion/react": "^11.10.5",

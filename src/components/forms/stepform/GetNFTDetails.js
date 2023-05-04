@@ -21,7 +21,7 @@ import { networkIds } from "../../../config";
 
 const useStyles = makeStyles((theme) => ({
   dialogPaper: {
-    height: "45vh",
+    height: "50vh",
     Width: "41vw",
     padding: "10px",
   },
