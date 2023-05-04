@@ -12,7 +12,7 @@ import CSVReader from "react-csv-reader";
 
 import { NFTStorageContext } from "../../../context/NFTStorageContext";
 
-function GetChain() {
+function GetChain({ message }) {
   const value = useContext(NFTStorageContext);
   const setCsvData = value.setCsvData;
   const [upload, setUpload] = useState(false);
@@ -37,83 +37,60 @@ function GetChain() {
   };
 
   return (
-    <div>  
-        <Stack spacing={3} sx={{ margin: "20px" }}>
-          <span>Upload excel sheet of collectors data</span>
-          <Box sx={{ m: 1 }}>
-            <Button
-              sx={{ m: 1, color: "white" }}
-              variant="contained"
-              component="label"
-              disabled={upload}
-            >
-              {upload ? "Uploading..." : "Upload File"}
-              <CSVReader
-                inputStyle={{ display: "none" }}
-                onFileLoaded={async (data, file) => {
-                  setUpload(true);
-
-                  data.shift();
-                  var result = data
-                    .map(function (row) {
-                      return {
-                        name: row[0],
-                      };
-                    })
-                    .filter((row) => row.name !== "");
-
-                  await setCsvData(result);
-                  setTimeout(function () {
-                    setUpload(false);
-                    setFileName(file.name);
-                  }, 2000);
-                }}
-              />
-            </Button>
-            <a href="#" onClick={generateCsv}>
-              Download sample file
-            </a>
-            {fileName ? (
-              <FormHelperText sx={{ fontWeight: "bold" }}>
-                {fileName}
-              </FormHelperText>
-            ) : (
-              <FormHelperText sx={{ fontWeight: "bold" }}>
-                Make sure the first column should be the Display Name
-              </FormHelperText>
-            )}
-          </Box>
-        </Stack>
-        <Divider />
+    <div>
+      <Stack spacing={3} sx={{ margin: "20px" }}>
+        <span>Upload excel sheet of collectors data</span>
         <Box sx={{ m: 1 }}>
           <Button
+            sx={{ m: 1, color: "white" }}
             variant="contained"
-            style={{ color: "white" }}
-            onClick={value.handleAddLink}
-            sx={{ mt: 1, mr: 1 }}
-            disabled={value.links.length > 2 ? true : false}
+            component="label"
+            disabled={upload}
           >
-            Add Links
-          </Button>
-          <FormHelperText>Where people can find you?</FormHelperText>
-        </Box>
+            {upload ? "Uploading..." : "Upload File"}
+            <CSVReader
+              inputStyle={{ display: "none" }}
+              onFileLoaded={async (data, file) => {
+                setUpload(true);
 
-        <Box>
-          {value.links.map((link, index) => (
-            <TextField
-              key={index}
-              sx={{ marginRight: "5px" }}
-              id="outlined-size-small"
-              size="small"
-              label="Link"
-              name="link"
-              type="text"
-              onChange={(e) => value.handleLinkChange(e, index)}
-              value={link}
+                data.shift();
+                var result = data
+                  .map(function (row) {
+                    return {
+                      name: row[0],
+                    };
+                  })
+                  .filter((row) => row.name !== "");
+
+                await setCsvData(result);
+                setTimeout(function () {
+                  setUpload(false);
+                  setFileName(file.name);
+                }, 2000);
+              }}
             />
-          ))}
+          </Button>
+          <a href="#" onClick={generateCsv}>
+            Download sample file
+          </a>
+          {fileName ? (
+            <FormHelperText sx={{ fontWeight: "bold" }}>
+              {fileName}
+            </FormHelperText>
+          ) : (
+            <FormHelperText sx={{ fontWeight: "bold" }}>
+              Make sure the first column should be the Display Name
+            </FormHelperText>
+          )}
+
+          {
+            message && <FormHelperText sx={{ fontWeight: "bold", color: 'red' }}>
+              {message}
+            </FormHelperText>
+          }
         </Box>
-      
+      </Stack>
+
     </div>
   );
 }

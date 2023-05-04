@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function GetNFTDetails() {
+function GetNFTDetails({tMsg, dMsg, net}) {
   const classes = useStyles();
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const value = useContext(NFTStorageContext);
@@ -117,6 +117,8 @@ function GetNFTDetails() {
               type="title"
               onChange={value.setFormdata("title")}
               value={formdata.title}
+              error={tMsg !== "" ? tMsg : ""}
+              helperText={tMsg !== "" ? tMsg : ""}
             />
 
             <TextField
@@ -126,6 +128,8 @@ function GetNFTDetails() {
               rows={4}
               onChange={value.setFormdata("description")}
               value={formdata.description}
+              helperText={dMsg !== "" ? dMsg : ""}
+              error={dMsg !== "" ? dMsg : ""}
             />
           </Stack>
 
@@ -266,6 +270,12 @@ function GetNFTDetails() {
                 <span class="MuiTouchRipple-root"></span>
               </div>
             </div>
+
+           {
+            net &&  <FormLabel id="demo-controlled-radio-buttons-group" style={{color:'red'}}>
+            please Select Your Network
+           </FormLabel>
+           }
 
             <Dialog
               classes={{ paper: classes.dialogPaper }}

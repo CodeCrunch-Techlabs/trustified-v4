@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Box, CircularProgress, Divider, Paper, StepLabel } from '@mui/material';
 import { NFTStorageContext } from '../../context/NFTStorageContext';
 import GetNFTDetails from '../forms/stepform/GetNFTDetails';
@@ -33,23 +33,55 @@ const NewTemplates = () => {
     const formdatavalue = React.useContext(NFTStorageContext);
     const formdata = formdatavalue.labelInfo.formData;
     const [activeStep, setActiveStep] = React.useState(0);
+    const [tmessage, setTmessage] = useState("");
+    const [dmessage, setDmessage] = useState("");
+    const [csvMessage, setCsvMessage] = useState("");
+    const [certMessage, setCertMessage] = useState("");
+    const [network, setNetwork] = useState("");
+
     const handleNext = () => {
-        setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    };
+        if (activeStep === 0) {
+          if (formdata.title === "") {
+            setTmessage("Title is required");
+          } else if (formdata.description === "") {
+            setDmessage("Description is required");
+          } else if(formdata.chain === ""){
+            setNetwork("Please select network");
+          } else {
+            setTmessage("");
+            setDmessage("");
+            setNetwork("");
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          }
+        } else if (activeStep === 1) {
+          if (formdatavalue.csvData.length === 0) {
+            setCsvMessage("Please upload CSV file");
+          } else {
+            setCsvMessage("");
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+          }
+        }
+      };
 
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const btnDisbaled =
-        formdata.title.length > 0 &&
-        formdata.chain.length > 0 &&
-        formdata.description.length > 0 &&
-        formdatavalue.csvData.length > 0;
+    const handleCreateNft = () => {
+        if (activeStep === 2) {
+            if (!formdatavalue.previewUrl) {
+                setCertMessage("Please upload certificate");
+                return;
+            } else {
+                setCertMessage("");
+                formdatavalue.createCertificateNFT();
+            }
+        }
+    }
 
     return (
         <Paper elevation={0} sx={{ borderRadius: '12px', p: 3 }} className="top-ba nner-cert" >
-          
+
             <div className='text-center '>
                 <h4 className=' text-dark'>Create certificate</h4>
                 <p className=''>Please fill out the form with as much information as possible.</p>
@@ -64,16 +96,16 @@ const NewTemplates = () => {
                                 {step.label}
                             </StepLabel>
                             <StepContent>
-                                {activeStep === 0 && <GetNFTDetails />}
-                                {activeStep === 1 && <GetChain />}
-                                {activeStep === 2 && <GetTemplate />}
+                                {activeStep === 0 && <GetNFTDetails tMsg={tmessage} dMsg={dmessage}  net={network}/>}
+                                {activeStep === 1 && <GetChain message={csvMessage} />}
+                                {activeStep === 2 && <GetTemplate message={certMessage} />}
                                 <Box sx={{ mb: 2, mt: 3 }}>
                                     <div>
 
                                         {index === steps.length - 1 ?
-                                            <a onClick={formdatavalue.createCertificateNFT}
+                                            <button onClick={handleCreateNft}
                                                 className="thm-btn header__cta-btn"
-                                                style={{ pointerEvents: !btnDisbaled && "none" }}
+                                            // style={{ pointerEvents: !btnDisbaled && "none" }}
                                             >
                                                 {formdatavalue.uploading ? (
                                                     <>
@@ -84,7 +116,7 @@ const NewTemplates = () => {
                                                 ) : (
                                                     <span>Create NFT</span>
                                                 )}
-                                            </a>
+                                            </button>
                                             : <Button
                                                 variant="contained"
                                                 style={{ color: 'white' }}

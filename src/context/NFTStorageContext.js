@@ -73,8 +73,7 @@ export const NFTStorageContextProvider = (props) => {
     getTemplate(id);
   };
 
-  const uploadCertificate = async (file) => {
-    console.log(file);
+  const uploadCertificate = async (file) => { 
     setUploadCert(true);
     const metadata = await client.store({
       name: "certificate",
@@ -171,6 +170,7 @@ export const NFTStorageContextProvider = (props) => {
         handleClickOpen,
         handleClose,
         open,
+        ipfsurl,
         setUsernamePos,
         previewUrl,
         usernamePos,

@@ -34,7 +34,7 @@ import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
-function GetTemplate() {
+function GetTemplate({message}) {
   const value = useContext(NFTStorageContext);
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
@@ -302,7 +302,13 @@ function GetTemplate() {
                   <FormHelperText sx={{ fontWeight: "bold" }}>
                     {fileName}
                   </FormHelperText>
-                )}
+                )} 
+                
+                  {
+                    message && <FormHelperText sx={{ fontWeight: "bold", color: 'red' }}>
+                      {message}
+                    </FormHelperText>
+                  } 
               </Box>
             )}
 
