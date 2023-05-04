@@ -5,6 +5,7 @@ require("./tasks");
 require("dotenv").config();
 
 const PRIVATE_KEY = process.env.REACT_APP_PRIVATE_KEY;
+const MAINNET_PRIVATE_KEY = process.env.REACT_APP_MAINNET_PRIVATE_KEY
 
 module.exports = {
   solidity: "0.8.4",
@@ -35,6 +36,15 @@ module.exports = {
       url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
       accounts: [PRIVATE_KEY],
     },
+    polygon: {
+      url: `https://polygon-rpc.com/`,
+      accounts: [MAINNET_PRIVATE_KEY],
+      chainId: 137,
+    },
+    mumbai: {
+      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
+      accounts: [PRIVATE_KEY],
+    },
     bsc: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545",
       chainId: 97,
@@ -44,6 +54,11 @@ module.exports = {
       url: `https://alfajores-forno.celo-testnet.org`,
       accounts: [PRIVATE_KEY],
       chainId: 44787,
+    },
+    celoMainnet: {
+      url: `https://forno.celo.org`,
+      accounts: [MAINNET_PRIVATE_KEY],
+      chainId: 42220,
     },
     arbitrumtestnet: {
       url: "https://goerli-rollup.arbitrum.io/rpc",

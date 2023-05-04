@@ -114,15 +114,7 @@ export default function Claim() {
                       <h4 className="card-h4 claim-h4">{claimer?.title}</h4>
                     </div>
                     <p className="card-p claim-des">{claimer?.description}</p>
-                    <div>
-                      {claimer?.platforms.map((link) => (
-                        <div>
-                          <Link to={link} target="_blank">
-                            {link}
-                          </Link>
-                        </div>
-                      ))}
-                    </div>
+
                     <div
                       className="card-body-cert d-flex"
                       style={{ justifyContent: "space-evenly" }}

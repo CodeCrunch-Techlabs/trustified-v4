@@ -179,6 +179,13 @@ export const Web3ContextProvider = (props) => {
           decimals: 18,
         },
         {
+          chainId: ethers.utils.hexValue(137),
+          rpcUrl: "https://polygon-rpc.com/",
+          chainName: "Polygon",
+          symbol: "MATIC",
+          decimals: 18,
+        },
+        {
           chainId: ethers.utils.hexValue(314),
           rpcUrl: "https://api.node.glif.io/rpc/v1",
           chainName: "Filecoin Mainnet",
@@ -196,6 +203,13 @@ export const Web3ContextProvider = (props) => {
           chainId: ethers.utils.hexValue(44787),
           rpcUrl: "https://alfajores-forno.celo-testnet.org",
           chainName: "Celo Testnet",
+          symbol: "CELO",
+          decimals: 18,
+        },
+        {
+          chainId: ethers.utils.hexValue(42220),
+          rpcUrl: "https://forno.celo.org",
+          chainName: "Celo Mainnet",
           symbol: "CELO",
           decimals: 18,
         },
@@ -409,7 +423,7 @@ export const Web3ContextProvider = (props) => {
     await Promise.all(promises);
   }
 
-  const createBadges = function (data, firebasedata, checked, type, links) {
+  const createBadges = function (data, firebasedata, checked, type) {
     return new Promise(async (resolve, reject) => {
       try {
         const trustifiedContract = new ethers.Contract(
@@ -438,7 +452,7 @@ export const Web3ContextProvider = (props) => {
             firebasedata.Nontransferable = checked == true ? "on" : "off";
             firebasedata.txHash = txm.transactionHash;
             firebasedata.createdBy = txm.from;
-            firebasedata.platforms = links;
+            firebasedata.platforms = [];
             await addCollection(firebasedata);
 
             let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
@@ -463,7 +477,7 @@ export const Web3ContextProvider = (props) => {
               uploadObj: "",
               txHash: txm.transactionHash,
               createdBy: txm.from,
-              platforms: links,
+              platforms: [],
             };
 
             const firebaseObj = {
@@ -473,14 +487,7 @@ export const Web3ContextProvider = (props) => {
               type: type,
             };
 
-            const config = {
-              headers: {
-                "Content-Type": "application/json",
-                "Access-Control-Allow-Origin": "*",
-                // "Access-Control-Allow-Headers":
-                //   "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-              },
-            };
+           
 
             const createApi = await axios.create({
               baseURL:
@@ -534,8 +541,7 @@ export const Web3ContextProvider = (props) => {
     templateId,
     position,
     previewUrl,
-    uploadObj,
-    links
+    uploadObj
   ) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -565,7 +571,7 @@ export const Web3ContextProvider = (props) => {
             formData.templateId = templateId;
             formData.txHash = txm.transactionHash;
             formData.createdBy = issuer;
-            formData.platforms = links;
+            formData.platforms = [];
             await addCollection(formData);
 
             let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
@@ -589,7 +595,7 @@ export const Web3ContextProvider = (props) => {
               uploadObj: previewUrl ? uploadObj.name : "",
               txHash: txm.transactionHash,
               createdBy: txm.from,
-              platforms: links,
+              platforms: [],
             };
 
             const firebaseObj = {

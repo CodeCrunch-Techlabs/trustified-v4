@@ -8,8 +8,14 @@ export const trustifiedContracts = {
   mumbai: {
     trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077",
   },
+  polygon: {
+    trustified: "0xf8545458E45168C268016BBA7eFfD54c4CF2808C",
+  },
   celotestnet: {
     trustified: "0x236b936792C05e48Fc98573F4C4019144704306a",
+  },
+  celomainnet: {
+    trustified: "0xb1D54e85A8e069DE67acaa73b15B1B8c28224Aff",
   },
   arbitrumtestnet: {
     trustified: "0x6b2e241Cb89C58bfa662FBf83aB56b788B6D22FD",
@@ -20,6 +26,7 @@ export const trustifiedContracts = {
   ethereumtestnet: {
     trustified: "0x06a8fa03F246adCC8D1Ce4f3A8f8323125A51b1a",
   },
+
   // bsc: {
   //   trustified: "0x0FE82cBB448A89Dd912EbC4117B927616826AcCC",
   // },
@@ -29,8 +36,10 @@ export const chain = {
   3141: "fvmtestnet",
   314: "fvm",
   80001: "mumbai",
+  137: "polygon",
   97: "bsc",
   44787: "celotestnet", // 
+  42220:"celomainnet",
   421613: "arbitrumtestnet", // GOERLI
   10200: "gnosistestnet",
   11155111: "ethereumtestnet", //SEPOLIA
@@ -38,8 +47,10 @@ export const chain = {
 
 export const logos={
   mumbai:'/assets/logo/mumbai.png',
+  polygon:'/assets/logo/mumbai.png',
   ether:'/assets/logo/ethereum.png',
   celo:'/assets/logo/celo.png',
+  celomainnet:'/assets/logo/celo.png',
   fvm:'/assets/logo/fvm.png',
   fvmtestnet:'/assets/logo/fvm.png',
   gnosis:'/assets/logo/gnosis.png',
@@ -51,7 +62,9 @@ export const networkURL = {
   fvm: "https://filfox.info/en/tx",
   fvmtestnet: "https://hyperspace.filfox.info/en/tx",
   mumbai:  "https://polygonscan.com/tx",
+  polygon:"https://polygonscan.com/tx",
   celotestnet: "https://alfajores-blockscout.celo-testnet.org/tx",
+  celomainnet: "https://celoscan.io/tx",
   arbitrumtestnet: "https://goerli-rollup-explorer.arbitrum.io/tx",
   ethereumtestnet: "https://sepolia.etherscan.io/tx",
   gnosistestnet:"https://gnosisscan.io/tx",
@@ -62,7 +75,9 @@ export const  networkIds = {
   fvm: 314,
   fvmtestnet: 3141,
   mumbai: 80001,
+  polygon:137,
   celotestnet: 44787,
+  celomainnet:42220,
   arbitrumtestnet: 421613,
   ethereumtestnet: 11155111,
   gnosistestnet:10200,

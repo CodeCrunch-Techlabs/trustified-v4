@@ -25,7 +25,6 @@ export const NFTStorageContextProvider = (props) => {
   const [uploadObj, setUploadObj] = useState({});
   const [checked, setChecked] = useState(true);
   const [uploadCert, setUploadCert] = useState(false);
-  const [links, setLinks] = useState([]);
 
   const [labelInfo, setlabelInfo] = useState({
     formData: {
@@ -75,6 +74,7 @@ export const NFTStorageContextProvider = (props) => {
   };
 
   const uploadCertificate = async (file) => {
+    console.log(file);
     setUploadCert(true);
     const metadata = await client.store({
       name: "certificate",
@@ -90,15 +90,6 @@ export const NFTStorageContextProvider = (props) => {
     setUploadCert(false);
   };
 
-  const handleAddLink = () => {
-    setLinks([...links, ""]);
-  };
-
-  const handleLinkChange = (event, index) => {
-    const updatedLinks = [...links];
-    updatedLinks[index] = event.target.value;
-    setLinks(updatedLinks);
-  };
 
   const createCertificateNFT = async () => {
     try {
@@ -111,8 +102,7 @@ export const NFTStorageContextProvider = (props) => {
           selectedTemplateId,
           usernamePos,
           ipfsurl,
-          uploadObj,
-          links
+          uploadObj
         )
           .then((e) => {
             setUploading(false);
@@ -140,8 +130,8 @@ export const NFTStorageContextProvider = (props) => {
           selectedTemplateId,
           usernamePos,
           ipfsurl,
-          uploadObj,
-          links
+          uploadObj
+        
         )
           .then((res) => {
             setUploading(false);
@@ -190,9 +180,7 @@ export const NFTStorageContextProvider = (props) => {
         selectTemplate,
         uploadCertificate,
         setUploadObj,
-        links,
-        handleAddLink,
-        handleLinkChange,
+
         setAutoCompleteData,
       }}
       {...props}
