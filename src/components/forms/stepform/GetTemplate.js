@@ -470,7 +470,7 @@ function GetTemplate({message}) {
 
             {value.previewUrl && (
               <span style={{ marginTop: "40px" }}>
-                Drag your name and put when you want to display certificate name
+                Drag your name and put wherever you want to display certificate name
               </span>
             )}
 
