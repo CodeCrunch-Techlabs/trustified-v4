@@ -39,7 +39,7 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
   }
  
   return (
-    <TableCell key={id}>
+    <TableCell >
       {status === 'Yes' && id === "ipfsurl" ?  (
         <a target="_blank" href={image} rel="noreferrer">
           Preview

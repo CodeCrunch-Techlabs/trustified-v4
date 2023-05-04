@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextField, CircularProgress } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import {   useParams } from "react-router-dom";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import MyCollection from "../myCollection";
@@ -102,8 +102,7 @@ export default function Claim() {
               ) : (
                 <CircularProgress />
               )}
-
-              {console.log(claimer)}
+ 
               {claimer && (
                 <div
                   className="justify-content-center"
@@ -119,7 +118,7 @@ export default function Claim() {
                       className="card-body-cert d-flex"
                       style={{ justifyContent: "space-evenly" }}
                     >
-                      {claimer.type == "certificate" && (
+                      {claimer.type === "certificate" && (
                         <div>
                           <h4>Certificate Id</h4>
                           <p>{id}</p>

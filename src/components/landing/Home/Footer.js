@@ -38,7 +38,7 @@ const  scrollTop = () => {
         onClick={ scrollTop}
         onKeyDown={scrollTop}
         role="button"
-        tabIndex="0"
+        // tabIndex="0"
         className="scroll-to-target scroll-to-top"
         style={{ display:  scrollBtn ? "block" : "none" }}
       >

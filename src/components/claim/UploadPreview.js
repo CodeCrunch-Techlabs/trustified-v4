@@ -1,6 +1,5 @@
 
-import React, { useState } from "react";
-import placeholderImage from "../../assets/jk-placeholder-image-768x518.jpg";
+import React, { useState } from "react"; 
 import { db } from "../../firebase";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 // import { collection, deleteDoc, getDoc, getDocs, query, where } from "firebase/firestore";
@@ -38,7 +37,7 @@ const UploadPreview = ({ claimer, id }) => {
           alt="Image Alt"
           height={claimer.uploadObj.height}
           src={claimer.ipfsurl}
-          placeholderSrc={placeholderImage}
+          placeholderSrc="/assets/bg-preview.jpg"
           width={claimer.uploadObj.width}
           onLoad={() => setLoaded(!loaded)}
           effect="blur"

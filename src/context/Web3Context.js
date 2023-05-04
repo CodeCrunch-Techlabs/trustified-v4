@@ -355,8 +355,7 @@ export const Web3ContextProvider = (props) => {
             firebasedata.platforms = [];
             await addCollection(firebasedata);
 
-            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
-            console.log(nftTokenIds, "nftTokenIds");
+            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token))); 
             let object = {
               tokenContract: trustifiedContract.address,
               claimerAddress: "",
@@ -397,18 +396,11 @@ export const Web3ContextProvider = (props) => {
               return res;
             }).catch((error) => {
               console.log(error);
-            });
-
-            console.log(createApiResponse, "createApiResponse");
-
-
+            }); 
             let obj = {
               type: type,
               data: createApiResponse.data,
-            };
-
-            console.log(obj, "obj");
-
+            }; 
             const api = await axios.create({
               baseURL:
                 "https://us-central1-trustified-fvm.cloudfunctions.net/api",

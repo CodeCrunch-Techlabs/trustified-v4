@@ -114,19 +114,20 @@ function Collectors(props) {
                   .map((row, index) => {
                     return (
                       <TableRow
+                        key={index}
                         hover
                         role="checkbox"
-                        tabIndex={-1}
-                        key={row.code}
+                        tabIndex={-1} 
                       >
                         {columns.map((column) => {
                           const value = row[column.id];
                           return (
                             <TableRowComponent
+                            key={column.id}
                               event={params.token}
                               id={column.id}
                               value={value}
-                              url={row.ipfsurl}
+                              url={row.ipfsurl} 
                               index={index}
                               type={type}
                               token={row.claimToken}

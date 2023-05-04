@@ -34,69 +34,69 @@ const BadgeTemplate = () => {
     const [activeStep, setActiveStep] = React.useState(0);
 
     const [tmessage, setTmessage] = useState("");
-    const [dmessage, setDmessage] = useState(""); 
+    const [dmessage, setDmessage] = useState("");
     const [certMessage, setCertMessage] = useState("");
     const [network, setNetwork] = useState("");
     const [csvMessage, setCsvMessage] = useState("");
 
     useEffect(() => {
         getUpdateErrors();
-      }, [formdata.title, formdata.description, formdata.chain, formdata.quantity,formdatavalue.previewUrl])
-      
-      const getUpdateErrors = () => {
+    }, [formdata.title, formdata.description, formdata.chain, formdata.quantity, formdatavalue.previewUrl])
+
+    const getUpdateErrors = () => {
         switch (activeStep) {
-          case 0:
-            if (formdata.title !== "") {
-              setTmessage("");
-            }
-            if (formdata.description !== "") {
-              setDmessage("");
-            }
-            if (formdata.chain !== "")  {
-              setNetwork("");
-            }
-            break;
-          case 1:
-            if (formdata.quantity !== 0){
-              setCsvMessage("");
-            }
-            break;
-          case 2:
-            if (formdatavalue.previewUrl !== "") {
-              setCertMessage("");
-            }
-            break;
-          default:
-            break;
+            case 0:
+                if (formdata.title !== "") {
+                    setTmessage("");
+                }
+                if (formdata.description !== "") {
+                    setDmessage("");
+                }
+                if (formdata.chain !== "") {
+                    setNetwork("");
+                }
+                break;
+            case 1:
+                if (formdata.quantity !== 0) {
+                    setCsvMessage("");
+                }
+                break;
+            case 2:
+                if (formdatavalue.previewUrl !== "") {
+                    setCertMessage("");
+                }
+                break;
+            default:
+                break;
         }
-      }
+    }
 
     const handleNext = () => {
         if (activeStep === 0) {
-          if (formdata.title === "") {
-            setTmessage("Title is required");
-          } else if (formdata.description === "") {
-            setDmessage("Description is required");
-          } else if(formdata.chain === ""){
-            setNetwork("Please select network");
-          } else {
-            setTmessage("");
-            setDmessage("");
-            setNetwork("");
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-          }
+            if (formdata.title === "") {
+                setTmessage("Title is required");
+            } else if (formdata.description === "") {
+                setDmessage("Description is required");
+            } else if (formdata.chain === "") {
+                setNetwork("Please select network");
+            } else {
+                setTmessage("");
+                setDmessage("");
+                setNetwork("");
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            }
         } else if (activeStep === 1) {
-          if (formdata.quantity === 0) {
-            setCsvMessage("This field is require");
-          } else {
-            setCsvMessage("");
-            setActiveStep((prevActiveStep) => prevActiveStep + 1);
-          }
+            if (formdata.quantity === 0) {
+                setCsvMessage("This field is require");
+            } else {
+                setCsvMessage("");
+                setActiveStep((prevActiveStep) => prevActiveStep + 1);
+            }
         }
-      };
- 
+    };
 
-     const handleCreateNft = () => {
+
+    const handleCreateNft = () => {
         if (activeStep === 2) {
             if (!formdatavalue.previewUrl) {
                 setCertMessage("Please upload badge");
@@ -109,7 +109,7 @@ const BadgeTemplate = () => {
     }
     const handleBack = () => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
-    }; 
+    };
 
 
     return (
@@ -137,15 +137,15 @@ const BadgeTemplate = () => {
                                 {step.label}
                             </StepLabel>
                             <StepContent>
-                                {activeStep === 0 && <GetTitle tMsg={tmessage} dMsg={dmessage}  net={network} />}
-                                {activeStep === 1 && <GetCsvFile  message={csvMessage}/>}
+                                {activeStep === 0 && <GetTitle tMsg={tmessage} dMsg={dmessage} net={network} />}
+                                {activeStep === 1 && <GetCsvFile message={csvMessage} />}
                                 {activeStep === 2 && <GetBadgeTemlate message={certMessage} />}
                                 <Box sx={{ mb: 2, mt: 3 }}>
                                     <div>
 
                                         {index === steps.length - 1 ?
                                             <button onClick={handleCreateNft}
-                                                className="thm-btn header__cta-btn" 
+                                                className="thm-btn header__cta-btn"
                                             >
                                                 <span>Create NFT</span>
                                             </button>

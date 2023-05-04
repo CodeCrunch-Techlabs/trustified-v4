@@ -24,7 +24,7 @@ const GetCsvFile = ({message}) => {
                 type="number"
                 onChange={value.setFormdata("quantity")}
                 value={formdata.quantity}
-                error={message !== "" ? message : ""}
+                error={message.length > 0}
                 helperText={message !== "" ? message : ""}
               />
             </Box>
