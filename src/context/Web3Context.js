@@ -247,49 +247,20 @@ export const Web3ContextProvider = (props) => {
  
   const createBadges = function (data, firebasedata, checked, type) {
     return new Promise(async (resolve, reject) => {
-      try {
+      try { 
+        
         const trustifiedContract = new ethers.Contract(
           trustifiedContracts[firebasedata.chain].trustified,
           trustifiedContractAbi.abi,
           signer
-        );
-        
-        const mydata = trustifiedContract.interface.encodeFunctionData("bulkMintERC721", [
-          data.tokenUris[0],
-          parseInt(firebasedata.quantity),
-          0,
-          checked
-        ]);
-        
-        const apiUrl = `https://api.etherscan.io/api?module=proxy&action=eth_estimateGas&to=${trustifiedContracts[firebasedata.chain].trustified}&data=${mydata}&gasPrice=20000000000&apikey=F693GWZEV3TVTDJYM6YK7VKTWH9EESP952`;
-        
-        const response = await axios.get(apiUrl);
-        console.log(response,"response");
-        
-        const gasLimit = parseInt(response.data.result);
-        
-        console.log("Estimated gas limit:", gasLimit);
-        
-        const transactionMint = await trustifiedContract.bulkMintERC721(
-          data.tokenUris[0],
-          parseInt(firebasedata.quantity),
-          0,
-          checked,
-          { gasLimit }
-        );
-        
-        // const trustifiedContract = new ethers.Contract(
-        //   trustifiedContracts[firebasedata.chain].trustified,
-        //   trustifiedContractAbi.abi,
-        //   signer
-        // ); 
+        ); 
 
-        // var transactionMint = await trustifiedContract.bulkMintERC721(
-        //   data.tokenUris[0],
-        //   parseInt(firebasedata.quantity),
-        //   0,
-        //   checked 
-        // ); // Bulk Mint NFT collection.
+        var transactionMint = await trustifiedContract.bulkMintERC721(
+          data.tokenUris[0],
+          parseInt(firebasedata.quantity),
+          0,
+          checked 
+        ); // Bulk Mint NFT collection.
 
         await trustifiedContract.once(
           "TokensMinted",
