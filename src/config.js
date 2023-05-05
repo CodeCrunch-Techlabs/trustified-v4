@@ -86,7 +86,16 @@ export const  networkIds = {
   bsc:97
 }; 
 
+  
+
 export const  chainParams = [
+  {
+    chainId: ethers.utils.hexValue(137),
+    rpcUrl: "https://polygon-rpc.com/",
+    chainName: "Polygon",
+    symbol: "MATIC",
+    decimals: 18,
+  },
   {
     chainId: ethers.utils.hexValue(80001),
     rpcUrl: "https://rpc-mumbai.maticvigil.com/",
@@ -127,6 +136,13 @@ export const  chainParams = [
     rpcUrl: "https://rpc2.sepolia.org",
     chainName: "Ethereum Sepolia",
     symbol: "ETH",
+    decimals: 18,
+  },
+  {
+    chainId: ethers.utils.hexValue(42220),
+    rpcUrl: "https://forno.celo.org",
+    chainName: "Celo Mainnet",
+    symbol: "CELO",
     decimals: 18,
   },
 ];
@@ -189,4 +205,44 @@ export  const multiChains = [
     chainId: 11155111,
     priority: 0,
   },
+];
+
+
+export const fsize = [
+  12, 14, 16, 18, 20, 24, 26, 30, 32, 36, 40, 42, 48, 50, 54, 60,
+];
+export const fbold = [100, 200, 300, 400, 500, 600, 700, 800, 900];
+export const fontList = [
+  "Roboto",
+  "Borsok",
+  "Open Sans",
+  "Lato ",
+  "Poppins",
+  "Zeyada",
+  "Babylonica",
+  "Dancing Script",
+  "Lobster",
+  "Pacifico",
+  "Caveat",
+  "Satisfy",
+  "Great Vibes",
+  "Ole",
+  "Coiny",
+  "Kenia",
+  "Rubik Beastly",
+  "Londrina Sketch",
+  "Neonderthaw",
+  "Kumar One",
+  "Ribeye",
+  "Emblema One",
+  "Ewert",
+  "Kavoon",
+  "Moul",
+  "Rubik Moonrocks",
+  "Rubik Iso",
+  "Unifraktur Cook",
+  "Germania One",
+  "Monoton",
+  "Orbitron",
+  "Rampart One",
 ];

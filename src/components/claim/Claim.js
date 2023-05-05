@@ -23,8 +23,7 @@ export default function Claim() {
   } = web3Context;
 
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { getMyCollection, getClaimer, claimer } = firebaseContext;
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const { getMyCollection, getClaimer, claimer } = firebaseContext; 
 
   const [id, setId] = useState("");
   const [show, setShow] = useState(false);
@@ -197,6 +196,11 @@ export default function Claim() {
                       toast.error("Please Enter Address!");
                       return;
                     }
+                    if(!window.ethereum){
+                      toast.error("Please install Metamask");
+                      return;
+                    }
+                    const provider = new ethers.providers.Web3Provider(window.ethereum);
                     const { chainId } = await provider.getNetwork();  
                     const selectedNetworkId = networkIds[claimer.chain]; 
                     if (selectedNetworkId && chainId !== selectedNetworkId) {

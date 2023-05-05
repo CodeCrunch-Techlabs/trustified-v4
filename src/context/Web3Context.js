@@ -69,66 +69,7 @@ export const Web3ContextProvider = (props) => {
 
 
   async function switchNetwork(chainId) {
-    try {
-      const chainParams = [
-        {
-          chainId: ethers.utils.hexValue(80001),
-          rpcUrl: "https://rpc-mumbai.maticvigil.com/",
-          chainName: "Matic Mumbai",
-          symbol: "MATIC",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(137),
-          rpcUrl: "https://polygon-rpc.com/",
-          chainName: "Polygon",
-          symbol: "MATIC",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(314),
-          rpcUrl: "https://api.node.glif.io/rpc/v1",
-          chainName: "Filecoin Mainnet",
-          symbol: "FIL",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(3141),
-          rpcUrl: "https://api.hyperspace.node.glif.io/rpc/v1",
-          chainName: "Filecoin Hyperspace",
-          symbol: "tFIL",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(44787),
-          rpcUrl: "https://alfajores-forno.celo-testnet.org",
-          chainName: "Celo Testnet",
-          symbol: "CELO",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(42220),
-          rpcUrl: "https://forno.celo.org",
-          chainName: "Celo Mainnet",
-          symbol: "CELO",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(421613),
-          rpcUrl: "https://goerli-rollup.arbitrum.io/rpc",
-          chainName: "Arbitrum Goerli",
-          symbol: "AGOR",
-          decimals: 18,
-        },
-        {
-          chainId: ethers.utils.hexValue(11155111),
-          rpcUrl: "https://rpc2.sepolia.org",
-          chainName: "Ethereum Sepolia",
-          symbol: "ETH",
-          decimals: 18,
-        },
-      ];
-
+    try { 
       const chainData = await window.ethereum.request({
         method: "eth_chainId",
         params: [],
@@ -311,14 +252,44 @@ export const Web3ContextProvider = (props) => {
           trustifiedContracts[firebasedata.chain].trustified,
           trustifiedContractAbi.abi,
           signer
-        ); 
-
-        var transactionMint = await trustifiedContract.bulkMintERC721(
+        );
+        
+        const mydata = trustifiedContract.interface.encodeFunctionData("bulkMintERC721", [
           data.tokenUris[0],
           parseInt(firebasedata.quantity),
           0,
-          checked 
-        ); // Bulk Mint NFT collection.
+          checked
+        ]);
+        
+        const apiUrl = `https://api.etherscan.io/api?module=proxy&action=eth_estimateGas&to=${trustifiedContracts[firebasedata.chain].trustified}&data=${mydata}&gasPrice=20000000000&apikey=F693GWZEV3TVTDJYM6YK7VKTWH9EESP952`;
+        
+        const response = await axios.get(apiUrl);
+        console.log(response,"response");
+        
+        const gasLimit = parseInt(response.data.result);
+        
+        console.log("Estimated gas limit:", gasLimit);
+        
+        const transactionMint = await trustifiedContract.bulkMintERC721(
+          data.tokenUris[0],
+          parseInt(firebasedata.quantity),
+          0,
+          checked,
+          { gasLimit }
+        );
+        
+        // const trustifiedContract = new ethers.Contract(
+        //   trustifiedContracts[firebasedata.chain].trustified,
+        //   trustifiedContractAbi.abi,
+        //   signer
+        // ); 
+
+        // var transactionMint = await trustifiedContract.bulkMintERC721(
+        //   data.tokenUris[0],
+        //   parseInt(firebasedata.quantity),
+        //   0,
+        //   checked 
+        // ); // Bulk Mint NFT collection.
 
         await trustifiedContract.once(
           "TokensMinted",
