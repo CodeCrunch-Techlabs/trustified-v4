@@ -68,7 +68,6 @@ export default function Claim() {
     return net;
   };
 
-  console.log(claimer);
   return (
     <section className="footer-position" id="banner">
       <div className="bannercontainer container">
@@ -188,53 +187,57 @@ export default function Claim() {
                 <button
                   className="thm-btn header__cta-btn"
                   onClick={async () => {
-                    if (claimer.status === "Yes") {
-                      toast.error("This certificate is already claimed!");
-                      return;
-                    }
-                    if (add === "") {
-                      toast.error("Please Enter Address!");
-                      return;
-                    }
-                    if (!window.ethereum) {
-                      toast.error("Please install Metamask");
-                      return;
-                    }
-                    const provider = new ethers.providers.Web3Provider(
-                      window.ethereum
-                    );
-                    const { chainId } = await provider.getNetwork();
-                    const selectedNetworkId = networkIds[claimer.chain];
-                    if (selectedNetworkId && chainId !== selectedNetworkId) {
-                      await switchNetwork(
-                        ethers.utils.hexValue(selectedNetworkId)
+                    try {
+                      if (claimer.status === "Yes") {
+                        toast.error("This certificate is already claimed!");
+                        return;
+                      }
+                      if (add === "") {
+                        toast.error("Please Enter Address!");
+                        return;
+                      }
+                      if (!window.ethereum) {
+                        toast.error("Please install Metamask");
+                        return;
+                      }
+                      const provider = new ethers.providers.Web3Provider(
+                        window.ethereum
                       );
-                    }
-
-                    if (claimer?.type === "badge") {
-                      await claimBadges(token, add);
-                    } else {
-                      if (
-                        claimer?.position !== "" &&
-                        claimer?.position !== undefined
-                      ) {
-                        await claimUploadedCertificate(
-                          token,
-                          add,
-                          claimer,
-                          claimer?.uploadObj.style.color,
-                          claimer?.uploadObj.width,
-                          claimer?.uploadObj.height
-                        );
-                      } else {
-                        await claimCertificate(
-                          token,
-                          add,
-                          claimer,
-                          claimer?.template.name.style.color,
-                          claimer?.template.name.style.fontFamily
+                      const { chainId } = await provider.getNetwork();
+                      const selectedNetworkId = networkIds[claimer.chain];
+                      if (selectedNetworkId && chainId !== selectedNetworkId) {
+                        await switchNetwork(
+                          ethers.utils.hexValue(selectedNetworkId)
                         );
                       }
+
+                      if (claimer?.type === "badge") {
+                        await claimBadges(token, add);
+                      } else {
+                        if (
+                          claimer?.position !== "" &&
+                          claimer?.position !== undefined
+                        ) {
+                          await claimUploadedCertificate(
+                            token,
+                            add,
+                            claimer,
+                            claimer?.uploadObj.style.color,
+                            claimer?.uploadObj.width,
+                            claimer?.uploadObj.height
+                          );
+                        } else {
+                          await claimCertificate(
+                            token,
+                            add,
+                            claimer,
+                            claimer?.template.name.style.color,
+                            claimer?.template.name.style.fontFamily
+                          );
+                        }
+                      }
+                    } catch (error) {
+                      console.log(error, "err");
                     }
                   }}
                 >

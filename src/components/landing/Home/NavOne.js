@@ -18,11 +18,7 @@ import { toast } from "react-toastify";
 import { Web3Context } from "../../../context/Web3Context";
 
 import { useFormik, Form, FormikProvider } from "formik";
-
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
+import MenuComponent from "./Menu";
 
 const NavOne = () => {
   const web3Context = React.useContext(Web3Context);
@@ -99,8 +95,6 @@ const NavOne = () => {
     }
   };
 
-
-
   return (
     <header className="site-header site-header__header-one">
       <nav
@@ -155,88 +149,16 @@ const NavOne = () => {
                 </IconButton>
               </Tooltip>
             )}
-            <Menu
-              sx={{ mt: "45px" }}
-              id="menu-appbar"
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "right",
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              <MenuItem>
-                {user != null && (
-                  <p className="text-dark m-0">{shortAddress(user)}</p>
-                )}
-              </MenuItem>
-              <Divider />
-              {/* <MenuItem onClick={() => handleNavigate("/dashboard/profile")}>
-                <Typography textAlign="center">Profile</Typography>
-              </MenuItem> */}
-              <MenuItem onClick={() => handleNavigate("/my-collection")}>
-                <Typography textAlign="center">Browse Collection</Typography>
-              </MenuItem>
-              <MenuItem onClick={disconnectWallet}>
-                <a className="thm-btn header__cta-btn mx-auto">
-                  <span>Logout</span>
-                </a>
-              </MenuItem>
-            </Menu>
-            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-              <DialogTitle
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                Create Id
-              </DialogTitle>
-
-              <DialogContent style={{ overflowX: "hidden" }}>
-                <Container maxWidth="sm">
-                  <form
-                    onSubmit={handleSubmit}
-                    style={{
-                      justifyContent: "center",
-                      marginLeft: "auto",
-                      marginRight: "auto",
-                      // marginTop: "100px",
-                    }}
-                  >
-                    <Stack spacing={3}>
-                      <TextField
-                        fullWidth
-                        label="Enter name"
-                        name="name"
-                        id="name"
-                        type="text"
-                        required
-                        {...formik.getFieldProps("name")}
-                      />
-                    </Stack>
-
-                    <DialogActions>
-                      <Grid container justifyContent="center">
-                        <Button
-                          size="large"
-                          type="submit"
-                          variant="contained"
-                          disabled={aLoading}
-                        >
-                          {aLoading ? "Creating..." : "Create"}
-                        </Button>
-                      </Grid>
-                    </DialogActions>
-                  </form>
-                </Container>
-              </DialogContent>
-            </Dialog>
+            {anchorElUser && (
+              <MenuComponent
+                anchorElUser={anchorElUser}
+                handleCloseUserMenu={handleCloseUserMenu}
+                disconnectWallet={disconnectWallet}
+                shortAddress={shortAddress}
+                handleNavigate={handleNavigate}
+                user={user}
+              />
+            )}
           </div>
         </div>
       </nav>

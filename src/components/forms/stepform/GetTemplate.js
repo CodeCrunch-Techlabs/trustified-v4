@@ -172,7 +172,7 @@ function GetTemplate({ message }) {
   useEffect(() => {
     if (selectedElement === "certText") {
       setUsername({ ...username });
-      console.log(textName, "textName");
+     
       value.setUploadObj(textName);
     }
   }, [

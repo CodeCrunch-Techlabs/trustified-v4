@@ -109,7 +109,13 @@ export const Web3ContextProvider = (props) => {
         setProviderAndSigner(provider, signer);
       }
     } catch (error) {
-      toast.error(error.message);
+      if (error.code == -32002) {
+        alert(
+          "Please approve the previous request, that is pending in Metamask!"
+        );
+      } else {
+        toast.error(error.message);
+      }
     }
   }
 
@@ -367,7 +373,8 @@ export const Web3ContextProvider = (props) => {
     templateId,
     position,
     previewUrl,
-    uploadObj
+    uploadObj,
+    visiblity
   ) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -379,7 +386,9 @@ export const Web3ContextProvider = (props) => {
 
         let transactionMint = await trustifiedContract.bulkMintERC721(
           "",
-          parseInt(csvdata.length),
+          visiblity == true || visiblity == "true"
+            ? parseInt(csvdata.length)
+            : formData.quantity,
           1,
           formData.Nontransferable === "on" ? true : false
         );
@@ -426,7 +435,7 @@ export const Web3ContextProvider = (props) => {
 
             const firebaseObj = {
               tokenIds: nftTokenIds,
-              type: type,
+              type: visiblity == true || visiblity == "true" ? type : "badge",
               eventId: parseInt(Number(eventId)),
               csvdata: csvdata,
               object: object,
@@ -615,6 +624,7 @@ export const Web3ContextProvider = (props) => {
     height
   ) => {
     setClaimLoading(true);
+
     const provider = await new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     const input = document.getElementById("certificateX");
@@ -637,7 +647,11 @@ export const Web3ContextProvider = (props) => {
 
     const imageFile = new File(
       [pdfBlob.imageData],
-      `${claimer?.claimer.replace(/ +/g, "")}.png`,
+      `${
+        claimer?.claimer == undefined
+          ? claimer.title.replace(/ +/g, "")
+          : claimer?.claimer.replace(/ +/g, "")
+      }.png`,
       {
         type: "image/png",
       }
@@ -652,9 +666,6 @@ export const Web3ContextProvider = (props) => {
       expireDate: claimer?.expireDate,
       issueDate: claimer?.issueDate,
     });
-    // let meta = await axios.get(
-    //   `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-    // );
 
     const q = query(
       collection(db, "Collectors"),

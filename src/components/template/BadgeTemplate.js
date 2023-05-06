@@ -22,7 +22,7 @@ const steps = [
     },
     {
         label: 'Step 3',
-        description: `Select template  `,
+        description: `Upload Badge`,
     },
 ];
 

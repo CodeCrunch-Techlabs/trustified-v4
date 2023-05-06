@@ -34,6 +34,7 @@ export const NFTStorageContextProvider = (props) => {
       expireDate: "",
       issueDate: new Date(),
       Nontransferable: "on",
+      quantity: 0,
     },
   });
 
@@ -73,24 +74,26 @@ export const NFTStorageContextProvider = (props) => {
     getTemplate(id);
   };
 
-  const uploadCertificate = async (file) => { 
+  const uploadCertificate = async (file) => {
     setUploadCert(true);
+
     const metadata = await client.store({
       name: "certificate",
       description: "certificate preview",
       image: file,
     });
+
     setIpfsurl(
       metadata.data.image.href.replace(
         "ipfs://",
         "https://nftstorage.link/ipfs/"
       )
     );
+
     setUploadCert(false);
   };
 
-
-  const createCertificateNFT = async () => {
+  const createCertificateNFT = async (visiblity) => {
     try {
       setUploading(true);
       if (ipfsurl) {
@@ -101,7 +104,8 @@ export const NFTStorageContextProvider = (props) => {
           selectedTemplateId,
           usernamePos,
           ipfsurl,
-          uploadObj
+          uploadObj,
+          visiblity
         )
           .then((e) => {
             setUploading(false);
@@ -129,8 +133,8 @@ export const NFTStorageContextProvider = (props) => {
           selectedTemplateId,
           usernamePos,
           ipfsurl,
-          uploadObj
-        
+          uploadObj,
+          visiblity
         )
           .then((res) => {
             setUploading(false);
