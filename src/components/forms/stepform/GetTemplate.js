@@ -24,23 +24,29 @@ import Draggable from "react-draggable";
 import { collection, getDocs, query } from "firebase/firestore";
 import { db } from "../../../firebase";
 import TemplateEdit from "../../template/TemplateEdit";
-import { FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
-import { SketchPicker } from 'react-color';
-import Popover from '@mui/material/Popover';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
+import { SketchPicker } from "react-color";
+import Popover from "@mui/material/Popover";
+import ButtonGroup from "@mui/material/ButtonGroup";
+import FormatAlignLeftIcon from "@mui/icons-material/FormatAlignLeft";
+import FormatAlignRightIcon from "@mui/icons-material/FormatAlignRight";
+import FormatAlignCenterIcon from "@mui/icons-material/FormatAlignCenter";
+import ToggleButton from "@mui/material/ToggleButton";
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { fbold, fontList, fsize } from "../../../config";
 
-function GetTemplate({message}) {
+function GetTemplate({ message }) {
   const value = useContext(NFTStorageContext);
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
     x: 30,
-    y: -590
+    y: -590,
   });
   const [selectedFont, setSelectedFont] = useState("Roboto");
   const [fontSize, setFontSize] = useState(24);
@@ -56,7 +62,8 @@ function GetTemplate({message}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const imgRef = useRef(null);
   const [fileName, setFileName] = useState("");
-  const [alignment, setAlignment] = React.useState('left');
+  const [alignment, setAlignment] = React.useState("left");
+  const [updatedPos, setUpdatedPos] = React.useState(false);
 
   const handleAlignment = (event, newAlignment) => {
     if (newAlignment !== null) {
@@ -118,9 +125,8 @@ function GetTemplate({message}) {
   }, []);
 
   useEffect(() => {
-    getImageResolution()
-  }, [width, height])
-
+    getImageResolution();
+  }, [width, height]);
 
   async function getImageResolution() {
     if (width >= 1000 || (height >= 700 && width > height)) {
@@ -149,28 +155,39 @@ function GetTemplate({message}) {
       width: imageWidth,
       height: imageHeight,
       style: {
-        position: 'absolute',
-        color: colors?.hex ? colors?.hex : '#000',
-        fontSize: `${fontSize}px` ? `${fontSize}px` : '40px',
-        lineHeight: `${fontSize + 5}px` ? `${fontSize + 5}px` : '20px',
+        position: "absolute",
+        color: colors?.hex ? colors?.hex : "#000",
+        fontSize: `${fontSize}px` ? `${fontSize}px` : "40px",
+        lineHeight: `${fontSize + 5}px` ? `${fontSize + 5}px` : "20px",
         textAlign: alignment,
-        margin: '10px auto',
-        fontFamily: selectedFont ? selectedFont : 'Poppins',
+        margin: "10px auto",
+        fontFamily: selectedFont ? selectedFont : "Poppins",
         fontWeight: bold ? bold : 100,
         transform: `translate(${30}px, ${username.y}px)`,
         width: `${imageWidth - 100}px`,
-      }
-    }
+      },
+    },
   };
+
   useEffect(() => {
-    if (selectedElement === "certText") { 
+    if (selectedElement === "certText") {
       setUsername({ ...username });
-      value.setUploadObj(textName); 
+      console.log(textName, "textName");
+      value.setUploadObj(textName);
     }
-  }, [selectedFont, colors, fontSize, bold, imageWidth, imageHeight, alignment,selectedElement])
+  }, [
+    selectedFont,
+    colors,
+    fontSize,
+    bold,
+    imageWidth,
+    imageHeight,
+    alignment,
+    selectedElement,
+    updatedPos
+  ]);
 
-
-  const handleDivClick = (event) => { 
+  const handleDivClick = (event) => {
     event.stopPropagation();
     setSelectedElement(event.currentTarget.id);
   };
@@ -234,7 +251,6 @@ function GetTemplate({message}) {
   useEffect(() => {
     getTemplates();
   }, []);
- 
 
   return (
     <div className="container">
@@ -265,13 +281,13 @@ function GetTemplate({message}) {
                   <FormHelperText sx={{ fontWeight: "bold" }}>
                     {fileName}
                   </FormHelperText>
-                )} 
-                
-                  {
-                    message && <FormHelperText sx={{ fontWeight: "bold", color: 'red' }}>
-                      {message}
-                    </FormHelperText>
-                  } 
+                )}
+
+                {message && (
+                  <FormHelperText sx={{ fontWeight: "bold", color: "red" }}>
+                    {message}
+                  </FormHelperText>
+                )}
               </Box>
             )}
 
@@ -433,7 +449,8 @@ function GetTemplate({message}) {
 
             {value.previewUrl && (
               <span style={{ marginTop: "40px" }}>
-                Drag your name and put wherever you want to display certificate name
+                Drag your name and put wherever you want to display certificate
+                name
               </span>
             )}
 
@@ -451,15 +468,28 @@ function GetTemplate({message}) {
                 />
                 <Draggable
                   position={username}
-                  onStop={(e, data) =>
-                    setUsername({ ...username, x: 30, y: data.y })
-                  }
+                  onStop={(e, data) => {
+    
+                    setUsername({ ...username, x: 30, y: data.y });
+                    setUpdatedPos(!updatedPos);
+                  }}
                   onMouseDown={(e) => {
                     handleDivClick(e);
                   }}
                 >
                   <div id="certText" style={textName.name.style}>
-                    <span style={{ backgroundColor: 'rgba(255,255,255,0.5)', color: textName.name.style.color == "#000" ? "#000" :  textName.name.style.color, padding: '2px 5px' }}>{textName.name.text}</span>
+                    <span
+                      style={{
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                        color:
+                          textName.name.style.color == "#000"
+                            ? "#000"
+                            : textName.name.style.color,
+                        padding: "2px 5px",
+                      }}
+                    >
+                      {textName.name.text}
+                    </span>
                   </div>
                 </Draggable>
               </div>

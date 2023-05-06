@@ -6,7 +6,7 @@ import trustifiedContractAbi from "../abi/Trustified.json";
 import { toast } from "react-toastify";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { NFTStorage, File } from "nft.storage";
 
 import jsPDF from "jspdf";
@@ -19,6 +19,7 @@ const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
 const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
 
 export const Web3ContextProvider = (props) => {
+  const location = useLocation();
   const navigate = useNavigate();
   const [address, setAddress] = useState();
   const [update, setUpdate] = useState(false);
@@ -67,9 +68,8 @@ export const Web3ContextProvider = (props) => {
     }
   }, [add]);
 
-
   async function switchNetwork(chainId) {
-    try { 
+    try {
       const chainData = await window.ethereum.request({
         method: "eth_chainId",
         params: [],
@@ -178,8 +178,7 @@ export const Web3ContextProvider = (props) => {
     // });
 
     const api = await axios.create({
-      baseURL:
-        "https://us-central1-trustified-fvm.cloudfunctions.net/api",
+      baseURL: "https://us-central1-trustified-fvm.cloudfunctions.net/api",
     });
 
     let response = await api
@@ -225,10 +224,19 @@ export const Web3ContextProvider = (props) => {
   };
 
   const disconnectWallet = () => {
-    navigate("/");
-    window.localStorage.removeItem("address");
-    setUpdate(!update);
-    window.location.reload();
+    if (location?.pathname.indexOf("claim") > -1) {
+      window.localStorage.removeItem("address");
+      setUpdate(!update);
+    } else {
+      navigate("/");
+      window.localStorage.removeItem("address");
+      setUpdate(!update);
+      window.location.reload();
+    }
+    // navigate("/");
+    // window.localStorage.removeItem("address");
+    // setUpdate(!update);
+    // window.location.reload();
   };
   const shortAddress = (addr) =>
     addr.length > 10 && addr.startsWith("0x")
@@ -243,23 +251,22 @@ export const Web3ContextProvider = (props) => {
       setData(fire.data());
       setUserId(fire.id);
     });
-  }; 
- 
+  };
+
   const createBadges = function (data, firebasedata, checked, type) {
     return new Promise(async (resolve, reject) => {
-      try { 
-        
+      try {
         const trustifiedContract = new ethers.Contract(
           trustifiedContracts[firebasedata.chain].trustified,
           trustifiedContractAbi.abi,
           signer
-        ); 
+        );
 
         var transactionMint = await trustifiedContract.bulkMintERC721(
           data.tokenUris[0],
           parseInt(firebasedata.quantity),
           0,
-          checked 
+          checked
         ); // Bulk Mint NFT collection.
 
         await trustifiedContract.once(
@@ -278,7 +285,7 @@ export const Web3ContextProvider = (props) => {
             firebasedata.platforms = [];
             await addCollection(firebasedata);
 
-            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token))); 
+            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
             let object = {
               tokenContract: trustifiedContract.address,
               claimerAddress: "",
@@ -309,21 +316,22 @@ export const Web3ContextProvider = (props) => {
               type: type,
             };
 
-           
-
             const createApi = await axios.create({
               baseURL:
                 "https://us-central1-trustified-fvm.cloudfunctions.net/api",
             });
-            let createApiResponse = await createApi.post("/create/collector", firebaseObj).then((res) => {
-              return res;
-            }).catch((error) => {
-              console.log(error);
-            }); 
+            let createApiResponse = await createApi
+              .post("/create/collector", firebaseObj)
+              .then((res) => {
+                return res;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
             let obj = {
               type: type,
               data: createApiResponse.data,
-            }; 
+            };
             const api = await axios.create({
               baseURL:
                 "https://us-central1-trustified-fvm.cloudfunctions.net/api",

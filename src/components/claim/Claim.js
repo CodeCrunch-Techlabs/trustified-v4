@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { TextField, CircularProgress } from "@mui/material";
-import {   useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 import MyCollection from "../myCollection";
@@ -23,7 +23,7 @@ export default function Claim() {
   } = web3Context;
 
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { getMyCollection, getClaimer, claimer } = firebaseContext; 
+  const { getMyCollection, getClaimer, claimer } = firebaseContext;
 
   const [id, setId] = useState("");
   const [show, setShow] = useState(false);
@@ -33,12 +33,11 @@ export default function Claim() {
   useEffect(() => {
     getClaimer(token);
     getUrl();
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token]); 
- 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
-  const getUrl = (chain) => { 
-    const url = networkURL[chain];  
+  const getUrl = (chain) => {
+    const url = networkURL[chain];
     return url;
   };
 
@@ -69,6 +68,7 @@ export default function Claim() {
     return net;
   };
 
+  console.log(claimer);
   return (
     <section className="footer-position" id="banner">
       <div className="bannercontainer container">
@@ -101,7 +101,7 @@ export default function Claim() {
               ) : (
                 <CircularProgress />
               )}
- 
+
               {claimer && (
                 <div
                   className="justify-content-center"
@@ -196,16 +196,20 @@ export default function Claim() {
                       toast.error("Please Enter Address!");
                       return;
                     }
-                    if(!window.ethereum){
+                    if (!window.ethereum) {
                       toast.error("Please install Metamask");
                       return;
                     }
-                    const provider = new ethers.providers.Web3Provider(window.ethereum);
-                    const { chainId } = await provider.getNetwork();  
-                    const selectedNetworkId = networkIds[claimer.chain]; 
+                    const provider = new ethers.providers.Web3Provider(
+                      window.ethereum
+                    );
+                    const { chainId } = await provider.getNetwork();
+                    const selectedNetworkId = networkIds[claimer.chain];
                     if (selectedNetworkId && chainId !== selectedNetworkId) {
-                      await switchNetwork(ethers.utils.hexValue(selectedNetworkId));
-                    } 
+                      await switchNetwork(
+                        ethers.utils.hexValue(selectedNetworkId)
+                      );
+                    }
 
                     if (claimer?.type === "badge") {
                       await claimBadges(token, add);

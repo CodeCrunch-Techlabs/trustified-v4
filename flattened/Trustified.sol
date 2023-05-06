@@ -1,4 +1,4 @@
-
+// SPDX-License-Identifier: MIT OR Apache-2.0
 // File: @openzeppelin/contracts/utils/math/Math.sol
 
 
@@ -658,6 +658,7 @@ library Address {
         } else {
             _revert(returndata, errorMessage);
         }
+      return new bytes(0);
     }
 
     /**
@@ -1658,7 +1659,6 @@ library Counters {
 }
 
 // File: contracts/Trustified.sol
-
 
 pragma solidity ^0.8.4;
 
