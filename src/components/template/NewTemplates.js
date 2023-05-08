@@ -178,7 +178,7 @@ const NewTemplates = () => {
                     setVisibility={(value) => setVisibility(value)}
                   />
                 )}
-                {activeStep === 2 && <GetTemplate message={certMessage} />}
+                {activeStep === 2 && <GetTemplate message={certMessage} visibility={visiblity} />}
                 <Box sx={{ mb: 2, mt: 3 }}>
                   <div>
                     {index === steps.length - 1 ? (

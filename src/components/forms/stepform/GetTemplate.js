@@ -41,7 +41,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { fbold, fontList, fsize } from "../../../config";
 
-function GetTemplate({ message }) {
+function GetTemplate({ message, visibility }) {
   const value = useContext(NFTStorageContext);
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
@@ -126,7 +126,7 @@ function GetTemplate({ message }) {
 
   useEffect(() => {
     getImageResolution();
-  }, [width, height]);
+  }, [width, height,visibility]);
 
   async function getImageResolution() {
     if (width >= 1000 || (height >= 700 && width > height)) {
@@ -184,7 +184,8 @@ function GetTemplate({ message }) {
     imageHeight,
     alignment,
     selectedElement,
-    updatedPos
+    updatedPos,
+    visibility
   ]);
 
   const handleDivClick = (event) => {
@@ -291,7 +292,7 @@ function GetTemplate({ message }) {
               </Box>
             )}
 
-            {value.previewUrl !== "" && (
+            {value.previewUrl !== "" && (visibility == true || visibility == "true") && (
               <Stack sx={{ my: 2 }} direction="row">
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <FormControl fullWidth>
@@ -408,7 +409,7 @@ function GetTemplate({ message }) {
                 </Popover>
               </Stack>
             )}
-            {value.previewUrl !== "" && (
+            {value.previewUrl !== "" &&  (
               <Stack direction="row">
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <TextField
@@ -447,14 +448,14 @@ function GetTemplate({ message }) {
               </IconButton>
             )}
 
-            {value.previewUrl && (
+            {  (visibility == true || visibility == "true") && (
               <span style={{ marginTop: "40px" }}>
                 Drag your name and put wherever you want to display certificate
                 name
               </span>
             )}
 
-            {value.previewUrl && (
+            {value.previewUrl &&   (
               <div
                 id="certificateX"
                 style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}
@@ -466,32 +467,34 @@ function GetTemplate({ message }) {
                   src={value.previewUrl}
                   alt=""
                 />
-                <Draggable
-                  position={username}
-                  onStop={(e, data) => {
-    
-                    setUsername({ ...username, x: 30, y: data.y });
-                    setUpdatedPos(!updatedPos);
-                  }}
-                  onMouseDown={(e) => {
-                    handleDivClick(e);
-                  }}
-                >
-                  <div id="certText" style={textName.name.style}>
-                    <span
-                      style={{
-                        backgroundColor: "rgba(255,255,255,0.5)",
-                        color:
-                          textName.name.style.color == "#000"
-                            ? "#000"
-                            : textName.name.style.color,
-                        padding: "2px 5px",
-                      }}
-                    >
-                      {textName.name.text}
-                    </span>
-                  </div>
-                </Draggable>
+               {
+                (visibility == true || visibility == "true") &&  <Draggable
+                position={username}
+                onStop={(e, data) => {
+  
+                  setUsername({ ...username, x: 30, y: data.y });
+                  setUpdatedPos(!updatedPos);
+                }}
+                onMouseDown={(e) => {
+                  handleDivClick(e);
+                }}
+              >
+                <div id="certText" style={textName.name.style}>
+                  <span
+                    style={{
+                      backgroundColor: "rgba(255,255,255,0.5)",
+                      color:
+                        textName.name.style.color == "#000"
+                          ? "#000"
+                          : textName.name.style.color,
+                      padding: "2px 5px",
+                    }}
+                  >
+                    {textName.name.text}
+                  </span>
+                </div>
+              </Draggable>
+               }
               </div>
             )}
 
