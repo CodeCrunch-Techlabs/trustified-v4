@@ -282,104 +282,121 @@ export const Web3ContextProvider = (props) => {
   const createBadges = function (data, firebasedata, checked, type) {
     return new Promise(async (resolve, reject) => {
       try {
-        const trustifiedContract = new ethers.Contract(
-          trustifiedContracts[firebasedata.chain].trustified,
-          trustifiedContractAbi.abi,
+        const trustifiedIssuerNFTContract = new ethers.Contract(
+          trustifiedContracts[firebasedata.chain].trustifiedIssuernft,
+          trustifiedIssuerAbi.abi,
           signer
         );
 
-        var transactionMint = await trustifiedContract.bulkMintERC721(
-          data.tokenUris[0],
-          parseInt(firebasedata.quantity),
-          0,
-          checked
-        ); // Bulk Mint NFT collection.
+        const balance = await trustifiedIssuerNFTContract.balanceOf(address);
 
-        await trustifiedContract.once(
-          "TokensMinted",
-          async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait();
-            firebasedata.contract = trustifiedContract.address;
-            firebasedata.userId = userId;
-            firebasedata.eventId = parseInt(Number(eventId));
-            firebasedata.type = type;
-            firebasedata.image = data.tokenUris[0];
-            firebasedata.templateId = "";
-            firebasedata.Nontransferable = checked == true ? "on" : "off";
-            firebasedata.txHash = txm.transactionHash;
-            firebasedata.createdBy = txm.from;
-            firebasedata.platforms = [];
-            await addCollection(firebasedata);
+        if (Number(balance) > 0) {
+          const trustifiedContract = new ethers.Contract(
+            trustifiedContracts[firebasedata.chain].trustified,
+            trustifiedContractAbi.abi,
+            signer
+          );
 
-            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
-            let object = {
-              tokenContract: trustifiedContract.address,
-              claimerAddress: "",
-              ipfsurl: `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`,
-              chain: firebasedata.chain,
-              name: "",
-              type: type,
-              claimed: "No",
-              eventId: parseInt(Number(eventId)),
-              templateId: "",
-              Nontransferable: checked == true ? "on" : "off",
-              templateId: "",
-              title: firebasedata.title,
-              description: firebasedata.description,
-              expireDate: firebasedata.expireDate,
-              issueDate: firebasedata.issueDate,
-              position: "",
-              uploadObj: "",
-              txHash: txm.transactionHash,
-              createdBy: txm.from,
-              platforms: [],
-            };
+          var transactionMint = await trustifiedContract.bulkMintERC721(
+            data.tokenUris[0],
+            parseInt(firebasedata.quantity),
+            0,
+            checked
+          ); // Bulk Mint NFT collection.
 
-            const firebaseObj = {
-              tokenIds: nftTokenIds,
-              eventId: parseInt(Number(eventId)),
-              object: object,
-              type: type,
-            };
+          await trustifiedContract.once(
+            "TokensMinted",
+            async (eventId, tokenIds, issuer) => {
+              let txm = await transactionMint.wait();
+              firebasedata.contract = trustifiedContract.address;
+              firebasedata.userId = userId;
+              firebasedata.eventId = parseInt(Number(eventId));
+              firebasedata.type = type;
+              firebasedata.image = data.tokenUris[0];
+              firebasedata.templateId = "";
+              firebasedata.Nontransferable = checked == true ? "on" : "off";
+              firebasedata.txHash = txm.transactionHash;
+              firebasedata.createdBy = txm.from;
+              firebasedata.platforms = [];
+              await addCollection(firebasedata);
 
-            const createApi = await axios.create({
-              baseURL:
-                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
-            });
-            let createApiResponse = await createApi
-              .post("/create/collector", firebaseObj)
-              .then((res) => {
-                return res;
-              })
-              .catch((error) => {
-                console.log(error);
+              let nftTokenIds = tokenIds.map((token) =>
+                parseInt(Number(token))
+              );
+              let object = {
+                tokenContract: trustifiedContract.address,
+                claimerAddress: "",
+                ipfsurl: `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`,
+                chain: firebasedata.chain,
+                name: "",
+                type: type,
+                claimed: "No",
+                eventId: parseInt(Number(eventId)),
+                templateId: "",
+                Nontransferable: checked == true ? "on" : "off",
+                templateId: "",
+                title: firebasedata.title,
+                description: firebasedata.description,
+                expireDate: firebasedata.expireDate,
+                issueDate: firebasedata.issueDate,
+                position: "",
+                uploadObj: "",
+                txHash: txm.transactionHash,
+                createdBy: txm.from,
+                platforms: [],
+              };
+
+              const firebaseObj = {
+                tokenIds: nftTokenIds,
+                eventId: parseInt(Number(eventId)),
+                object: object,
+                type: type,
+              };
+
+              const createApi = await axios.create({
+                baseURL:
+                  "https://us-central1-trustified-fvm.cloudfunctions.net/api",
               });
-            let obj = {
-              type: type,
-              data: createApiResponse.data,
-            };
-            const api = await axios.create({
-              baseURL:
-                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
-            });
-
-            let response = await api
-              .post("/export/csv", obj)
-              .then((res) => {
-                return res;
-              })
-              .catch((error) => {
-                console.log(error);
+              let createApiResponse = await createApi
+                .post("/create/collector", firebaseObj)
+                .then((res) => {
+                  return res;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              let obj = {
+                type: type,
+                data: createApiResponse.data,
+              };
+              const api = await axios.create({
+                baseURL:
+                  "https://us-central1-trustified-fvm.cloudfunctions.net/api",
               });
-            const blob = new Blob([response.data], { type: "text/csv" });
-            const downloadLink = document.createElement("a");
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = `${firebasedata.title}.csv`;
-            downloadLink.click();
-            toast.success("Badges successfully issued!");
-            resolve({ isResolved: true });
-          }
-        );
+
+              let response = await api
+                .post("/export/csv", obj)
+                .then((res) => {
+                  return res;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              const blob = new Blob([response.data], { type: "text/csv" });
+              const downloadLink = document.createElement("a");
+              downloadLink.href = URL.createObjectURL(blob);
+              downloadLink.download = `${firebasedata.title}.csv`;
+              downloadLink.click();
+              toast.success("Badges successfully issued!");
+              resolve({ isResolved: true });
+            }
+          );
+        } else {
+          return reject({
+            code: "NFT_OWNER",
+            message: "You don't own issuer nft on the selected network!",
+          });
+        }
       } catch (err) {
         return reject(err);
       }
@@ -398,111 +415,128 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
-        const trustifiedContract = new ethers.Contract(
-          trustifiedContracts[formData.chain].trustified,
-          trustifiedContractAbi.abi,
+        const trustifiedIssuerNFTContract = new ethers.Contract(
+          trustifiedContracts[formData.chain].trustifiedIssuernft,
+          trustifiedIssuerAbi.abi,
           signer
         );
 
-        let transactionMint = await trustifiedContract.bulkMintERC721(
-          "",
-          visiblity == true || visiblity == "true"
-            ? parseInt(csvdata.length)
-            : formData.quantity,
-          1,
-          formData.Nontransferable === "on" ? true : false
-        );
+        const balance = await trustifiedIssuerNFTContract.balanceOf(address);
 
-        await trustifiedContract.once(
-          "TokensMinted",
-          async (eventId, tokenIds, issuer) => {
-            let txm = await transactionMint.wait();
-            var eventId = eventId;
-            formData.contract = trustifiedContract.address;
-            formData.userId = userId;
-            formData.eventId = parseInt(Number(eventId));
-            formData.type = type;
-            formData.image = previewUrl ? previewUrl : template.preview;
-            formData.templateId = templateId;
-            formData.txHash = txm.transactionHash;
-            formData.createdBy = issuer;
-            formData.platforms = [];
-            await addCollection(formData);
+        if (Number(balance) > 0) {
+          const trustifiedContract = new ethers.Contract(
+            trustifiedContracts[formData.chain].trustified,
+            trustifiedContractAbi.abi,
+            signer
+          );
 
-            let nftTokenIds = tokenIds.map((token) => parseInt(Number(token)));
+          let transactionMint = await trustifiedContract.bulkMintERC721(
+            "",
+            visiblity == true || visiblity == "true"
+              ? parseInt(csvdata.length)
+              : formData.quantity,
+            1,
+            formData.Nontransferable === "on" ? true : false
+          );
 
-            let object = {
-              tokenContract: trustifiedContract.address,
-              claimerAddress: "",
-              ipfsurl: previewUrl ? previewUrl : "",
-              chain: formData.chain,
-              type: type,
-              claimed: "No",
-              eventId: parseInt(Number(eventId)),
-              templateId: previewUrl ? "" : formData.templateId,
-              Nontransferable: formData.Nontransferable,
-              templateId: "",
-              title: formData.title,
-              description: formData.description,
-              expireDate: formData.expireDate,
-              issueDate: formData.issueDate,
-              position: previewUrl ? position : "",
-              uploadObj: previewUrl ? uploadObj.name : "",
-              txHash: txm.transactionHash,
-              createdBy: txm.from,
-              platforms: [],
-            };
+          await trustifiedContract.once(
+            "TokensMinted",
+            async (eventId, tokenIds, issuer) => {
+              let txm = await transactionMint.wait();
+              var eventId = eventId;
+              formData.contract = trustifiedContract.address;
+              formData.userId = userId;
+              formData.eventId = parseInt(Number(eventId));
+              formData.type = type;
+              formData.image = previewUrl ? previewUrl : template.preview;
+              formData.templateId = templateId;
+              formData.txHash = txm.transactionHash;
+              formData.createdBy = issuer;
+              formData.platforms = [];
+              await addCollection(formData);
 
-            const firebaseObj = {
-              tokenIds: nftTokenIds,
-              type: visiblity == true || visiblity == "true" ? type : "badge",
-              eventId: parseInt(Number(eventId)),
-              csvdata: csvdata,
-              object: object,
-            };
+              let nftTokenIds = tokenIds.map((token) =>
+                parseInt(Number(token))
+              );
 
-            const createApi = await axios.create({
-              baseURL:
-                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
-            });
-            let createApiResponse = await createApi
-              .post("/create/collector", firebaseObj)
-              .then((res) => {
-                return res;
-              })
-              .catch((error) => {
-                console.log(error);
+              let object = {
+                tokenContract: trustifiedContract.address,
+                claimerAddress: "",
+                ipfsurl: previewUrl ? previewUrl : "",
+                chain: formData.chain,
+                type: type,
+                claimed: "No",
+                eventId: parseInt(Number(eventId)),
+                templateId: previewUrl ? "" : formData.templateId,
+                Nontransferable: formData.Nontransferable,
+                templateId: "",
+                title: formData.title,
+                description: formData.description,
+                expireDate: formData.expireDate,
+                issueDate: formData.issueDate,
+                position: previewUrl ? position : "",
+                uploadObj: previewUrl ? uploadObj.name : "",
+                txHash: txm.transactionHash,
+                createdBy: txm.from,
+                platforms: [],
+              };
+
+              const firebaseObj = {
+                tokenIds: nftTokenIds,
+                type: visiblity == true || visiblity == "true" ? type : "badge",
+                eventId: parseInt(Number(eventId)),
+                csvdata: csvdata,
+                object: object,
+              };
+
+              const createApi = await axios.create({
+                baseURL:
+                  "https://us-central1-trustified-fvm.cloudfunctions.net/api",
+              });
+              let createApiResponse = await createApi
+                .post("/create/collector", firebaseObj)
+                .then((res) => {
+                  return res;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+
+              let obj = {
+                type: type,
+                data: createApiResponse.data,
+              };
+
+              const api = await axios.create({
+                baseURL:
+                  "https://us-central1-trustified-fvm.cloudfunctions.net/api",
               });
 
-            let obj = {
-              type: type,
-              data: createApiResponse.data,
-            };
+              let response = await api
+                .post("/export/csv", obj)
+                .then((res) => {
+                  return res;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
 
-            const api = await axios.create({
-              baseURL:
-                "https://us-central1-trustified-fvm.cloudfunctions.net/api",
-            });
+              const blob = new Blob([response.data], { type: "text/csv" });
 
-            let response = await api
-              .post("/export/csv", obj)
-              .then((res) => {
-                return res;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-
-            const blob = new Blob([response.data], { type: "text/csv" });
-
-            const downloadLink = document.createElement("a");
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = `${formData.title}.csv`;
-            downloadLink.click();
-            toast.success("Certificate Successfully issued!");
-            resolve({ isResolved: true });
-          }
-        );
+              const downloadLink = document.createElement("a");
+              downloadLink.href = URL.createObjectURL(blob);
+              downloadLink.download = `${formData.title}.csv`;
+              downloadLink.click();
+              toast.success("Certificate Successfully issued!");
+              resolve({ isResolved: true });
+            }
+          );
+        } else {
+          return reject({
+            code: "NFT_OWNER",
+            message: "You don't own issuer nft on the selected network!",
+          });
+        }
       } catch (err) {
         // console.log(err);
         // toast.error("Something want wrong!!", err);
@@ -874,8 +908,6 @@ export const Web3ContextProvider = (props) => {
             }
           });
 
-          console.log(addresses.length);
-
           if (addresses.length > 0) {
             await switchNetwork(ethers.utils.hexValue(multiChains[i].chainId));
 
@@ -926,9 +958,6 @@ export const Web3ContextProvider = (props) => {
       trustifiedIssuerAbi.abi,
       signer
     );
-
-    console.log(trustifiedIssuerContract);
-
     let isallowed = await trustifiedIssuerContract.isAllowed();
     return isallowed;
   };

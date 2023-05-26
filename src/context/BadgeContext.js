@@ -132,7 +132,7 @@ export const BadgeContextProvider = (props) => {
           })
           .catch((error) => {
             setLoading(false);
-            console.log(error);
+
             console.log(error.code);
             console.log(error.message);
 
@@ -144,6 +144,8 @@ export const BadgeContextProvider = (props) => {
               );
             } else if (error.code == "UNPREDICTABLE_GAS_LIMIT") {
               toast.error("You are not approved! Please contact admin!");
+            } else if ((error.code = "NFT_OWNER")) {
+              toast.error(error.message);
             } else {
               toast.error(error.message);
             }
