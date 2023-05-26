@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   NavLink as RouterLink,
@@ -173,7 +173,16 @@ export default function NavSection({ navConfig, ...other }) {
     path ? !!matchPath({ path, end: false }, pathname) : false;
 
   const web3Context = React.useContext(Web3Context);
-  const { data } = web3Context;
+  const { data, checkAllowList } = web3Context;
+  const [allowed, setAllowed] = useState(false);
+
+  useEffect(() => {
+    const init = async () => {
+      let allowed = await checkAllowList();
+      setAllowed(allowed);
+    };
+    init();
+  }, [data]);
 
   return (
     <Box {...other}>

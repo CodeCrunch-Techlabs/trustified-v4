@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Button,
   Container,
@@ -51,25 +52,37 @@ TabPanel.propTypes = {
 
 const Requests = () => {
   const [requests, setRequests] = React.useState([]);
+  const navigate = useNavigate();
   const web3Context = React.useContext(Web3Context);
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { shortAddress, updateIssuerAccess, updateIssuer } = web3Context;
+  const {
+    shortAddress,
+    updateIssuerAccess,
+    updateIssuer,
+    data,
+    checkAllowList,
+  } = web3Context;
   const { updateStatus, updateStatusLoading, getIssuers, updateIssuerNFT } =
     firebaseContext;
 
   useEffect(() => {
     const init = async () => {
       try {
-        const profiles = query(collection(db, "UserProfile"));
+        let allowed = await checkAllowList();
+        if (allowed) {
+          const profiles = query(collection(db, "UserProfile"));
 
-        const profileSnapshot = await getDocs(profiles);
+          const profileSnapshot = await getDocs(profiles);
 
-        const profileList = profileSnapshot.docs.map((doc) => {
-          let obj = doc?.data();
-          obj.id = doc?.id;
-          return obj;
-        });
-        setRequests(profileList);
+          const profileList = profileSnapshot.docs.map((doc) => {
+            let obj = doc?.data();
+            obj.id = doc?.id;
+            return obj;
+          });
+          setRequests(profileList);
+        } else {
+          navigate("/");
+        }
       } catch (error) {
         console.log(error);
       }

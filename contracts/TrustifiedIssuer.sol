@@ -27,6 +27,10 @@ contract TrustifiedIssuer is ERC721URIStorage {
       _;
     }
 
+    function isAllowed() external view returns(bool){
+        return allowList[msg.sender];
+    }
+
     function createTokens(string memory tokenURI, address[] calldata issuers) external  {
         require(allowList[msg.sender], "Caller is not allowed to create tokens!");
         for(uint256 i = 0; i < issuers.length; i++){

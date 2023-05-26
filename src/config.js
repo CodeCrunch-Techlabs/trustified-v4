@@ -2,16 +2,16 @@ import { ethers } from "ethers";
 
 export const trustifiedContracts = {
   fvmtestnet: {
-    trustified: "0x3dCb4abD4B024688e63e51fA717E2233D20528A9",
-    trustifiedIssuernft: "0xD444CC7FE5C98775Fa7890Ca74Cd3b39eD028502",
+    trustified: "0x81e97081e927337169c5E94981cA5369C1bF2E78",
+    trustifiedIssuernft: "0x268584d176AE97853CDa60DDB02F2E2441913840",
   }, // Testnet
   fvm: {
     trustified: "0xb93F6F074107C4dd6707879874D1C017450898FC",
     trustifiedIssuernft: "",
   }, // Mainnet
   mumbai: {
-    trustified: "0x991B9cCD378096afEd03787E020bA5f7FDA9d393", //v5
-    trustifiedIssuernft: "0xf62398e2fF9Eca3F564e83F06d19941d8c960914",
+    trustified: "0x626A917450fC705CeCbf9407583E8e6D71f57dE3", //v5
+    trustifiedIssuernft: "0xa733055261fA3B9Fb036Fa0665AFDE8985224B00",
     //trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077", v4
   },
   polygon: {
@@ -19,23 +19,23 @@ export const trustifiedContracts = {
     trustifiedIssuernft: "",
   },
   celotestnet: {
-    trustified: "0xF913b6A387e15f0FcDBb1d8ce4c16C34927c0542",
-    trustifiedIssuernft: "0xA5564Fe4AD705cFa5FE159eD7529AA172188Afe9",
+    trustified: "0x9973b43F2BE4Cb8002a589560Da9b824cF05A5C6",
+    trustifiedIssuernft: "0xCecef805A3B80a3cCFC5Ac83EbDa0B52b2Bb50fc",
   },
   celomainnet: {
     trustified: "0xb1D54e85A8e069DE67acaa73b15B1B8c28224Aff",
   },
   arbitrumtestnet: {
-    trustified: "0x5BCdF0e733cF9Ab425f8c285540a0EEC5e5461f2",
-    trustifiedIssuernft: "0x41390b635F19C28cb3dB705dB18e147104587fB0",
+    trustified: "0x27C433Cf7d6Af672F2e67498692C56DA1D314A70",
+    trustifiedIssuernft: "0xF913b6A387e15f0FcDBb1d8ce4c16C34927c0542",
   },
   gnosistestnet: {
     trustified: "",
     trustifiedIssuernft: "",
   },
   ethereumtestnet: {
-    trustified: "0xF16b1872B09E9B7676fd5187d36601f4C6245288",
-    trustifiedIssuernft: "0x27C433Cf7d6Af672F2e67498692C56DA1D314A70",
+    trustified: "0xA151aeF807DdFc0c3B6b38A89195f405c6bc0Ecf",
+    trustifiedIssuernft: "0x9973b43F2BE4Cb8002a589560Da9b824cF05A5C6",
   },
 
   // bsc: {

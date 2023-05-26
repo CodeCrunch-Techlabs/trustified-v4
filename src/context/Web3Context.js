@@ -911,6 +911,28 @@ export const Web3ContextProvider = (props) => {
     }
   };
 
+  const checkAllowList = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+
+    const { chainId } = await provider.getNetwork();
+
+    const selectedNetwork = multiChains.filter(
+      (chain) => chain.chainId == chainId
+    );
+
+    const trustifiedIssuerContract = new ethers.Contract(
+      trustifiedContracts[selectedNetwork[0].value].trustifiedIssuernft,
+      trustifiedIssuerAbi.abi,
+      signer
+    );
+
+    console.log(trustifiedIssuerContract);
+
+    let isallowed = await trustifiedIssuerContract.isAllowed();
+    return isallowed;
+  };
+
   return (
     <Web3Context.Provider
       value={{
@@ -936,6 +958,7 @@ export const Web3ContextProvider = (props) => {
         aLoading,
         switchNetwork,
         updateIssuer,
+        checkAllowList,
       }}
       {...props}
     >

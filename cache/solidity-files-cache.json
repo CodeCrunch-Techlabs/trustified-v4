@@ -177,6 +177,48 @@
         "Counters"
       ]
     },
+    "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
+      "lastModificationDate": 1684832896322,
+      "contentHash": "a8e2d1c30042f64ed89c9d4157eb6cb9",
+      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "ReentrancyGuard"
+      ]
+    },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
       "lastModificationDate": 1684832896298,
       "contentHash": "f7f4f78c31f28534852e5c56000a25af",
@@ -227,10 +269,10 @@
         "ERC721"
       ]
     },
-    "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/security/ReentrancyGuard.sol": {
-      "lastModificationDate": 1684832896322,
-      "contentHash": "a8e2d1c30042f64ed89c9d4157eb6cb9",
-      "sourceName": "@openzeppelin/contracts/security/ReentrancyGuard.sol",
+    "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/utils/Address.sol": {
+      "lastModificationDate": 1684832896262,
+      "contentHash": "f31ad6fc4bbf9c06203987220156a6ba",
+      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
         "version": "0.8.4",
         "settings": {
@@ -263,10 +305,10 @@
       },
       "imports": [],
       "versionPragmas": [
-        "^0.8.0"
+        "^0.8.1"
       ],
       "artifacts": [
-        "ReentrancyGuard"
+        "Address"
       ]
     },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/utils/Context.sol": {
@@ -309,48 +351,6 @@
       ],
       "artifacts": [
         "Context"
-      ]
-    },
-    "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1684832896316,
-      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
-      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "IERC721Receiver"
       ]
     },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
@@ -397,6 +397,48 @@
         "Strings"
       ]
     },
+    "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
+      "lastModificationDate": 1684832896316,
+      "contentHash": "c22d4395e33763de693fd440c6fd10e1",
+      "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
+      "solcConfig": {
+        "version": "0.8.4",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata",
+                "devdoc",
+                "userdoc",
+                "storageLayout",
+                "evm.gasEstimates"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          },
+          "metadata": {
+            "useLiteralContent": true
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "IERC721Receiver"
+      ]
+    },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
       "lastModificationDate": 1684832896315,
       "contentHash": "eb7e61db29f31d88b3c1cef1b063d338",
@@ -439,48 +481,6 @@
       ],
       "artifacts": [
         "IERC721"
-      ]
-    },
-    "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1684832896262,
-      "contentHash": "f31ad6fc4bbf9c06203987220156a6ba",
-      "sourceName": "@openzeppelin/contracts/utils/Address.sol",
-      "solcConfig": {
-        "version": "0.8.4",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata",
-                "devdoc",
-                "userdoc",
-                "storageLayout",
-                "evm.gasEstimates"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          },
-          "metadata": {
-            "useLiteralContent": true
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        "^0.8.1"
-      ],
-      "artifacts": [
-        "Address"
       ]
     },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/node_modules/@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol": {
@@ -700,8 +700,8 @@
       ]
     },
     "/Users/codecrunch/Documents/mansi/Blockchain/Filecoin Virtual Machine/trustified-v4/contracts/TrustifiedIssuer.sol": {
-      "lastModificationDate": 1684904464832,
-      "contentHash": "404012b23a95b52ac5cd8c2b9583e2de",
+      "lastModificationDate": 1685081397647,
+      "contentHash": "4e63d7fbf819c5850970b92f93764926",
       "sourceName": "contracts/TrustifiedIssuer.sol",
       "solcConfig": {
         "version": "0.8.4",
