@@ -2,6 +2,7 @@ import Iconify from "./Iconify";
 
 const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 
+
 const sidebarConfig = [
   // {
   //   title: "Certificates",
@@ -17,12 +18,12 @@ const sidebarConfig = [
     title: "Certificates",
     path: "/dashboard/certificates",
     icon: getIcon("material-symbols:collections-bookmark-outline"),
-  }, 
+  },
   // {
   //   title: "test",
   //   path: "/dashboard/test",
   //   icon: getIcon("material-symbols:collections-bookmark-outline"),
-  // }, 
+  // },
   // {
   //   title: "preview",
   //   path: "/dashboard/preview",

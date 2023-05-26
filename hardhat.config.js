@@ -31,11 +31,6 @@ module.exports = {
       url: "https://api.node.glif.io/rpc/v1",
       accounts: [PRIVATE_KEY],
     },
-
-    mumbai: {
-      url: `https://polygon-mumbai.g.alchemy.com/v2/${process.env.REACT_APP_ALCHEMY_KEY}`,
-      accounts: [PRIVATE_KEY],
-    },
     polygon: {
       url: `https://polygon-rpc.com/`,
       accounts: [MAINNET_PRIVATE_KEY],

@@ -4,7 +4,9 @@ import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 //
 import DashboardNavbar from "./DashboardNavbar";
-import DashboardSidebar from "./DashboardSidebar"; 
+import DashboardSidebar from "./DashboardSidebar";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const APP_BAR_MOBILE = 64;
 const APP_BAR_DESKTOP = 92;

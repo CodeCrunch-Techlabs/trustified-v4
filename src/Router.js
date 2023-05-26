@@ -13,6 +13,7 @@ import DemoTemplate from "./components/template/DemoTemplate";
 import Preview from "./components/template/Preview";
 import BadgeTemplate from "./components/template/BadgeTemplate";
 import MyCollection from "./components/myCollection";
+import Requests from "./components/List/AccessRequests";
 
 export default function Router() {
   return useRoutes([
@@ -47,6 +48,10 @@ export default function Router() {
         {
           path: "badge",
           element: <BadgeTemplate />,
+        },
+        {
+          path: "access",
+          element: <Requests />,
         },
         // {
         //   path: "test",

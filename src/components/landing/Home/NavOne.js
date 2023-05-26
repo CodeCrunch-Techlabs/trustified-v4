@@ -129,14 +129,19 @@ const NavOne = () => {
               </li>
             </ul>
           </div>
+
           <div className="right-side-box">
             &nbsp;&nbsp;
-            <a
-              className="thm-btn header__cta-btn"
-              onClick={() => handleNavigate("/dashboard/certificates")}
-            >
-              <span>Create</span>
-            </a>
+            {(data && data?.verified == 1) || data?.verified == "1" ? (
+              <a
+                className="thm-btn header__cta-btn"
+                onClick={() => handleNavigate("/dashboard/certificates")}
+              >
+                <span>Create</span>
+              </a>
+            ) : (
+              ""
+            )}
             &nbsp;&nbsp;
             {user === null ? (
               <a className="thm-btn header__cta-btn" onClick={connectWallet}>

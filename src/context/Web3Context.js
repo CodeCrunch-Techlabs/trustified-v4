@@ -1,8 +1,14 @@
 import React, { createContext, useEffect, useState } from "react";
 import { collection, db, getDocs, query, where } from "../firebase";
 import { ethers } from "ethers";
-import { chain, chainParams, trustifiedContracts } from "../config";
+import {
+  chain,
+  chainParams,
+  trustifiedContracts,
+  multiChains,
+} from "../config";
 import trustifiedContractAbi from "../abi/Trustified.json";
+import trustifiedIssuerAbi from "../abi/TrustifiedIssuer.json";
 import { toast } from "react-toastify";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import axios from "axios";
@@ -12,6 +18,7 @@ import { NFTStorage, File } from "nft.storage";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Web3 from "web3";
+import { getIssuerMarkleTree } from "../utils/markleTree";
 
 export const Web3Context = createContext(undefined);
 
@@ -28,6 +35,7 @@ export const Web3ContextProvider = (props) => {
   const [claimLoading, setClaimLoading] = useState(false);
   const [claimer, setClaimer] = useState({});
   const [aLoading, setaLoading] = useState(false);
+  const [updateIssuer, setUpdateIssuers] = useState(false);
 
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -138,6 +146,18 @@ export const Web3ContextProvider = (props) => {
       // await issueCredId(issuerName, accounts[0]);
       setAddress(accounts[0]);
       window.localStorage.setItem("address", accounts[0]);
+
+      const q = query(
+        collection(db, "UserProfile"),
+        where("Address", "==", accounts[0]),
+        where("verified", "==", 1)
+      );
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        toast.info("Please make a Request to access!");
+        navigate("/dashboard/profile");
+      }
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {
@@ -837,6 +857,60 @@ export const Web3ContextProvider = (props) => {
     });
   };
 
+  const updateIssuerAccess = async (issuers) => {
+    try {
+      setUpdateIssuers(true);
+
+      for (let i = 0; i < multiChains.length; i++) {
+        if (
+          multiChains[i].value !== "fvm" &&
+          multiChains[i].value !== "polygon" &&
+          multiChains[i].value !== "celomainnet"
+        ) {
+          let addresses = [];
+          await issuers.map((issuer) => {
+            if (issuer.networks[multiChains[i].value].checked) {
+              addresses.push(issuer.Address);
+            }
+          });
+
+          console.log(addresses.length);
+
+          if (addresses.length > 0) {
+            await switchNetwork(ethers.utils.hexValue(multiChains[i].chainId));
+
+            const provider = new ethers.providers.Web3Provider(window.ethereum);
+            const signer = provider.getSigner();
+
+            const trustifiedIssuerContract = new ethers.Contract(
+              trustifiedContracts[multiChains[i].value].trustifiedIssuernft,
+              trustifiedIssuerAbi.abi,
+              signer
+            );
+
+            const airdropIssuerNFT =
+              await trustifiedIssuerContract.createTokens(
+                "https://bafybeibsjdxc4b7p4v46322tx5nrkmemgz6e6ni5mpslmsl6wigwjec4du.ipfs.dweb.link/ItsTrustified.png",
+                addresses
+              );
+            const txanft = await airdropIssuerNFT.wait();
+            if (i == multiChains.length - 1) {
+              setUpdateIssuers(false);
+            }
+          } else {
+            if (i == multiChains.length - 1) {
+              toast.info("Airdroped issuer nfts to all the approved issuers!");
+              setUpdateIssuers(false);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      setUpdateIssuers(false);
+    }
+  };
+
   return (
     <Web3Context.Provider
       value={{
@@ -850,6 +924,7 @@ export const Web3ContextProvider = (props) => {
         loginWithTrustified,
         getFirestoreData,
         claimBadges,
+        updateIssuerAccess,
         claimLoading,
         setUpdate,
         csvData,
@@ -860,6 +935,7 @@ export const Web3ContextProvider = (props) => {
         userId,
         aLoading,
         switchNetwork,
+        updateIssuer,
       }}
       {...props}
     >

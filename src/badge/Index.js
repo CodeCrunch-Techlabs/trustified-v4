@@ -13,10 +13,14 @@ const Index = () => {
 
   const handleNavigate = async () => {
     const add = window.localStorage.getItem("address");
-    const q = query(collection(db, "UserProfile"), where("Address", "==", add));
+    const q = query(
+      collection(db, "UserProfile"),
+      where("Address", "==", add),
+      where("verified", "==", 1)
+    );
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
-      await toast.info("Please create profile first!");
+      await toast.info("Please make a Request to access!");
       navigate("/dashboard/profile");
     } else {
       navigate("/dashboard/badge");
@@ -32,7 +36,7 @@ const Index = () => {
               <div className="cert-coll">
                 <span>Trustified</span>
                 <p>Badges</p>
-              </div> 
+              </div>
               <div>
                 <a className="thm-btn header__cta-btn" onClick={handleNavigate}>
                   <span>

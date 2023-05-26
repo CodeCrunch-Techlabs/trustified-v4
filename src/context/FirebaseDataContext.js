@@ -34,6 +34,7 @@ export const FirebaseDataContextProvider = (props) => {
   const [type, setType] = useState("");
   const [certLoad, setCertLoad] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
+  const [updateStatusLoading, setUpdateLoading] = useState(false);
 
   function createDataCollector(
     claimToken,
@@ -263,8 +264,7 @@ export const FirebaseDataContextProvider = (props) => {
     //   baseURL: "https://trustified-backend.onrender.com/trustified/api",
     // });
     const api = await axios.create({
-      baseURL:
-        "https://us-central1-trustified-fvm.cloudfunctions.net/api",
+      baseURL: "https://us-central1-trustified-fvm.cloudfunctions.net/api",
     });
     let response = await api
       .post("/export/csv", obj)
@@ -481,6 +481,46 @@ export const FirebaseDataContextProvider = (props) => {
     return querySnapshot.data();
   };
 
+  async function updateStatus(data, status) {
+    setUpdateLoading(true);
+    const userRef = doc(db, "UserProfile", data.id);
+    await updateDoc(userRef, {
+      status: status,
+    });
+    setUpdateLoading(false);
+  }
+
+  async function getIssuers() {
+    const q = query(
+      collection(db, "UserProfile"),
+      where("status", "==", "approved"),
+      where("verified", "==", 0)
+    );
+    const querySnapshot = await getDocs(q);
+    let issuers = [];
+    querySnapshot.forEach(async (fire) => {
+      issuers.push(fire.data());
+    });
+    return issuers;
+  }
+
+  async function updateIssuerNFT() {
+    setUpdateLoading(true);
+    const q = query(
+      collection(db, "UserProfile"),
+      where("status", "==", "approved"),
+      where("verified", "==", 0)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (fire) => {
+      const userRef = doc(db, "UserProfile", fire.id);
+      await updateDoc(userRef, {
+        verified: 1,
+      });
+    });
+    setUpdateLoading(false);
+  }
+
   return (
     <firebaseDataContext.Provider
       value={{
@@ -511,6 +551,10 @@ export const FirebaseDataContextProvider = (props) => {
         certLoad,
         exportLoading,
         setCertLoad,
+        updateStatus,
+        getIssuers,
+        updateIssuerNFT,
+        updateStatusLoading,
       }}
       {...props}
     >

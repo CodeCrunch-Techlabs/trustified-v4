@@ -2,8 +2,8 @@ import React from "react";
 import { Box } from "@mui/material";
 
 import Certificates from "./Certificates";
-import { useNavigate } from "react-router-dom"; 
-import AddIcon from "@mui/icons-material/Add"; 
+import { useNavigate } from "react-router-dom";
+import AddIcon from "@mui/icons-material/Add";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { toast } from "react-toastify";
@@ -13,10 +13,14 @@ function Collections() {
 
   const handleClickNavigate = async () => {
     const add = window.localStorage.getItem("address");
-    const q = query(collection(db, "UserProfile"), where("Address", "==", add));
+    const q = query(
+      collection(db, "UserProfile"),
+      where("Address", "==", add),
+      where("verified", "==", 1)
+    );
     const querySnapshot = await getDocs(q);
     if (querySnapshot.empty) {
-      toast.info("Please create profile first!");
+      toast.info("Please make a Request to access!");
       navigate("/dashboard/profile");
     } else {
       navigate("/dashboard/certificate");
@@ -45,7 +49,7 @@ function Collections() {
               <div>
                 <button
                   className="thm-btn header__cta-btn"
-                  onClick={handleClickNavigate} 
+                  onClick={handleClickNavigate}
                 >
                   <span>
                     <AddIcon /> Create Certificates{" "}

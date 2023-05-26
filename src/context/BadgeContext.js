@@ -16,7 +16,6 @@ export const BadgeContextProvider = (props) => {
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
   const [checked, setChecked] = useState(true);
 
-
   const [previewUrl, setPreviewUrl] = useState("");
   const [usernamePos, setUsernamePos] = useState({ x: 112, y: -171 });
 
@@ -62,10 +61,6 @@ export const BadgeContextProvider = (props) => {
   const switchHandler = (event) => {
     setChecked(event.target.checked);
   };
-
-  
-
-
 
   const createBadge = async () => {
     try {
@@ -130,13 +125,16 @@ export const BadgeContextProvider = (props) => {
           },
           labelInfo.formData,
           checked,
-          "badge",
+          "badge"
         )
           .then((response) => {
             setLoading(false);
           })
           .catch((error) => {
             setLoading(false);
+            console.log(error);
+            console.log(error.code);
+            console.log(error.message);
 
             if (error.message == "Internal JSON-RPC error.") {
               toast.error("You don't have enough balance to create Badges!");
@@ -144,6 +142,8 @@ export const BadgeContextProvider = (props) => {
               toast.error(
                 "MetaMask Tx Signature: User denied transaction signature!"
               );
+            } else if (error.code == "UNPREDICTABLE_GAS_LIMIT") {
+              toast.error("You are not approved! Please contact admin!");
             } else {
               toast.error(error.message);
             }
@@ -173,7 +173,6 @@ export const BadgeContextProvider = (props) => {
         setPreviewUrl,
         checked,
         switchHandler,
-
 
         setAutoCompleteData,
       }}
