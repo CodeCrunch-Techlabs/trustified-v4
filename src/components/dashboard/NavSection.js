@@ -190,11 +190,7 @@ export default function NavSection({ navConfig, ...other }) {
         {navConfig.map((item) => (
           <NavItem key={item.title} item={item} active={match} />
         ))}
-        {(data &&
-          Web3.utils.toChecksumAddress(data?.Address) ==
-            "0x61bde2112cf0B16F3E90B86695E6c5d0B2cD9960") ||
-        Web3.utils.toChecksumAddress(data?.Address) ==
-          "0x3Fe0ab910eA2f59D4E7ee7375FA69Acff238B798" ? (
+        {allowed ? (
           <NavItem
             key={"admin"}
             item={{
