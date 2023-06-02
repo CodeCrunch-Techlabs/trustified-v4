@@ -15,10 +15,12 @@ const Index = () => {
     const add = window.localStorage.getItem("address");
     const q = query(
       collection(db, "UserProfile"),
-      where("Address", "==", add),
-      where("verified", "==", 1)
+      where("Address", "==", add)
+      // where("verified", "==", 1)
     );
+
     const querySnapshot = await getDocs(q);
+
     if (querySnapshot.empty) {
       await toast.info("Please make a Request to access!");
       navigate("/dashboard/profile");

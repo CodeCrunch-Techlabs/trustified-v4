@@ -1,20 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
+import { Web3Context } from "../../context/Web3Context";
 import { useNavigate } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import Iconify from "../utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
-import { IconButton } from "@mui/material";
+import { IconButton, Button } from "@mui/material";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { logos, networkURL } from "../../config";
 
 export default function Certificates() {
   const navigate = useNavigate();
+  const web3Context = React.useContext(Web3Context);
+  const { airdropNFTs, airdropLoading } = web3Context;
 
   const fireDataContext = React.useContext(firebaseDataContext);
-  const { getNFTCollections, certificatesData, generateClaimersExcellSheet } =
-    fireDataContext;
+  const {
+    getNFTCollections,
+    certificatesData,
+    generateClaimersExcellSheet,
+    getClaimers,
+  } = fireDataContext;
 
   const [certificates, setCertificates] = React.useState([]);
   const [loadingStates, setLoadingStates] = React.useState(
@@ -33,8 +40,8 @@ export default function Certificates() {
     navigate(`/dashboard/collectors/${id}`, { state: { chain } });
   };
 
-  const getUrl = (chain) => { 
-    const url = networkURL[chain];  
+  const getUrl = (chain) => {
+    const url = networkURL[chain];
     return url;
   };
 
@@ -48,7 +55,7 @@ export default function Certificates() {
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
                 key={index}
               >
-                <div className="card-root" style={{ position: 'relative' }}>
+                <div className="card-root" style={{ position: "relative" }}>
                   <img
                     style={{ cursor: "pointer" }}
                     onClick={() => navigateTo(item.eventId, item.chain)}
@@ -59,21 +66,27 @@ export default function Certificates() {
                     alt=""
                   />
 
-                  <div style={{
-                    position:'absolute',
-                    bottom:'15px',
-                    right:'15px',
-                    backgroundColor: 'rgba(0,0,0,0.1)',
-                    borderRadius: '50%',
-                    width: '30px',
-                    height: '30px',
-                    textAlign: 'center'
-                  }}>
-                    <img style={{
-                      width: '22px',
-                      height: '22px',
-                      marginTop: '-5px'
-                    }} src={`${logos[item.chain]}`} alt="" />
+                  <div
+                    style={{
+                      position: "absolute",
+                      bottom: "15px",
+                      right: "15px",
+                      backgroundColor: "rgba(0,0,0,0.1)",
+                      borderRadius: "50%",
+                      width: "30px",
+                      height: "30px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <img
+                      style={{
+                        width: "22px",
+                        height: "22px",
+                        marginTop: "-5px",
+                      }}
+                      src={`${logos[item.chain]}`}
+                      alt=""
+                    />
                   </div>
 
                   <div className="card-body-cert">
@@ -135,18 +148,34 @@ export default function Certificates() {
                       <p>{item.chain}</p>
                     </div>
                   </div>
-
+                  {item?.mode == "airdrop" && (
+                    <Button
+                      onClick={async (e) => {
+                        let claimers = await getClaimers(
+                          item.eventId,
+                          item.chain
+                        );
+                        await airdropNFTs({
+                          chain: item.chain,
+                          eventId: item.eventId,
+                          claimers: claimers,
+                          type: item.type,
+                        });
+                      }}
+                    >
+                      {airdropLoading ? "Dropping.." : "Airdrop"}
+                    </Button>
+                  )}
                   <div className="card-body-cert d-flex justify-content-center">
                     <a
                       href={`${getUrl(item?.chain)}/${item.txHash}`}
                       target="_blank"
                       rel="noreferrer"
-                      style={{ fontSize: '16px' }}
+                      style={{ fontSize: "16px" }}
                     >
                       View Transaction <OpenInNewIcon fontSize="16" />
                     </a>
                   </div>
-
                 </div>
               </div>
             );

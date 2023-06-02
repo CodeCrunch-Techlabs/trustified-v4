@@ -1,13 +1,12 @@
 import * as React from "react";
-import Paper from "@mui/material/Paper"; 
+import Paper from "@mui/material/Paper";
 
-export default function Certificates({data}) {
+export default function Certificates({ data }) {
   const [certificates, setCertificates] = React.useState([]);
 
-  React.useEffect(() =>{
-    setCertificates(data)
-  },[data])
- 
+  React.useEffect(() => {
+    setCertificates(data);
+  }, [data]);
 
   return (
     <>
@@ -17,10 +16,7 @@ export default function Certificates({data}) {
             <Paper className="certificatesCard">
               <img
                 className="certificate"
-                src={item?.ipfsurl?.replace(
-                  "ipfs://",
-                  "https://nftstorage.link/ipfs/"
-                )}
+                src={item?.ipfsurl}
                 alt={item.name}
               />
 

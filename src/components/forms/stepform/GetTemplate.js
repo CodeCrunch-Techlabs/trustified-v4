@@ -41,7 +41,7 @@ import ToggleButton from "@mui/material/ToggleButton";
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
 import { fbold, fontList, fsize } from "../../../config";
 
-function GetTemplate({ message, visibility }) {
+function GetTemplate({ message }) {
   const value = useContext(NFTStorageContext);
   const [data, setdata] = useState();
   const [username, setUsername] = useState({
@@ -126,7 +126,7 @@ function GetTemplate({ message, visibility }) {
 
   useEffect(() => {
     getImageResolution();
-  }, [width, height,visibility]);
+  }, [width, height]);
 
   async function getImageResolution() {
     if (width >= 1000 || (height >= 700 && width > height)) {
@@ -172,7 +172,7 @@ function GetTemplate({ message, visibility }) {
   useEffect(() => {
     if (selectedElement === "certText") {
       setUsername({ ...username });
-     
+
       value.setUploadObj(textName);
     }
   }, [
@@ -185,7 +185,6 @@ function GetTemplate({ message, visibility }) {
     alignment,
     selectedElement,
     updatedPos,
-    visibility
   ]);
 
   const handleDivClick = (event) => {
@@ -292,7 +291,7 @@ function GetTemplate({ message, visibility }) {
               </Box>
             )}
 
-            {value.previewUrl !== "" && (visibility == true || visibility == "true") && (
+            {value.previewUrl !== "" && (
               <Stack sx={{ my: 2 }} direction="row">
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <FormControl fullWidth>
@@ -409,7 +408,7 @@ function GetTemplate({ message, visibility }) {
                 </Popover>
               </Stack>
             )}
-            {value.previewUrl !== "" &&  (
+            {value.previewUrl !== "" && (
               <Stack direction="row">
                 <Box sx={{ maxWidth: 200, minWidth: 100, m: 1 }}>
                   <TextField
@@ -448,14 +447,11 @@ function GetTemplate({ message, visibility }) {
               </IconButton>
             )}
 
-            {  (visibility == true || visibility == "true") && (
-              <span style={{ marginTop: "40px" }}>
-                Drag your name and put wherever you want to display certificate
-                name
-              </span>
-            )}
-
-            {value.previewUrl &&   (
+            <span style={{ marginTop: "40px" }}>
+              Drag your name, wherever you want if you want to display it on
+              certificate.
+            </span>
+            {value.previewUrl && (
               <div
                 id="certificateX"
                 style={{ width: `${imageWidth}px`, height: `${imageHeight}px` }}
@@ -467,34 +463,31 @@ function GetTemplate({ message, visibility }) {
                   src={value.previewUrl}
                   alt=""
                 />
-               {
-                (visibility == true || visibility == "true") &&  <Draggable
-                position={username}
-                onStop={(e, data) => {
-  
-                  setUsername({ ...username, x: 30, y: data.y });
-                  setUpdatedPos(!updatedPos);
-                }}
-                onMouseDown={(e) => {
-                  handleDivClick(e);
-                }}
-              >
-                <div id="certText" style={textName.name.style}>
-                  <span
-                    style={{
-                      backgroundColor: "rgba(255,255,255,0.5)",
-                      color:
-                        textName.name.style.color == "#000"
-                          ? "#000"
-                          : textName.name.style.color,
-                      padding: "2px 5px",
-                    }}
-                  >
-                    {textName.name.text}
-                  </span>
-                </div>
-              </Draggable>
-               }
+                <Draggable
+                  position={username}
+                  onStop={(e, data) => {
+                    setUsername({ ...username, x: 30, y: data.y });
+                    setUpdatedPos(!updatedPos);
+                  }}
+                  onMouseDown={(e) => {
+                    handleDivClick(e);
+                  }}
+                >
+                  <div id="certText" style={textName.name.style}>
+                    <span
+                      style={{
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                        color:
+                          textName.name.style.color == "#000"
+                            ? "#000"
+                            : textName.name.style.color,
+                        padding: "2px 5px",
+                      }}
+                    >
+                      {textName.name.text}
+                    </span>
+                  </div>
+                </Draggable>
               </div>
             )}
 

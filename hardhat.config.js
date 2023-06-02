@@ -45,7 +45,7 @@ module.exports = {
       chainId: 97,
       accounts: [PRIVATE_KEY],
     },
-    celo: {
+    celotestnet: {
       url: `https://alfajores-forno.celo-testnet.org`,
       accounts: [PRIVATE_KEY],
       chainId: 44787,

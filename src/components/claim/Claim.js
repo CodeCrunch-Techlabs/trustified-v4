@@ -60,8 +60,16 @@ export default function Claim() {
       net = "fvm";
     } else if (network === "mumbai") {
       net = "mumbai";
-    } else if (network === "goerli") {
-      net = "goerli";
+    } else if (network === "polygon") {
+      net = "polygon";
+    } else if (network === "celotestnet") {
+      net = "celotestnet";
+    } else if (network === "celomainnet") {
+      net = "celo";
+    } else if (network === "arbitrumtestnet") {
+      net = "arbitrumtestnet";
+    } else if (network === "ethereumtestnet") {
+      net = "ethereumtestnet";
     } else {
       net = "bsc";
     }
@@ -149,21 +157,6 @@ export default function Claim() {
                     >
                       View Transaction <OpenInNewIcon />
                     </a>
-                    {claimer.status === "Yes" && (
-                      <div className="mt-4">
-                        <button className="thm-btn header__cta-btn">
-                          <span>
-                            Claimed
-                            <Iconify
-                              icon={"material-symbols:done"}
-                              width={30}
-                              height={30}
-                              sx={{ color: "green" }}
-                            />
-                          </span>
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               )}
@@ -172,8 +165,22 @@ export default function Claim() {
         </div>
         <div className="row mt-4">
           <div className="col-12 col-xl-8 col-lg-8 col-md-8 col-sm-10  mx-auto text-center">
-            {claimer?.status === "Yes" ? (
+            {claimer?.mode == "airdrop" ? (
               ""
+            ) : claimer?.status === "Yes" ? (
+              <div className="mt-4">
+                <button className="thm-btn header__cta-btn">
+                  <span>
+                    Claimed
+                    <Iconify
+                      icon={"material-symbols:done"}
+                      width={30}
+                      height={30}
+                      sx={{ color: "green" }}
+                    />
+                  </span>
+                </button>
+              </div>
             ) : (
               <div className="d-flex justify-content-start">
                 <TextField

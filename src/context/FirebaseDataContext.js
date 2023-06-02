@@ -1,17 +1,17 @@
 import { getDoc } from "firebase/firestore";
-import React, { useState, createContext, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import { trustifiedContracts } from "../config";
 
 import {
-  collection,
   addDoc,
+  collection,
   db,
-  updateDoc,
   doc,
-  query,
-  where,
   getDocs,
+  query,
+  updateDoc,
+  where,
 } from "../firebase";
-import Iconify from "../components/utils/Iconify";
 
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -46,7 +46,8 @@ export const FirebaseDataContextProvider = (props) => {
     claimed,
     type,
     Nontransferable,
-    eventId
+    eventId,
+    ipfscid
   ) {
     return {
       claimToken,
@@ -59,6 +60,7 @@ export const FirebaseDataContextProvider = (props) => {
       type,
       Nontransferable,
       eventId,
+      ipfscid,
     };
   }
   function createDataCollection(
@@ -72,7 +74,9 @@ export const FirebaseDataContextProvider = (props) => {
     ipfsUrl,
     chain,
     txHash,
-    createdBy
+    createdBy,
+    mode,
+    ipfscid
   ) {
     return {
       id,
@@ -86,12 +90,15 @@ export const FirebaseDataContextProvider = (props) => {
       chain,
       txHash,
       createdBy,
+      mode,
+      ipfscid,
     };
   }
 
   useEffect(() => {
     getIssuers();
     getNFTCollections();
+    updateCollectoes();
   }, []);
 
   async function addCollection(data) {
@@ -110,6 +117,7 @@ export const FirebaseDataContextProvider = (props) => {
       txHash: data.txHash,
       createdBy: data.createdBy,
       platforms: data.platforms,
+      mode: data.mode,
     };
     setLoading(true);
 
@@ -128,6 +136,7 @@ export const FirebaseDataContextProvider = (props) => {
       txHash: data.txHash,
       createdBy: data.createdBy,
       platforms: data.platforms,
+      mode: data.mode,
     });
 
     setLoading(false);
@@ -168,8 +177,8 @@ export const FirebaseDataContextProvider = (props) => {
     await updateDoc(collectorRef, {
       claimerAddress: data.claimerAddress,
       claimed: data.claimed,
-      ipfsurl: data.ipfsurl,
       txHash: data.txHash,
+      ipfsurl: data.ipfsurl,
     });
   }
 
@@ -209,20 +218,27 @@ export const FirebaseDataContextProvider = (props) => {
       );
 
       const collectorsSnapshot = await getDocs(collectors);
-      collectorsSnapshot.forEach((e) => {
+      collectorsSnapshot.forEach(async (e) => {
         setType(e.data().type);
+        let meta = await axios.get(e.data().ipfsurl);
+
+        var ipfsurl = meta.data.image.replace(
+          "ipfs://",
+          "https://nftstorage.link/ipfs/"
+        );
         arry.push(
           createDataCollector(
             e.data().claimToken,
             e.data().tokenContract,
             e.data().tokenId,
             e.data().claimerAddress,
-            e.data().ipfsurl,
+            ipfsurl,
             e.data().name,
             e.data().claimed,
             e.data().type,
             e.data().Nontransferable,
-            e.data().eventId
+            e.data().eventId,
+            e.data().ipfsurl
           )
         );
       });
@@ -320,26 +336,17 @@ export const FirebaseDataContextProvider = (props) => {
         obj.createdBy = fire.data().createdBy;
         obj.txHash = fire.data().txHash;
         obj.platforms = fire.data().platforms;
+        obj.claimerAddress = fire.data().claimerAddress;
+        obj.mode = fire.data().mode;
 
-        if (fire.data().type == "badge") {
-          let meta = await axios.get(fire.data().ipfsurl);
+        let meta = await axios.get(fire.data().ipfsurl);
 
-          obj.ipfsurl = meta.data.image.replace(
-            "ipfs://",
-            "https://nftstorage.link/ipfs/"
-          );
-          obj.price = meta.data.price;
-        } else if (fire.data().ipfsurl == "") {
-          obj.ipfsurl = "";
-        } else if (fire.data().claimed == "Yes") {
-          let meta = await axios.get(fire.data().ipfsurl);
-          obj.ipfsurl = meta.data.image.replace(
-            "ipfs://",
-            "https://nftstorage.link/ipfs/"
-          );
-        } else {
-          obj.ipfsurl = fire.data().ipfsurl;
-        }
+        obj.ipfsurl = meta.data.image.replace(
+          "ipfs://",
+          "https://nftstorage.link/ipfs/"
+        );
+
+        obj.ipfscid = fire.data().ipfsurl;
 
         obj.expireDate = fire.data().expireDate;
         obj.position = fire.data().position;
@@ -385,41 +392,43 @@ export const FirebaseDataContextProvider = (props) => {
       const snap = await getDocs(qr);
 
       for (const e of snap.docs) {
-        const date = new Date(e.data().issueDate.seconds * 1000);
-        const dd = String(date.getDate()).padStart(2, "0");
-        const mm = String(date.getMonth() + 1).padStart(2, "0");
-        const yyyy = date.getFullYear();
-        const formattedDate = `${mm}/${dd}/${yyyy}`;
-        const imageUrl =
-          e.data().type === "badge"
-            ? `https://nftstorage.link/ipfs/${e.data().image}/metadata.json`
-            : `${e.data().image}`;
+        if (
+          e.data().collectionContract ==
+          trustifiedContracts[e.data().chain].trustified
+        ) {
+          const date = new Date(e.data().issueDate.seconds * 1000);
+          const dd = String(date.getDate()).padStart(2, "0");
+          const mm = String(date.getMonth() + 1).padStart(2, "0");
+          const yyyy = date.getFullYear();
+          const formattedDate = `${mm}/${dd}/${yyyy}`;
 
-        const meta =
-          e.data().type === "badge" ? await axios.get(imageUrl) : null;
-        const data = createDataCollection(
-          e.data().collectionContract,
-          e.data().name,
-          e.data().description,
-          formattedDate,
-          e.data().expireDate,
-          e.data().type,
-          e.data().eventId,
-          e.data().type === "badge"
-            ? meta.data.image.replace(
-                "ipfs://",
-                "https://nftstorage.link/ipfs/"
-              )
-            : imageUrl,
-          e.data().chain,
-          e.data().txHash,
-          e.data().createdBy
-        );
+          let meta = await axios.get(e.data().image);
 
-        if (e.data().type === "badge") {
-          badgesData.push(data);
-        } else {
-          certificates.push(data);
+          var ipfsurl = meta.data.image.replace(
+            "ipfs://",
+            "https://nftstorage.link/ipfs/"
+          );
+
+          const data = createDataCollection(
+            e.data().collectionContract,
+            e.data().name,
+            e.data().description,
+            formattedDate,
+            e.data().expireDate,
+            e.data().type,
+            e.data().eventId,
+            ipfsurl,
+            e.data().chain,
+            e.data().txHash,
+            e.data().createdBy,
+            e.data().mode,
+            e.data().ipfsurl
+          );
+          if (e.data().type === "badge") {
+            badgesData.push(data);
+          } else {
+            certificates.push(data);
+          }
         }
       }
     }
@@ -431,7 +440,7 @@ export const FirebaseDataContextProvider = (props) => {
     let add =
       address == ""
         ? Web3.utils.toChecksumAddress(localStorage.getItem("address"))
-        : address;
+        : Web3.utils.toChecksumAddress(address);
 
     if (add) {
       setCertLoad(true);
@@ -445,15 +454,15 @@ export const FirebaseDataContextProvider = (props) => {
         var obj;
         if (fire.exists) {
           obj = fire.data();
-          const d = await axios.get(fire.data().ipfsurl);
-          obj.ipfsurl = d.data.image.replace(
+
+          let meta = await axios.get(fire.data().ipfsurl);
+
+          obj.ipfsurl = meta.data.image.replace(
             "ipfs://",
             "https://nftstorage.link/ipfs/"
           );
-          // obj.pdf = d.data.pdf.replace(
-          //   "ipfs://",
-          //   "https://nftstorage.link/ipfs/"
-          // );
+
+          obj.ipfscid = fire.data().ipfsurl;
 
           array.push(obj);
         }
@@ -461,6 +470,7 @@ export const FirebaseDataContextProvider = (props) => {
         for (let i = 0; i < array.length; i++) {
           arr[i] = array[i];
         }
+
         setMyCollection(arr);
       });
       setCertLoad(false);
@@ -521,6 +531,54 @@ export const FirebaseDataContextProvider = (props) => {
     setUpdateLoading(false);
   }
 
+  async function updateAirdroppedCollectors(data) {
+    const q = query(
+      collection(db, "Collectors"),
+      where("eventId", "==", data.eventId),
+      where("chain", "==", data.chain)
+    );
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async (fire) => {
+      const userRef = doc(db, "Collectors", fire.id);
+      await updateDoc(userRef, {
+        claimed: "Yes",
+      });
+    });
+  }
+
+  async function updateIpfs(ipfsurl, id) {
+    const userRef = doc(db, "Collections", id);
+    await updateDoc(userRef, {
+      image: ipfsurl,
+    });
+  }
+
+  async function updateCollectoes() {
+    const q = query(collection(db, "Collectors"));
+    const querySnapshot = await getDocs(q);
+    let arr = [];
+    querySnapshot.forEach(async (fire) => {
+      if (!fire.data().ipfsurl.includes("metadata.json")) {
+        arr.push(fire.data());
+        console.log(fire.data().ipfsurl)
+      }
+    });
+    
+  }
+
+  // async function updatedata() {
+  //   setUpdateLoading(true);
+  //   const q = query(collection(db, "Collections"));
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach(async (fire) => {
+  //     const userRef = doc(db, "Collections", fire.id);
+  //     await updateDoc(userRef, {
+  //       mode: "claimurl",
+  //     });
+  //   });
+  //   setUpdateLoading(false);
+  // }
+
   return (
     <firebaseDataContext.Provider
       value={{
@@ -554,7 +612,10 @@ export const FirebaseDataContextProvider = (props) => {
         updateStatus,
         getIssuers,
         updateIssuerNFT,
+        updateAirdroppedCollectors,
+        updateIpfs,
         updateStatusLoading,
+        // updatedata
       }}
       {...props}
     >

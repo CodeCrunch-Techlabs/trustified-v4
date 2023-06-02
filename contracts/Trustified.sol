@@ -22,7 +22,6 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
 
     event TokensCreated(
         uint256 indexed eventId,
-        uint256[] tokenIds,
         address indexed issuer
     );
 
@@ -60,13 +59,6 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         
     }
 
-    struct token {
-        uint256 tokenId;
-        address payable creator;
-        bool nonTransferable;
-        bool mintStatus;
-    }
-
     struct Transaction {
         address to;
         uint amount;
@@ -74,8 +66,10 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint numConfirmations;
     }
 
-    mapping(uint256 => token) private tokens;
+    mapping (uint256 => bool) private nonTransferable;
+    mapping (uint256 => bool) private mintStatus;
     mapping(uint256 => uint256[]) private eventTokens;
+    mapping(uint256 => address) private issuers;
     mapping(uint => mapping(address => bool)) public isConfirmed;
 
     Transaction[] public transactions;
@@ -109,10 +103,10 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
     
     /**
      * @param quantity Number of nft needs to be minted for particular event Id.
-     * @param nonTransferable token should be transferable or nonTransferable.
+     * @param _nonTransferable token should be transferable or nonTransferable.
      */
-    function bulkMintERC721(uint256 quantity, bool nonTransferable)
-        external
+    function bulkMintERC721(uint256 quantity, bool _nonTransferable)
+        public 
         payable
         nonReentrant
     {
@@ -132,19 +126,21 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         for (uint256 i = 0; i < quantity; i++) {
             uint256 tokenId = _tokenIdCounter.current();
             _tokenIdCounter.increment();
-            tokens[tokenId] = token(
-                tokenId,
-                payable(msg.sender),
-                nonTransferable,
-                false
-            );
+            nonTransferable[tokenId] = _nonTransferable;
+            mintStatus[tokenId] = false;
+            issuers[eventId] = msg.sender;
             tokenIds[i] = tokenId;
             eventTokens[eventId].push(tokenId);
         }
         if (tokenIds.length == quantity) {
-            emit TokensCreated(eventId, tokenIds, msg.sender);
+            emit TokensCreated(eventId, msg.sender);
         }
         payable(address(this)).transfer(listingPrice * quantity);
+    }
+
+    function getEventTokens(uint256 eventId) public view returns(uint256[] memory){
+        require(issuers[eventId] == msg.sender, "You are not issuer!");
+        return  eventTokens[eventId];
     }
 
     function _beforeTokenTransfer(
@@ -155,7 +151,7 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
     ) internal virtual override {
         if (from != address(0)) {
             require(
-                tokens[firstTokenId].nonTransferable != true,
+                nonTransferable[firstTokenId] != true,
                 "Not allowed to transfer token"
             );
         }
@@ -172,20 +168,21 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         address to
     ) external {
         require(
-            tokens[tokenId].mintStatus == false,
+            mintStatus[tokenId] == false,
             "This token is already minted!"
         );
         _mint(to, tokenId);
         require(bytes(tokenURI).length > 0, "Token URI must not be empty");
         _setTokenURI(tokenId, tokenURI);
-        tokens[tokenId].mintStatus = true;
+        mintStatus[tokenId] = true;
     }
 
     function airdropnfts(
         address[] calldata wallets,
         uint256 eventId,
-        string calldata tokenURI
+        string[] calldata tokenURIs
     ) external {
+        require(issuers[eventId] == msg.sender, "You are not issuer!");
         require(
             wallets.length == eventTokens[eventId].length,
             "Number of tokenIds and collectors of this event should be same!"
@@ -193,13 +190,13 @@ contract Trustified is ERC721URIStorage, ReentrancyGuard {
         uint256[] memory tokenIds = eventTokens[eventId];
         for (uint256 i = 0; i < tokenIds.length; i++) {
             require(
-                tokens[tokenIds[i]].mintStatus == false,
+                mintStatus[tokenIds[i]] == false,
                 "This token is already minted!"
             );
             _mint(wallets[i], tokenIds[i]);
-            require(bytes(tokenURI).length > 0, "Token URI must not be empty");
-            _setTokenURI(tokenIds[i], tokenURI);
-            tokens[tokenIds[i]].mintStatus = true;
+            require(bytes(tokenURIs[i]).length > 0, "Token URI must not be empty");
+            _setTokenURI(tokenIds[i], tokenURIs[i]);
+             mintStatus[tokenIds[i]] = true;
         }
     }
 

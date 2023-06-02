@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
-import {   TableCell } from "@mui/material";
+import { TableCell } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { Web3Context } from "../../context/Web3Context";
 
 const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
-  const navigate = useNavigate(); 
+  const web3Context = React.useContext(Web3Context);
+  const { shortAddress } = web3Context;
+  const navigate = useNavigate();
   const [image, setImage] = useState("");
 
   useEffect(() => {
@@ -13,48 +15,47 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
       // getUserSMetadata(url);
       getUserSMetadataImg(url);
     }
-  }, [event, url,id, status]); 
+  }, [event, url, id, status]);
 
-  // const getUserSMetadata = async (url) => {
-  //   console.log(url,"url");
-  //   let d = await axios.get(url); 
-  //   const rep = d.data.pdf.replace(
-  //     "ipfs://",
-  //     "https://nftstorage.link/ipfs/"
-  //   );
-  //   setPdf(rep);
-  // };
+  const getUserSMetadataImg = async (url) => {
+    if (type == "certificate") {
+      setImage(url);
+    } else {
+      let d = await axios.get(url);
+      const rep = d.data.image.replace(
+        "ipfs://",
+        "https://nftstorage.link/ipfs/"
+      );
 
-  const getUserSMetadataImg = async (url) => { 
-    let d = await axios.get(url);
-    const rep = d.data.image.replace(
-      "ipfs://",
-      "https://nftstorage.link/ipfs/"
-    );
-    setImage(rep);
+      setImage(rep);
+    }
   };
 
   const handleNavigate = (token) => {
     navigate(`/claim/${token}`);
-  }
- 
+  };
+
   return (
-    <TableCell >
-      {status === 'Yes' && id === "ipfsurl" ?  (
+    <TableCell>
+      {status === "Yes" && id === "ipfsurl" ? (
         <a target="_blank" href={image} rel="noreferrer">
           Preview
         </a>
-      ) : ( 
-        id !== "ipfsurl" && value 
-      )
-      }
+      ) : id == "claimerAddress" ? (
+        shortAddress(value)
+      ) : (
+        id !== "ipfsurl" && value
+      )}
 
-      {
-        status === 'No' && id === "ipfsurl"  && <p style={{ cursor: 'pointer', color: 'dodgerblue' }} onClick={() => handleNavigate(token)}>
+      {status === "No" && id === "ipfsurl" && (
+        <p
+          style={{ cursor: "pointer", color: "dodgerblue" }}
+          onClick={() => handleNavigate(token)}
+        >
           Preview
         </p>
-      }
-    </TableCell >
+      )}
+    </TableCell>
   );
 };
 export default TableRowComponent;

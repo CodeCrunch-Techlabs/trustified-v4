@@ -1,6 +1,5 @@
- 
-import React, { useEffect  } from "react"; 
-import {  Paper } from "@mui/material"; 
+import React, { useEffect } from "react";
+import { Paper } from "@mui/material";
 
 const Badges = ({ data }) => {
   const [badges, setBadges] = React.useState([]);
@@ -17,23 +16,13 @@ const Badges = ({ data }) => {
             <Paper className="badgeCard" sx={{ borderRadius: "2em" }}>
               <img
                 className="badgeItem m-auto m-2"
-                src={item?.ipfsurl?.replace(
-                  "ipfs://",
-                  "https://nftstorage.link/ipfs/"
-                )}
+                src={item?.ipfsurl}
                 alt={item.name}
               />
 
               <span className="badgeDescription"> {item.name}</span>
               <span className="optionspan">
-                <a
-                  target="_blank"
-                  rel="noreferrer"
-                  href={item?.ipfsurl?.replace(
-                    "ipfs://",
-                    "https://nftstorage.link/ipfs/"
-                  )}
-                >
+                <a target="_blank" rel="noreferrer" href={item?.ipfsurl}>
                   Preview
                 </a>
               </span>

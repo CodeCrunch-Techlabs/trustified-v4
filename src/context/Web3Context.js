@@ -6,6 +6,8 @@ import {
   chainParams,
   trustifiedContracts,
   multiChains,
+  networkIds,
+  ipfsDataCollections,
 } from "../config";
 import trustifiedContractAbi from "../abi/Trustified.json";
 import trustifiedIssuerAbi from "../abi/TrustifiedIssuer.json";
@@ -36,6 +38,7 @@ export const Web3ContextProvider = (props) => {
   const [claimer, setClaimer] = useState({});
   const [aLoading, setaLoading] = useState(false);
   const [updateIssuer, setUpdateIssuers] = useState(false);
+  const [airdropLoading, setAirdropLoading] = useState(false);
 
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -49,6 +52,9 @@ export const Web3ContextProvider = (props) => {
     updateCollectors,
     template,
     updateCollectorsForBadges,
+    updateAirdroppedCollectors,
+    claim,
+    updateIpfs,
   } = firebasedatacontext;
 
   useEffect(() => {
@@ -279,9 +285,19 @@ export const Web3ContextProvider = (props) => {
     });
   };
 
-  const createBadges = function (data, firebasedata, checked, type) {
+  const createBadges = function (
+    data,
+    firebasedata,
+    checked,
+    mode,
+    type,
+    csvData
+  ) {
     return new Promise(async (resolve, reject) => {
       try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+
         const trustifiedIssuerNFTContract = new ethers.Contract(
           trustifiedContracts[firebasedata.chain].trustifiedIssuernft,
           trustifiedIssuerAbi.abi,
@@ -298,26 +314,28 @@ export const Web3ContextProvider = (props) => {
           );
 
           var transactionMint = await trustifiedContract.bulkMintERC721(
-            data.tokenUris[0],
-            parseInt(firebasedata.quantity),
-            0,
+            mode == "claimurl"
+              ? parseInt(firebasedata.quantity)
+              : csvData.length,
             checked
           ); // Bulk Mint NFT collection.
 
           await trustifiedContract.once(
-            "TokensMinted",
-            async (eventId, tokenIds, issuer) => {
+            "TokensCreated",
+            async (eventId, issuer) => {
               let txm = await transactionMint.wait();
+              let tokenIds = await trustifiedContract.getEventTokens(eventId);
               firebasedata.contract = trustifiedContract.address;
               firebasedata.userId = userId;
               firebasedata.eventId = parseInt(Number(eventId));
               firebasedata.type = type;
-              firebasedata.image = data.tokenUris[0];
+              firebasedata.image = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
               firebasedata.templateId = "";
               firebasedata.Nontransferable = checked == true ? "on" : "off";
               firebasedata.txHash = txm.transactionHash;
               firebasedata.createdBy = txm.from;
               firebasedata.platforms = [];
+              firebasedata.mode = mode;
               await addCollection(firebasedata);
 
               let nftTokenIds = tokenIds.map((token) =>
@@ -330,9 +348,9 @@ export const Web3ContextProvider = (props) => {
                 chain: firebasedata.chain,
                 name: "",
                 type: type,
+                mode: mode,
                 claimed: "No",
                 eventId: parseInt(Number(eventId)),
-                templateId: "",
                 Nontransferable: checked == true ? "on" : "off",
                 templateId: "",
                 title: firebasedata.title,
@@ -351,12 +369,15 @@ export const Web3ContextProvider = (props) => {
                 eventId: parseInt(Number(eventId)),
                 object: object,
                 type: type,
+                mode: mode,
+                csvData: csvData,
               };
 
               const createApi = await axios.create({
                 baseURL:
                   "https://us-central1-trustified-fvm.cloudfunctions.net/api",
               });
+
               let createApiResponse = await createApi
                 .post("/create/collector", firebaseObj)
                 .then((res) => {
@@ -369,24 +390,26 @@ export const Web3ContextProvider = (props) => {
                 type: type,
                 data: createApiResponse.data,
               };
-              const api = await axios.create({
-                baseURL:
-                  "https://us-central1-trustified-fvm.cloudfunctions.net/api",
-              });
-
-              let response = await api
-                .post("/export/csv", obj)
-                .then((res) => {
-                  return res;
-                })
-                .catch((error) => {
-                  console.log(error);
+              if (mode == "claimurl") {
+                const api = await axios.create({
+                  baseURL:
+                    "https://us-central1-trustified-fvm.cloudfunctions.net/api",
                 });
-              const blob = new Blob([response.data], { type: "text/csv" });
-              const downloadLink = document.createElement("a");
-              downloadLink.href = URL.createObjectURL(blob);
-              downloadLink.download = `${firebasedata.title}.csv`;
-              downloadLink.click();
+
+                let response = await api
+                  .post("/export/csv", obj)
+                  .then((res) => {
+                    return res;
+                  })
+                  .catch((error) => {
+                    console.log(error);
+                  });
+                const blob = new Blob([response.data], { type: "text/csv" });
+                const downloadLink = document.createElement("a");
+                downloadLink.href = URL.createObjectURL(blob);
+                downloadLink.download = `${firebasedata.title}.csv`;
+                downloadLink.click();
+              }
               toast.success("Badges successfully issued!");
               resolve({ isResolved: true });
             }
@@ -411,60 +434,58 @@ export const Web3ContextProvider = (props) => {
     position,
     previewUrl,
     uploadObj,
-    visiblity
+    mode,
+    customeType,
+    tokenURIS
   ) {
     return new Promise(async (resolve, reject) => {
       try {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
         const trustifiedIssuerNFTContract = new ethers.Contract(
           trustifiedContracts[formData.chain].trustifiedIssuernft,
           trustifiedIssuerAbi.abi,
           signer
         );
-
         const balance = await trustifiedIssuerNFTContract.balanceOf(address);
-
         if (Number(balance) > 0) {
           const trustifiedContract = new ethers.Contract(
             trustifiedContracts[formData.chain].trustified,
             trustifiedContractAbi.abi,
             signer
           );
-
-          let transactionMint = await trustifiedContract.bulkMintERC721(
-            "",
-            visiblity == true || visiblity == "true"
-              ? parseInt(csvdata.length)
-              : formData.quantity,
-            1,
+          var transactionMint = await trustifiedContract.bulkMintERC721(
+            csvdata.length > 0 ? parseInt(csvdata.length) : formData.quantity,
             formData.Nontransferable === "on" ? true : false
-          );
-
+          ); // Bulk Mint NFT collection.
           await trustifiedContract.once(
-            "TokensMinted",
-            async (eventId, tokenIds, issuer) => {
+            "TokensCreated",
+            async (eventId, issuer) => {
               let txm = await transactionMint.wait();
               var eventId = eventId;
+              let tokenIds = await trustifiedContract.getEventTokens(eventId);
               formData.contract = trustifiedContract.address;
               formData.userId = userId;
               formData.eventId = parseInt(Number(eventId));
               formData.type = type;
-              formData.image = previewUrl ? previewUrl : template.preview;
+              formData.image = previewUrl
+                ? `https://nftstorage.link/ipfs/${previewUrl}/metadata.json`
+                : template.preview;
               formData.templateId = templateId;
               formData.txHash = txm.transactionHash;
               formData.createdBy = issuer;
               formData.platforms = [];
+              formData.mode = mode;
               await addCollection(formData);
-
               let nftTokenIds = tokenIds.map((token) =>
                 parseInt(Number(token))
               );
-
               let object = {
                 tokenContract: trustifiedContract.address,
                 claimerAddress: "",
-                ipfsurl: previewUrl ? previewUrl : "",
                 chain: formData.chain,
                 type: type,
+                mode: mode,
                 claimed: "No",
                 eventId: parseInt(Number(eventId)),
                 templateId: previewUrl ? "" : formData.templateId,
@@ -483,10 +504,13 @@ export const Web3ContextProvider = (props) => {
 
               const firebaseObj = {
                 tokenIds: nftTokenIds,
-                type: visiblity == true || visiblity == "true" ? type : "badge",
+                type: csvdata.length > 0 ? customeType : "badge",
                 eventId: parseInt(Number(eventId)),
-                csvdata: csvdata,
+                csvData: csvdata,
                 object: object,
+                mode: mode,
+                tokenURIS: tokenURIS,
+                previewUrl: previewUrl,
               };
 
               const createApi = await axios.create({
@@ -501,7 +525,6 @@ export const Web3ContextProvider = (props) => {
                 .catch((error) => {
                   console.log(error);
                 });
-
               let obj = {
                 type: type,
                 data: createApiResponse.data,
@@ -511,7 +534,6 @@ export const Web3ContextProvider = (props) => {
                 baseURL:
                   "https://us-central1-trustified-fvm.cloudfunctions.net/api",
               });
-
               let response = await api
                 .post("/export/csv", obj)
                 .then((res) => {
@@ -520,13 +542,12 @@ export const Web3ContextProvider = (props) => {
                 .catch((error) => {
                   console.log(error);
                 });
-
               const blob = new Blob([response.data], { type: "text/csv" });
-
               const downloadLink = document.createElement("a");
               downloadLink.href = URL.createObjectURL(blob);
               downloadLink.download = `${formData.title}.csv`;
               downloadLink.click();
+
               toast.success("Certificate Successfully issued!");
               resolve({ isResolved: true });
             }
@@ -543,6 +564,59 @@ export const Web3ContextProvider = (props) => {
         return reject(err);
       }
     });
+  };
+
+  const airdropNFTs = async (data) => {
+    const { chain, eventId, claimers, type } = data;
+    console.log(claimers);
+
+    let wallets = claimers.map((claimer) => {
+      return claimer.claimerAddress;
+    });
+
+    let tokenURIs = claimers.map((claimer) => {
+      return `https://nftstorage.link/ipfs/${claimer.ipfscid}/metadata.json`;
+    });
+
+    try {
+      setAirdropLoading(true);
+      const { chainId } = await provider.getNetwork();
+      const selectedNetworkId = networkIds[chain];
+      if (selectedNetworkId && chainId !== selectedNetworkId) {
+        await switchNetwork(ethers.utils.hexValue(selectedNetworkId));
+      }
+
+      const providerlocal = await new ethers.providers.Web3Provider(
+        window.ethereum
+      );
+      const signer = providerlocal.getSigner();
+
+      const trustifiedContract = new ethers.Contract(
+        trustifiedContracts[chain].trustified,
+        trustifiedContractAbi.abi,
+        signer
+      );
+
+      const transactionAirdrop = await trustifiedContract.airdropnfts(
+        wallets,
+        eventId,
+        tokenURIs
+      );
+
+      let txa = await transactionAirdrop.wait();
+      if (txa) {
+        await updateAirdroppedCollectors({
+          chain: chain,
+          eventId: eventId,
+        });
+      }
+      setAirdropLoading(false);
+      toast.success("Successfully Airdroped nfts!");
+    } catch (error) {
+      setAirdropLoading(false);
+      toast.error("Something went wrong! Please try again after some time!");
+      console.log(error);
+    }
   };
 
   const claimCertificate = async (
@@ -686,41 +760,48 @@ export const Web3ContextProvider = (props) => {
     const pdfHeight = height;
     const canvasWidth = pdfWidth * 1;
     const canvasHeight = pdfHeight * 1;
+    var metadata;
+    var update = false;
 
-    var pdfBlob = await html2canvas(input, {
-      allowTaint: true,
-      useCORS: true,
-      width: canvasWidth,
-      height: canvasHeight,
-      scale: 2,
-    }).then(async (canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const imageData = await fetch(imgData).then((r) => r.blob());
-      return { imageData };
-    });
+    if (
+      claimer?.mode == "claimurl" &&
+      (claimer.claimer !== undefined || claimer.claimer !== "")
+    ) {
+      update = true;
+      var pdfBlob = await html2canvas(input, {
+        allowTaint: true,
+        useCORS: true,
+        width: canvasWidth,
+        height: canvasHeight,
+        scale: 2,
+      }).then(async (canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const imageData = await fetch(imgData).then((r) => r.blob());
+        return { imageData };
+      });
 
-    const imageFile = new File(
-      [pdfBlob.imageData],
-      `${
-        claimer?.claimer == undefined
-          ? claimer.title.replace(/ +/g, "")
-          : claimer?.claimer.replace(/ +/g, "")
-      }.png`,
-      {
-        type: "image/png",
-      }
-    );
+      const imageFile = new File(
+        [pdfBlob.imageData],
+        `${
+          claimer?.claimer == undefined
+            ? claimer.title.replace(/ +/g, "")
+            : claimer?.claimer.replace(/ +/g, "")
+        }.png`,
+        {
+          type: "image/png",
+        }
+      );
 
-    const metadata = await client.store({
-      name: claimer?.title,
-      description: claimer?.description,
-      image: imageFile,
-      claimer: claimer?.claimer,
-      eventId: claimer?.eventId,
-      expireDate: claimer?.expireDate,
-      issueDate: claimer?.issueDate,
-    });
-
+      metadata = await client.store({
+        name: claimer?.title,
+        description: claimer?.description,
+        image: imageFile,
+        claimer: claimer?.claimer,
+        eventId: claimer?.eventId,
+        expireDate: claimer?.expireDate,
+        issueDate: claimer?.issueDate,
+      });
+    }
     const q = query(
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
@@ -730,66 +811,35 @@ export const Web3ContextProvider = (props) => {
 
     querySnapshot.forEach(async (fire) => {
       try {
-        if (fire.data().claimerAddress == "") {
-          const trustifiedContract = new ethers.Contract(
-            fire.data().tokenContract,
-            trustifiedContractAbi.abi,
-            signer
-          );
+        const trustifiedContract = new ethers.Contract(
+          fire.data().tokenContract,
+          trustifiedContractAbi.abi,
+          signer
+        );
 
-          let transferTokenTransaction = await trustifiedContract.transferToken(
-            fire.data().tokenContract,
-            claimerAddress,
-            fire.data().tokenId,
-            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
-            1
-          );
+        let transferTokenTransaction = await trustifiedContract.safeMint(
+          update
+            ? `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+            : fire.data().ipfsurl,
+          fire.data().tokenId,
+          claimerAddress
+        );
 
-          const txt = await transferTokenTransaction.wait();
+        const txt = await transferTokenTransaction.wait();
 
-          if (txt) {
-            setClaimer(fire.data());
-            await updateCollectors({
-              id: fire.id,
-              claimerAddress: claimerAddress,
-              claimed: "Yes",
-              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
-              txHash: txt.transactionHash,
-            });
-            toast.success("Certificate Successfully claimed!");
-            setClaimLoading(false);
-          }
-        } else {
-          const trustifiedContract = new ethers.Contract(
-            fire.data().tokenContract,
-            trustifiedContractAbi.abi,
-            signer
-          );
-
-          let transferTokenTransaction = await trustifiedContract.transferToken(
-            address,
-            claimerAddress,
-            fire.data().tokenId,
-            `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
-            1
-          );
-
-          const txt = await transferTokenTransaction.wait();
-
-          if (txt) {
-            setClaimer(fire.data());
-            await updateCollectors({
-              id: fire.id,
-              claimerAddress: claimerAddress,
-              claimed: "Yes",
-              ipfsurl: `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
-              txHash: txt.transactionHash,
-            });
-
-            toast.success("Certificate Successfully claimed!");
-
-            setClaimLoading(false);
-          }
+        if (txt) {
+          setClaimer(fire.data());
+          await updateCollectors({
+            id: fire.id,
+            claimerAddress: claimerAddress,
+            claimed: "Yes",
+            txHash: txt.transactionHash,
+            ipfsurl: update
+              ? `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+              : fire.data().ipfsurl,
+          });
+          toast.success("Certificate Successfully claimed!");
+          setClaimLoading(false);
         }
       } catch (error) {
         setClaimLoading(false);
@@ -819,62 +869,30 @@ export const Web3ContextProvider = (props) => {
 
     querySnapshot.forEach(async (fire) => {
       try {
-        if (fire.data().claimerAddress == "") {
-          const trustifiedContract = new ethers.Contract(
-            fire.data().tokenContract,
-            trustifiedContractAbi.abi,
-            signer
-          );
+        const trustifiedContract = new ethers.Contract(
+          fire.data().tokenContract,
+          trustifiedContractAbi.abi,
+          signer
+        );
 
-          let transferTokenTransaction = await trustifiedContract.transferToken(
-            fire.data().tokenContract,
-            claimerAddress,
-            fire.data().tokenId,
-            "",
-            0
-          );
+        let transferTokenTransaction = await trustifiedContract.safeMint(
+          fire.data().ipfsurl,
+          fire.data().tokenId,
+          claimerAddress
+        );
 
-          const txt = await transferTokenTransaction.wait();
+        const txt = await transferTokenTransaction.wait();
 
-          if (txt) {
-            setClaimer(fire.data());
-            await updateCollectorsForBadges({
-              id: fire.id,
-              claimerAddress: claimerAddress,
-              claimed: "Yes",
-              txHash: txt.transactionHash,
-            });
-            toast.success("Badge Successfully claimed!");
-            setClaimLoading(false);
-          }
-        } else {
-          const trustifiedContract = new ethers.Contract(
-            fire.data().tokenContract,
-            trustifiedContractAbi.abi,
-            signer
-          );
-
-          let transferTokenTransaction = await trustifiedContract.transferToken(
-            address,
-            claimerAddress,
-            fire.data().tokenId,
-            "",
-            0
-          );
-
-          const txt = await transferTokenTransaction.wait();
-
-          if (txt) {
-            setClaimer(fire.data());
-            await updateCollectorsForBadges({
-              id: fire.id,
-              claimerAddress: claimerAddress,
-              claimed: "Yes",
-              txHash: txt.transactionHash,
-            });
-            toast.success("Badge Successfully claimed!");
-            setClaimLoading(false);
-          }
+        if (txt) {
+          setClaimer(fire.data());
+          await updateCollectorsForBadges({
+            id: fire.id,
+            claimerAddress: claimerAddress,
+            claimed: "Yes",
+            txHash: txt.transactionHash,
+          });
+          toast.success("Badge Successfully claimed!");
+          setClaimLoading(false);
         }
       } catch (error) {
         setClaimLoading(false);
@@ -962,6 +980,25 @@ export const Web3ContextProvider = (props) => {
     return isallowed;
   };
 
+  // const testfunction = async () => {
+  //   ipfsDataCollections.map(async (ipfs) => {
+  //     let blob = await fetch(ipfs.image).then((r) => r.blob());
+  //     let metadata = await client.store({
+  //       name: ipfs?.name,
+  //       description: ipfs?.description,
+  //       image: blob,
+  //       claimer: "",
+  //       expireDate: "",
+  //       issueDate: {},
+  //     });
+
+  //     await updateIpfs(
+  //       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+  //       ipfs.id
+  //     );
+  //   });
+  // };
+
   return (
     <Web3Context.Provider
       value={{
@@ -988,6 +1025,9 @@ export const Web3ContextProvider = (props) => {
         switchNetwork,
         updateIssuer,
         checkAllowList,
+        airdropNFTs,
+        // testfunction,
+        airdropLoading,
       }}
       {...props}
     >

@@ -24,14 +24,11 @@ const NavOne = () => {
   const web3Context = React.useContext(Web3Context);
   const {
     connectWallet,
-    loginWithTrustified,
     disconnectWallet,
     update,
     shortAddress,
-    userId,
     data,
     getFirestoreData,
-    aLoading,
   } = web3Context;
 
   const navigate = useNavigate();

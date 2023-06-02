@@ -62,8 +62,13 @@ const Requests = () => {
     data,
     checkAllowList,
   } = web3Context;
-  const { updateStatus, updateStatusLoading, getIssuers, updateIssuerNFT } =
-    firebaseContext;
+  const {
+    updateStatus,
+    updateStatusLoading,
+    getIssuers,
+    updateIssuerNFT,
+    // updatedata,
+  } = firebaseContext;
 
   useEffect(() => {
     const init = async () => {

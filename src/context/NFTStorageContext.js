@@ -8,6 +8,8 @@ import { Web3Context } from "./Web3Context";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import { toast } from "react-toastify";
 import { ethers } from "ethers";
+import axios from "axios";
+import { rejects } from "assert";
 
 export const NFTStorageContext = createContext(undefined);
 
@@ -83,19 +85,63 @@ export const NFTStorageContextProvider = (props) => {
       image: file,
     });
 
-    setIpfsurl(
-      metadata.data.image.href.replace(
-        "ipfs://",
-        "https://nftstorage.link/ipfs/"
-      )
-    );
+    setIpfsurl(metadata.ipnft);
 
     setUploadCert(false);
   };
 
-  const createCertificateNFT = async (visiblity) => {
+  const createCertificateNFT = async (mode, customeType) => {
     try {
+      console.log();
       setUploading(true);
+
+      var tokenURIS = [];
+
+      await Promise.all(
+        csvData.map(async (data) => {
+          if (mode == "airdrop" && csvData[0].name !== undefined) {
+            const input = document.getElementById("certificateX");
+            var inputText = document.getElementById("certText");
+            inputText.innerHTML = data.name;
+
+            const pdfWidth = uploadObj.name.width;
+            const pdfHeight = uploadObj.name.height;
+            const canvasWidth = pdfWidth * 1;
+            const canvasHeight = pdfHeight * 1;
+
+            var pdfBlob = await html2canvas(input, {
+              allowTaint: true,
+              useCORS: true,
+              width: canvasWidth,
+              height: canvasHeight,
+              scale: 2,
+            }).then(async (canvas) => {
+              const imgData = canvas.toDataURL("image/png");
+              const imageData = await fetch(imgData).then((r) => r.blob());
+              return { imageData };
+            });
+
+            const imageFile = new File(
+              [pdfBlob.imageData],
+              `${data.name.replace(/ +/g, "")}.png`,
+              {
+                type: "image/png",
+              }
+            );
+
+            const metadata = await client.store({
+              name: labelInfo.formData.title,
+              description: labelInfo.formData.description,
+              image: imageFile,
+              claimer: data.name,
+              expireDate: labelInfo?.formData.expireDate,
+              issueDate: labelInfo?.formData.issueDate,
+            });
+            tokenURIS.push(metadata.ipnft);
+          }
+        })
+      );
+
       if (ipfsurl) {
         createNftFunction(
           csvData,
@@ -105,7 +151,9 @@ export const NFTStorageContextProvider = (props) => {
           usernamePos,
           ipfsurl,
           uploadObj,
-          visiblity
+          mode,
+          customeType,
+          tokenURIS
         )
           .then((e) => {
             setUploading(false);
@@ -134,7 +182,10 @@ export const NFTStorageContextProvider = (props) => {
           usernamePos,
           ipfsurl,
           uploadObj,
-          visiblity
+          visiblity,
+          mode,
+          customeType,
+          tokenURIS
         )
           .then((res) => {
             setUploading(false);

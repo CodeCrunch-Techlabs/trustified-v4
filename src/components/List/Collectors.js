@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
-import { useParams, useLocation } from "react-router-dom"; 
+import { useParams, useLocation } from "react-router-dom";
 import TableRowComponent from "./TableRow";
 
 function Collectors(props) {
@@ -33,7 +33,7 @@ function Collectors(props) {
 
   useEffect(() => {
     getClaimers(params.token, chain);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.token]);
 
   useEffect(() => {
@@ -55,6 +55,10 @@ function Collectors(props) {
           id: "claimed",
           label: "Claimed",
         },
+        {
+          id: "claimerAddress",
+          label: "Claimer",
+        },
         { id: "tokenId", label: "TokenId" },
         { id: "type", label: "Type" },
       ]);
@@ -75,6 +79,10 @@ function Collectors(props) {
         {
           id: "claimed",
           label: "Claimed",
+        },
+        {
+          id: "claimerAddress",
+          label: "Claimer",
         },
         { id: "tokenId", label: "TokenId" },
         { id: "type", label: "Type" },
@@ -113,21 +121,16 @@ function Collectors(props) {
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
                     return (
-                      <TableRow
-                        key={index}
-                        hover
-                        role="checkbox"
-                        tabIndex={-1} 
-                      >
+                      <TableRow key={index} hover role="checkbox" tabIndex={-1}>
                         {columns.map((column) => {
                           const value = row[column.id];
                           return (
                             <TableRowComponent
-                            key={column.id}
+                              key={column.id}
                               event={params.token}
                               id={column.id}
                               value={value}
-                              url={row.ipfsurl} 
+                              url={row.ipfsurl}
                               index={index}
                               type={type}
                               token={row.claimToken}

@@ -42,7 +42,8 @@ const NewTemplates = () => {
   const [certMessage, setCertMessage] = useState("");
   const [quantityMessage, setquantityMessage] = useState("");
   const [network, setNetwork] = useState("");
-  const [visiblity, setVisibility] = useState(false);
+  const [mode, setMode] = useState("claimurl");
+  const [customeType, setCutomeType] = useState("certificate");
 
   useEffect(() => {
     getUpdateErrors();
@@ -98,27 +99,7 @@ const NewTemplates = () => {
         setActiveStep((prevActiveStep) => prevActiveStep + 1);
       }
     } else if (activeStep === 1) {
-      if (visiblity == true || visiblity == "true") {
-        if (formdatavalue.csvData.length === 0) {
-          setCsvMessage("Please upload CSV file");
-          setquantityMessage("");
-        } else {
-          setCsvMessage("");
-          setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        }
-      } else {
-        if (
-          formdata.quantity === 0 ||
-          formdata.quantity === "0" ||
-          formdata.quantity === ""
-        ) {
-          setCsvMessage("");
-          setquantityMessage("Please Enter quantity!");
-        } else {
-          setquantityMessage("");
-          setActiveStep((prevActiveStep) => prevActiveStep + 1);
-        }
-      }
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
     }
   };
 
@@ -133,7 +114,7 @@ const NewTemplates = () => {
         return;
       } else {
         setCertMessage("");
-        formdatavalue.createCertificateNFT(visiblity);
+        formdatavalue.createCertificateNFT(mode, customeType);
       }
     }
   };
@@ -174,11 +155,14 @@ const NewTemplates = () => {
                   <GetChain
                     message={csvMessage}
                     quantityMessage={quantityMessage}
-                    visiblity={visiblity}
-                    setVisibility={(value) => setVisibility(value)}
+                    mode={mode}
+                    setMode={(value) => setMode(value)}
+                    setCustomeType={(val) => {
+                      setCutomeType(val);
+                    }}
                   />
                 )}
-                {activeStep === 2 && <GetTemplate message={certMessage} visibility={visiblity} />}
+                {activeStep === 2 && <GetTemplate message={certMessage} />}
                 <Box sx={{ mb: 2, mt: 3 }}>
                   <div>
                     {index === steps.length - 1 ? (
