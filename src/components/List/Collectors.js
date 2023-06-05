@@ -15,6 +15,7 @@ function Collectors(props) {
   const params = useParams();
   const { state } = useLocation();
   const chain = state?.chain;
+  const collectionContract = state?.collectionContract
   const fireDataContext = React.useContext(firebaseDataContext);
   const { claim, getClaimers, type } = fireDataContext;
   const [page, setPage] = React.useState(0);
@@ -32,7 +33,7 @@ function Collectors(props) {
   };
 
   useEffect(() => {
-    getClaimers(params.token, chain);
+    getClaimers(params.token, chain, collectionContract);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [params.token]);
 
@@ -123,6 +124,7 @@ function Collectors(props) {
                     return (
                       <TableRow key={index} hover role="checkbox" tabIndex={-1}>
                         {columns.map((column) => {
+                         
                           const value = row[column.id];
                           return (
                             <TableRowComponent

@@ -28,8 +28,10 @@ const Badges = () => {
     Array(badges.length).fill(false)
   );
 
-  const navigateTo = (id, chain) => {
-    navigate(`/dashboard/collectors/${id}`, { state: { chain } });
+  const navigateTo = (id, chain, collectionContract) => {
+    navigate(`/dashboard/collectors/${id}`, {
+      state: { chain, collectionContract },
+    });
   };
 
   useEffect(() => {
@@ -37,7 +39,14 @@ const Badges = () => {
   }, []);
 
   useEffect(() => {
-    setBadges(badgesData);
+    const compareDates = (a, b) => {
+      const dateA = new Date(a.issueDate);
+      const dateB = new Date(b.issueDate);
+      return dateB - dateA; // Sort in descending order (recent dates first)
+    };
+
+    let badges = badgesData.sort(compareDates);
+    setBadges(badges);
   }, [badgesData]);
 
   const getUrl = (chain) => {
@@ -55,11 +64,18 @@ const Badges = () => {
                 key={index}
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
               >
+           
                 <div className="badge-root" style={{ position: "relative" }}>
                   <div className="fact-one__single">
                     <div className="fact-one__inner">
                       <img
-                        onClick={() => navigateTo(item.eventId, item.chain)}
+                        onClick={() =>
+                          navigateTo(
+                            item.eventId,
+                            item.chain,
+                            item.collectionContract
+                          )
+                        }
                         style={{ cursor: "pointer" }}
                         src={
                           item?.ipfsUrl
@@ -104,58 +120,63 @@ const Badges = () => {
                     color="primary"
                     variant="outlined"
                   />
-                  <div className="badge-footer mt-2">
-                    {loadingStates[index] ? (
-                      <CircularProgress />
-                    ) : (
-                      <Tooltip title="Download CSV" arrow>
-                        <Button
-                          onClick={async (e) => {
-                            const newLoadingStates = [...loadingStates];
-                            newLoadingStates[index] = true;
-                            setLoadingStates(newLoadingStates);
-                            e.stopPropagation();
-                            await generateClaimersExcellSheet(
-                              item.eventId,
-                              item.name,
-                              "badge",
-                              item.chain
-                            );
-                            newLoadingStates[index] = false;
-                            setLoadingStates(newLoadingStates);
-                          }}
-                          endIcon={
-                            <Iconify
-                              icon="eva:download-outline"
-                              width={30}
-                              height={30}
-                              style={{ cursor: "pointer" }}
-                            />
-                          }
-                        >
-                          Download
-                        </Button>
-                      </Tooltip>
-                    )}
-                  </div>
 
-                  {item?.mode == "airdrop" && (
-                    <Button
-                      onClick={async (e) => {
-                        let claimers = await getClaimers(
-                          item.eventId,
-                          item.chain
-                        );
-                        await airdropNFTs({
-                          chain: item.chain,
-                          eventId: item.eventId,
-                          claimers: claimers,
-                          type: item.type,
-                        });
-                      }}
-                    >
-                      {airdropLoading ? "Dropping.." : "Airdrop"}
-                    </Button>
+                  {item?.mode == "airdrop" ? (
+                    <div className="badge-footer mt-2">
+                      <Button
+                        onClick={async (e) => {
+                          let claimers = await getClaimers(
+                            item.eventId,
+                            item.chain,
+                            item.collectionContract
+                          );
+                          await airdropNFTs({
+                            chain: item.chain,
+                            eventId: item.eventId,
+                            claimers: claimers,
+                            type: item.type,
+                          });
+                        }}
+                      >
+                        {airdropLoading ? "Dropping.." : "Airdrop"}
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="badge-footer mt-2">
+                      {loadingStates[index] ? (
+                        <CircularProgress />
+                      ) : (
+                        <Tooltip title="Download CSV" arrow>
+                          <Button
+                            onClick={async (e) => {
+                              const newLoadingStates = [...loadingStates];
+                              newLoadingStates[index] = true;
+                              setLoadingStates(newLoadingStates);
+                              e.stopPropagation();
+                              await generateClaimersExcellSheet(
+                                item.eventId,
+                                item.name,
+                                "badge",
+                                item.chain,
+                                item.collectionContract
+                              );
+                              newLoadingStates[index] = false;
+                              setLoadingStates(newLoadingStates);
+                            }}
+                            endIcon={
+                              <Iconify
+                                icon="eva:download-outline"
+                                width={30}
+                                height={30}
+                                style={{ cursor: "pointer" }}
+                              />
+                            }
+                          >
+                            Download
+                          </Button>
+                        </Tooltip>
+                      )}
+                    </div>
                   )}
 
                   <div className="d-flex justify-content-center">

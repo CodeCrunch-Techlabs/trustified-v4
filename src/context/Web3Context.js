@@ -7,7 +7,6 @@ import {
   trustifiedContracts,
   multiChains,
   networkIds,
-  ipfsDataCollections,
 } from "../config";
 import trustifiedContractAbi from "../abi/Trustified.json";
 import trustifiedIssuerAbi from "../abi/TrustifiedIssuer.json";
@@ -55,6 +54,7 @@ export const Web3ContextProvider = (props) => {
     updateAirdroppedCollectors,
     claim,
     updateIpfs,
+    getCollectors,
   } = firebasedatacontext;
 
   useEffect(() => {
@@ -336,6 +336,8 @@ export const Web3ContextProvider = (props) => {
               firebasedata.createdBy = txm.from;
               firebasedata.platforms = [];
               firebasedata.mode = mode;
+            
+              
               await addCollection(firebasedata);
 
               let nftTokenIds = tokenIds.map((token) =>
@@ -390,26 +392,24 @@ export const Web3ContextProvider = (props) => {
                 type: type,
                 data: createApiResponse.data,
               };
-              if (mode == "claimurl") {
-                const api = await axios.create({
-                  baseURL:
-                    "https://us-central1-trustified-fvm.cloudfunctions.net/api",
-                });
+              const api = await axios.create({
+                baseURL:
+                  "https://us-central1-trustified-fvm.cloudfunctions.net/api",
+              });
 
-                let response = await api
-                  .post("/export/csv", obj)
-                  .then((res) => {
-                    return res;
-                  })
-                  .catch((error) => {
-                    console.log(error);
-                  });
-                const blob = new Blob([response.data], { type: "text/csv" });
-                const downloadLink = document.createElement("a");
-                downloadLink.href = URL.createObjectURL(blob);
-                downloadLink.download = `${firebasedata.title}.csv`;
-                downloadLink.click();
-              }
+              let response = await api
+                .post("/export/csv", obj)
+                .then((res) => {
+                  return res;
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              const blob = new Blob([response.data], { type: "text/csv" });
+              const downloadLink = document.createElement("a");
+              downloadLink.href = URL.createObjectURL(blob);
+              downloadLink.download = `${firebasedata.title}.csv`;
+              downloadLink.click();
               toast.success("Badges successfully issued!");
               resolve({ isResolved: true });
             }
@@ -501,10 +501,11 @@ export const Web3ContextProvider = (props) => {
                 createdBy: txm.from,
                 platforms: [],
               };
+            
 
               const firebaseObj = {
                 tokenIds: nftTokenIds,
-                type: csvdata.length > 0 ? customeType : "badge",
+                type: csvdata.length > 0 ? customeType : "certi",
                 eventId: parseInt(Number(eventId)),
                 csvData: csvdata,
                 object: object,
@@ -917,11 +918,12 @@ export const Web3ContextProvider = (props) => {
         if (
           multiChains[i].value !== "fvm" &&
           multiChains[i].value !== "polygon" &&
-          multiChains[i].value !== "celomainnet"
+          multiChains[i].value !== "celomainnet" &&
+          multiChains[i].value !== "fvmtestnet"
         ) {
           let addresses = [];
           await issuers.map((issuer) => {
-            if (issuer.networks[multiChains[i].value].checked) {
+            if (issuer.networks !== undefined && issuer.networks[multiChains[i].value].checked) {
               addresses.push(issuer.Address);
             }
           });
@@ -980,24 +982,33 @@ export const Web3ContextProvider = (props) => {
     return isallowed;
   };
 
-  // const testfunction = async () => {
-  //   ipfsDataCollections.map(async (ipfs) => {
-  //     let blob = await fetch(ipfs.image).then((r) => r.blob());
-  //     let metadata = await client.store({
-  //       name: ipfs?.name,
-  //       description: ipfs?.description,
-  //       image: blob,
-  //       claimer: "",
-  //       expireDate: "",
-  //       issueDate: {},
-  //     });
+  const testfunction = async () => {
+    let data = await getCollectors();
+    let startIndex = 0;
+    var batch;
+    while (startIndex < data.length) {
+      batch = data.slice(startIndex, startIndex + 10); // Extract the current batch of data
 
-  //     await updateIpfs(
-  //       `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
-  //       ipfs.id
-  //     );
-  //   });
-  // };
+      startIndex += 10; // Move the starting index to the next batch
+    }
+    console.log(batch, "batch");
+    batch.map(async (ipfs, index) => {
+      let blob = await fetch(ipfs.ipfsurl).then((r) => r.blob());
+      let metadata = await client.store({
+        name: ipfs?.title,
+        description: ipfs?.description,
+        image: blob,
+        claimer: ipfs.name ? ipfs.name : "",
+        expireDate: "",
+        issueDate: {},
+      });
+
+      await updateIpfs(
+        `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
+        ipfs.id
+      );
+    });
+  };
 
   return (
     <Web3Context.Provider
@@ -1026,7 +1037,7 @@ export const Web3ContextProvider = (props) => {
         updateIssuer,
         checkAllowList,
         airdropNFTs,
-        // testfunction,
+        testfunction,
         airdropLoading,
       }}
       {...props}

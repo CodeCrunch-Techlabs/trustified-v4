@@ -33,11 +33,18 @@ export default function Certificates() {
   }, []);
 
   React.useEffect(() => {
-    setCertificates(certificatesData);
+    const compareDates = (a, b) => {
+      const dateA = new Date(a.issueDate);
+      const dateB = new Date(b.issueDate);
+      return dateB - dateA; // Sort in descending order (recent dates first)
+    };
+
+   let certificates = certificatesData.sort(compareDates);
+    setCertificates(certificates)
   }, [certificatesData]);
 
-  const navigateTo = (id, chain) => {
-    navigate(`/dashboard/collectors/${id}`, { state: { chain } });
+  const navigateTo = (id, chain, collectionContract) => {
+    navigate(`/dashboard/collectors/${id}`, { state: { chain, collectionContract } });
   };
 
   const getUrl = (chain) => {
@@ -55,10 +62,11 @@ export default function Certificates() {
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
                 key={index}
               >
+
                 <div className="card-root" style={{ position: "relative" }}>
                   <img
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigateTo(item.eventId, item.chain)}
+                    onClick={() => navigateTo(item.eventId, item.chain, item.collectionContract)}
                     src={
                       item?.ipfsUrl ? item?.ipfsUrl : "/images/placeholder.jpg"
                     }
@@ -96,7 +104,7 @@ export default function Certificates() {
                       </div>
                       {loadingStates[index] ? (
                         <CircularProgress />
-                      ) : (
+                      ) : item?.mode == "claimurl" ? (
                         <div>
                           <Tooltip
                             title="Download CSV"
@@ -113,7 +121,8 @@ export default function Certificates() {
                                   item.eventId,
                                   item.name,
                                   "certificate",
-                                  item.chain
+                                  item.chain,
+                                  item.collectionContract
                                 );
                                 newLoadingStates[index] = false;
                                 setLoadingStates(newLoadingStates);
@@ -130,7 +139,23 @@ export default function Certificates() {
                             </IconButton>
                           </Tooltip>
                         </div>
-                      )}
+                      ) : <Button
+                      onClick={async (e) => {
+                        let claimers = await getClaimers(
+                          item.eventId,
+                          item.chain,
+                          item.collectionContract
+                        );
+                        await airdropNFTs({
+                          chain: item.chain,
+                          eventId: item.eventId,
+                          claimers: claimers,
+                          type: item.type,
+                        });
+                      }}
+                    >
+                      {airdropLoading ? "Dropping.." : "Airdrop"}
+                    </Button> }
                     </div>
                   </div>
                   <p className="card-p">{item.description}</p>
@@ -148,24 +173,7 @@ export default function Certificates() {
                       <p>{item.chain}</p>
                     </div>
                   </div>
-                  {item?.mode == "airdrop" && (
-                    <Button
-                      onClick={async (e) => {
-                        let claimers = await getClaimers(
-                          item.eventId,
-                          item.chain
-                        );
-                        await airdropNFTs({
-                          chain: item.chain,
-                          eventId: item.eventId,
-                          claimers: claimers,
-                          type: item.type,
-                        });
-                      }}
-                    >
-                      {airdropLoading ? "Dropping.." : "Airdrop"}
-                    </Button>
-                  )}
+                 
                   <div className="card-body-cert d-flex justify-content-center">
                     <a
                       href={`${getUrl(item?.chain)}/${item.txHash}`}

@@ -157,10 +157,10 @@ function GetChain({ message, quantityMessage, mode, setMode, setCustomeType }) {
                           };
                         })
                         .filter((row) => row.address !== "");
-                      setCustomeType("badge");
+                      setCustomeType("certi");
                     } else {
                       result = [];
-                      setCustomeType("badge");
+                      setCustomeType("certi");
                     }
 
                     await setCsvData(result);

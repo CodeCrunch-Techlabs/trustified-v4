@@ -76,7 +76,8 @@ export const FirebaseDataContextProvider = (props) => {
     txHash,
     createdBy,
     mode,
-    ipfscid
+    ipfscid,
+    collectionContract
   ) {
     return {
       id,
@@ -92,13 +93,14 @@ export const FirebaseDataContextProvider = (props) => {
       createdBy,
       mode,
       ipfscid,
+      collectionContract
     };
   }
 
   useEffect(() => {
     getIssuers();
     getNFTCollections();
-    updateCollectoes();
+    // getCollectors();
   }, []);
 
   async function addCollection(data) {
@@ -207,41 +209,52 @@ export const FirebaseDataContextProvider = (props) => {
     }
   }
 
-  async function getClaimers(eventId, chain) {
+  async function getClaimers(eventId, chain, collectionContract) {
     const arry = [];
     try {
+
+  
       setLoading(true);
       const collectors = query(
         collection(db, "Collectors"),
         where("eventId", "==", parseInt(eventId)),
-        where("chain", "==", chain)
+        where("chain", "==", chain),
+        where("tokenContract", "==", collectionContract)
       );
+     
 
       const collectorsSnapshot = await getDocs(collectors);
-      collectorsSnapshot.forEach(async (e) => {
-        setType(e.data().type);
-        let meta = await axios.get(e.data().ipfsurl);
 
-        var ipfsurl = meta.data.image.replace(
+      for (const fire of collectorsSnapshot.docs) {
+        setType(fire.data().type);
+
+        console.log(fire.data())
+
+        let meta = await axios.get(fire.data().ipfsurl);
+
+        var ipfsurl = await meta.data.image.replace(
           "ipfs://",
           "https://nftstorage.link/ipfs/"
         );
+
         arry.push(
           createDataCollector(
-            e.data().claimToken,
-            e.data().tokenContract,
-            e.data().tokenId,
-            e.data().claimerAddress,
+            fire.data().claimToken,
+            fire.data().tokenContract,
+            fire.data().tokenId,
+            fire.data().claimerAddress,
             ipfsurl,
-            e.data().name,
-            e.data().claimed,
-            e.data().type,
-            e.data().Nontransferable,
-            e.data().eventId,
-            e.data().ipfsurl
+            fire.data().name,
+            fire.data().claimed,
+            fire.data().type,
+            fire.data().Nontransferable,
+            fire.data().eventId,
+            fire.data().ipfsurl
           )
         );
-      });
+        
+      }
+
       setClaim(arry);
       setLoading(false);
       return arry;
@@ -251,9 +264,9 @@ export const FirebaseDataContextProvider = (props) => {
     }
   }
 
-  async function generateClaimersExcellSheet(eventId, eventTitle, type, chain) {
+  async function generateClaimersExcellSheet(eventId, eventTitle, type, chain, collectionContract) {
     setExportLoading(true);
-    let claimers = await getClaimers(eventId, chain);
+    let claimers = await getClaimers(eventId, chain,collectionContract);
     var arr = [];
     for (let i = 0; i < claimers.length; i++) {
       if (type == "badge") {
@@ -312,6 +325,8 @@ export const FirebaseDataContextProvider = (props) => {
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach(async (fire) => {
+
+      
         var obj = {};
 
         const template =
@@ -392,44 +407,49 @@ export const FirebaseDataContextProvider = (props) => {
       const snap = await getDocs(qr);
 
       for (const e of snap.docs) {
-        if (
-          e.data().collectionContract ==
-          trustifiedContracts[e.data().chain].trustified
-        ) {
-          const date = new Date(e.data().issueDate.seconds * 1000);
-          const dd = String(date.getDate()).padStart(2, "0");
-          const mm = String(date.getMonth() + 1).padStart(2, "0");
-          const yyyy = date.getFullYear();
-          const formattedDate = `${mm}/${dd}/${yyyy}`;
+        // console.log(e.data(),"dasndnsan")
+        // if (
+        //   e.data().collectionContract ==
+        //   trustifiedContracts[e.data().chain].trustified
+        // ) {
+        const date = new Date(e.data().issueDate.seconds * 1000);
+        const dd = String(date.getDate()).padStart(2, "0");
+        const mm = String(date.getMonth() + 1).padStart(2, "0");
+        const yyyy = date.getFullYear();
+        const formattedDate = `${mm}/${dd}/${yyyy}`;
 
-          let meta = await axios.get(e.data().image);
+        let meta = await axios.get(e.data().image);
 
-          var ipfsurl = meta.data.image.replace(
-            "ipfs://",
-            "https://nftstorage.link/ipfs/"
-          );
+        var ipfsurl = meta.data.image.replace(
+          "ipfs://",
+          "https://nftstorage.link/ipfs/"
+        );
 
-          const data = createDataCollection(
-            e.data().collectionContract,
-            e.data().name,
-            e.data().description,
-            formattedDate,
-            e.data().expireDate,
-            e.data().type,
-            e.data().eventId,
-            ipfsurl,
-            e.data().chain,
-            e.data().txHash,
-            e.data().createdBy,
-            e.data().mode,
-            e.data().ipfsurl
-          );
-          if (e.data().type === "badge") {
-            badgesData.push(data);
-          } else {
-            certificates.push(data);
-          }
+        const data = createDataCollection(
+          e.id,
+          e.data().name,
+          e.data().description,
+          formattedDate,
+          e.data().expireDate,
+          e.data().type,
+          e.data().eventId,
+          ipfsurl,
+          e.data().chain,
+          e.data().txHash,
+          e.data().createdBy,
+          e.data().mode,
+          e.data().image,
+          e.data().collectionContract,
+        );
+
+
+
+        if (e.data().type === "badge") {
+          badgesData.push(data);
+        } else {
+          certificates.push(data);
         }
+        // }
       }
     }
     setBadgesData(badgesData);
@@ -547,37 +567,26 @@ export const FirebaseDataContextProvider = (props) => {
   }
 
   async function updateIpfs(ipfsurl, id) {
-    const userRef = doc(db, "Collections", id);
+    const userRef = doc(db, "Collectors", id);
     await updateDoc(userRef, {
-      image: ipfsurl,
+      ipfsurl: ipfsurl,
     });
   }
 
-  async function updateCollectoes() {
+  async function getCollectors() {
     const q = query(collection(db, "Collectors"));
     const querySnapshot = await getDocs(q);
     let arr = [];
     querySnapshot.forEach(async (fire) => {
       if (!fire.data().ipfsurl.includes("metadata.json")) {
-        arr.push(fire.data());
-        console.log(fire.data().ipfsurl)
+        let obj = fire.data();
+        obj.id = fire.id;
+        arr.push(obj);
       }
     });
-    
-  }
 
-  // async function updatedata() {
-  //   setUpdateLoading(true);
-  //   const q = query(collection(db, "Collections"));
-  //   const querySnapshot = await getDocs(q);
-  //   querySnapshot.forEach(async (fire) => {
-  //     const userRef = doc(db, "Collections", fire.id);
-  //     await updateDoc(userRef, {
-  //       mode: "claimurl",
-  //     });
-  //   });
-  //   setUpdateLoading(false);
-  // }
+    return arr;
+  }
 
   return (
     <firebaseDataContext.Provider
@@ -614,8 +623,8 @@ export const FirebaseDataContextProvider = (props) => {
         updateIssuerNFT,
         updateAirdroppedCollectors,
         updateIpfs,
+        getCollectors,
         updateStatusLoading,
-        // updatedata
       }}
       {...props}
     >

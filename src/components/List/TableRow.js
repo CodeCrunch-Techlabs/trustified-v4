@@ -18,17 +18,7 @@ const TableRowComponent = ({ id, value, url, event, type, token, status }) => {
   }, [event, url, id, status]);
 
   const getUserSMetadataImg = async (url) => {
-    if (type == "certificate") {
-      setImage(url);
-    } else {
-      let d = await axios.get(url);
-      const rep = d.data.image.replace(
-        "ipfs://",
-        "https://nftstorage.link/ipfs/"
-      );
-
-      setImage(rep);
-    }
+    setImage(url);
   };
 
   const handleNavigate = (token) => {
