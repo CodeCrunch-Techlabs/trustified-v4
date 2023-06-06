@@ -569,7 +569,7 @@ export const Web3ContextProvider = (props) => {
 
   const airdropNFTs = async (data) => {
     const { chain, eventId, claimers, type } = data;
-    console.log(claimers);
+
 
     let wallets = claimers.map((claimer) => {
       return claimer.claimerAddress;
@@ -991,7 +991,7 @@ export const Web3ContextProvider = (props) => {
 
       startIndex += 10; // Move the starting index to the next batch
     }
-    console.log(batch, "batch");
+
     batch.map(async (ipfs, index) => {
       let blob = await fetch(ipfs.ipfsurl).then((r) => r.blob());
       let metadata = await client.store({

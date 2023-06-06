@@ -60,14 +60,14 @@ export const logos = {
   mumbai: "/assets/logo/mumbai.png",
   polygon: "/assets/logo/mumbai.png",
   ether: "/assets/logo/ethereum.png",
-  celo: "/assets/logo/celo.png",
+  celotestnet: "/assets/logo/celo.png",
   celomainnet: "/assets/logo/celo.png",
   fvm: "/assets/logo/fvm.png",
   fvmtestnet: "/assets/logo/fvm.png",
   gnosis: "/assets/logo/gnosis.png",
   arbitrum: "/assets/logo/arbitrum.png",
   bsc: "/assets/logo/bsc.png",
-};
+};  
 
 export const networkURL = {
   fvm: "https://filfox.info/en/tx",

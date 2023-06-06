@@ -228,7 +228,7 @@ export const FirebaseDataContextProvider = (props) => {
       for (const fire of collectorsSnapshot.docs) {
         setType(fire.data().type);
 
-        console.log(fire.data())
+     
 
         let meta = await axios.get(fire.data().ipfsurl);
 
@@ -467,10 +467,13 @@ export const FirebaseDataContextProvider = (props) => {
       var array = [];
       const q = query(
         collection(db, "Collectors"),
-        where("claimerAddress", "==", add)
+        where("claimerAddress", "==", add),
+        where("claimed","==","Yes")
+
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (fire) => {
+
         var obj;
         if (fire.exists) {
           obj = fire.data();

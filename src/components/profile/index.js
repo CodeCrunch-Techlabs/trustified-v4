@@ -206,7 +206,7 @@ function User() {
       setUpdate(!update);
       toast.success("Requested Access successfully!!");
     } else {
-      console.log(profileData, "p");
+
       querySnapshot.forEach((fire) => {
         const data = {
           Name: profileData.name !== "" ? profileData.name : fire.data().Name,
