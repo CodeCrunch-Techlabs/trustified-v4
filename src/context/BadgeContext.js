@@ -11,7 +11,7 @@ export const BadgeContextProvider = (props) => {
   const [csvData, setCsvData] = React.useState([]);
   const [loading, setLoading] = useState(false);
   const web3Context = React.useContext(Web3Context);
-  const { createBadges, testfunction } = web3Context;
+  const { createBadges } = web3Context;
   const NFT_STORAGE_TOKEN = process.env.REACT_APP_NFT_STORAGE_TOKEN;
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
   const [checked, setChecked] = useState(true);

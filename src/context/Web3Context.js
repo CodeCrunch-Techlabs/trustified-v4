@@ -52,9 +52,8 @@ export const Web3ContextProvider = (props) => {
     template,
     updateCollectorsForBadges,
     updateAirdroppedCollectors,
+    updateAirdropStatus,
     claim,
-    updateIpfs,
-    getCollectors,
   } = firebasedatacontext;
 
   useEffect(() => {
@@ -336,8 +335,8 @@ export const Web3ContextProvider = (props) => {
               firebasedata.createdBy = txm.from;
               firebasedata.platforms = [];
               firebasedata.mode = mode;
-            
-              
+              firebasedata.airdropstatus = false;
+
               await addCollection(firebasedata);
 
               let nftTokenIds = tokenIds.map((token) =>
@@ -476,6 +475,7 @@ export const Web3ContextProvider = (props) => {
               formData.createdBy = issuer;
               formData.platforms = [];
               formData.mode = mode;
+              formData.airdropstatus = false;
               await addCollection(formData);
               let nftTokenIds = tokenIds.map((token) =>
                 parseInt(Number(token))
@@ -501,7 +501,6 @@ export const Web3ContextProvider = (props) => {
                 createdBy: txm.from,
                 platforms: [],
               };
-            
 
               const firebaseObj = {
                 tokenIds: nftTokenIds,
@@ -568,8 +567,7 @@ export const Web3ContextProvider = (props) => {
   };
 
   const airdropNFTs = async (data) => {
-    const { chain, eventId, claimers, type } = data;
-
+    const { chain, eventId, claimers, type, id } = data;
 
     let wallets = claimers.map((claimer) => {
       return claimer.claimerAddress;
@@ -610,6 +608,7 @@ export const Web3ContextProvider = (props) => {
           chain: chain,
           eventId: eventId,
         });
+        await updateAirdropStatus(id);
       }
       setAirdropLoading(false);
       toast.success("Successfully Airdroped nfts!");
@@ -923,7 +922,10 @@ export const Web3ContextProvider = (props) => {
         ) {
           let addresses = [];
           await issuers.map((issuer) => {
-            if (issuer.networks !== undefined && issuer.networks[multiChains[i].value].checked) {
+            if (
+              issuer.networks !== undefined &&
+              issuer.networks[multiChains[i].value].checked
+            ) {
               addresses.push(issuer.Address);
             }
           });
@@ -982,34 +984,6 @@ export const Web3ContextProvider = (props) => {
     return isallowed;
   };
 
-  const testfunction = async () => {
-    let data = await getCollectors();
-    let startIndex = 0;
-    var batch;
-    while (startIndex < data.length) {
-      batch = data.slice(startIndex, startIndex + 10); // Extract the current batch of data
-
-      startIndex += 10; // Move the starting index to the next batch
-    }
-
-    batch.map(async (ipfs, index) => {
-      let blob = await fetch(ipfs.ipfsurl).then((r) => r.blob());
-      let metadata = await client.store({
-        name: ipfs?.title,
-        description: ipfs?.description,
-        image: blob,
-        claimer: ipfs.name ? ipfs.name : "",
-        expireDate: "",
-        issueDate: {},
-      });
-
-      await updateIpfs(
-        `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`,
-        ipfs.id
-      );
-    });
-  };
-
   return (
     <Web3Context.Provider
       value={{
@@ -1037,7 +1011,6 @@ export const Web3ContextProvider = (props) => {
         updateIssuer,
         checkAllowList,
         airdropNFTs,
-        testfunction,
         airdropLoading,
       }}
       {...props}

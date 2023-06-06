@@ -64,7 +64,6 @@ const Badges = () => {
                 key={index}
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
               >
-           
                 <div className="badge-root" style={{ position: "relative" }}>
                   <div className="fact-one__single">
                     <div className="fact-one__inner">
@@ -121,8 +120,9 @@ const Badges = () => {
                     variant="outlined"
                   />
 
-                  {item?.mode == "airdrop" ? (
+                  {item?.mode == "airdrop" && item?.airdropstatus == false ? (
                     <div className="badge-footer mt-2">
+                      {console.log(item)}
                       <Button
                         onClick={async (e) => {
                           let claimers = await getClaimers(
@@ -135,6 +135,7 @@ const Badges = () => {
                             eventId: item.eventId,
                             claimers: claimers,
                             type: item.type,
+                            id: item.id,
                           });
                         }}
                       >
@@ -158,6 +159,7 @@ const Badges = () => {
                                 item.name,
                                 "badge",
                                 item.chain,
+                                item.mode,
                                 item.collectionContract
                               );
                               newLoadingStates[index] = false;

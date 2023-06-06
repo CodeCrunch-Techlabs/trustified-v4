@@ -39,12 +39,14 @@ export default function Certificates() {
       return dateB - dateA; // Sort in descending order (recent dates first)
     };
 
-   let certificates = certificatesData.sort(compareDates);
-    setCertificates(certificates)
+    let certificates = certificatesData.sort(compareDates);
+    setCertificates(certificates);
   }, [certificatesData]);
 
   const navigateTo = (id, chain, collectionContract) => {
-    navigate(`/dashboard/collectors/${id}`, { state: { chain, collectionContract } });
+    navigate(`/dashboard/collectors/${id}`, {
+      state: { chain, collectionContract },
+    });
   };
 
   const getUrl = (chain) => {
@@ -62,11 +64,16 @@ export default function Certificates() {
                 className="col-lg-4 col-sm-6 col-12 col-xl-4 col-md-4"
                 key={index}
               >
-
                 <div className="card-root" style={{ position: "relative" }}>
                   <img
                     style={{ cursor: "pointer" }}
-                    onClick={() => navigateTo(item.eventId, item.chain, item.collectionContract)}
+                    onClick={() =>
+                      navigateTo(
+                        item.eventId,
+                        item.chain,
+                        item.collectionContract
+                      )
+                    }
                     src={
                       item?.ipfsUrl ? item?.ipfsUrl : "/images/placeholder.jpg"
                     }
@@ -102,60 +109,70 @@ export default function Certificates() {
                       <div>
                         <h4 className="">{item.name}</h4>
                       </div>
-                      {loadingStates[index] ? (
-                        <CircularProgress />
-                      ) : item?.mode == "claimurl" ? (
-                        <div>
-                          <Tooltip
-                            title="Download CSV"
-                            arrow
-                            style={{ alignItems: "baseline" }}
+
+                      {item?.mode == "airdrop" &&
+                      item?.airdropstatus == false ? (
+                        <div className="badge-footer mt-2">
+                          <Button
+                            onClick={async (e) => {
+                              let claimers = await getClaimers(
+                                item.eventId,
+                                item.chain,
+                                item.collectionContract
+                              );
+                              await airdropNFTs({
+                                chain: item.chain,
+                                eventId: item.eventId,
+                                claimers: claimers,
+                                type: item.type,
+                                id: item.id,
+                              });
+                            }}
                           >
-                            <IconButton
-                              onClick={async (e) => {
-                                const newLoadingStates = [...loadingStates];
-                                newLoadingStates[index] = true;
-                                setLoadingStates(newLoadingStates);
-                                e.stopPropagation();
-                                await generateClaimersExcellSheet(
-                                  item.eventId,
-                                  item.name,
-                                  "certificate",
-                                  item.chain,
-                                  item.collectionContract
-                                );
-                                newLoadingStates[index] = false;
-                                setLoadingStates(newLoadingStates);
-                              }}
-                              color="primary"
-                              component="label"
-                            >
-                              <Iconify
-                                icon="eva:download-outline"
-                                width={20}
-                                height={20}
-                                style={{ cursor: "pointer" }}
-                              />
-                            </IconButton>
-                          </Tooltip>
+                            {airdropLoading ? "Dropping.." : "Airdrop"}
+                          </Button>
                         </div>
-                      ) : <Button
-                      onClick={async (e) => {
-                        let claimers = await getClaimers(
-                          item.eventId,
-                          item.chain,
-                          item.collectionContract
-                        );
-                        await airdropNFTs({
-                          chain: item.chain,
-                          eventId: item.eventId,
-                          claimers: claimers,
-                          type: item.type,
-                        });
-                      }}
-                    >
-                      {airdropLoading ? "Dropping.." : "Airdrop"}
-                    </Button> }
+                      ) : (
+                        <div className="badge-footer mt-2">
+                          {loadingStates[index] ? (
+                            <CircularProgress />
+                          ) : (
+                            <Tooltip
+                              title="Download CSV"
+                              arrow
+                              style={{ alignItems: "baseline" }}
+                            >
+                              <IconButton
+                                onClick={async (e) => {
+                                  const newLoadingStates = [...loadingStates];
+                                  newLoadingStates[index] = true;
+                                  setLoadingStates(newLoadingStates);
+                                  e.stopPropagation();
+                                  await generateClaimersExcellSheet(
+                                    item.eventId,
+                                    item.name,
+                                    "certificate",
+                                    item.chain,
+                                    item.mode,
+                                    item.collectionContract
+                                  );
+                                  newLoadingStates[index] = false;
+                                  setLoadingStates(newLoadingStates);
+                                }}
+                                color="primary"
+                                component="label"
+                              >
+                                <Iconify
+                                  icon="eva:download-outline"
+                                  width={20}
+                                  height={20}
+                                  style={{ cursor: "pointer" }}
+                                />
+                              </IconButton>
+                            </Tooltip>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                   <p className="card-p">{item.description}</p>
@@ -173,7 +190,7 @@ export default function Certificates() {
                       <p>{item.chain}</p>
                     </div>
                   </div>
-                 
+
                   <div className="card-body-cert d-flex justify-content-center">
                     <a
                       href={`${getUrl(item?.chain)}/${item.txHash}`}

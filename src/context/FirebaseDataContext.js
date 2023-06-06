@@ -77,7 +77,8 @@ export const FirebaseDataContextProvider = (props) => {
     createdBy,
     mode,
     ipfscid,
-    collectionContract
+    collectionContract,
+    airdropstatus
   ) {
     return {
       id,
@@ -93,14 +94,14 @@ export const FirebaseDataContextProvider = (props) => {
       createdBy,
       mode,
       ipfscid,
-      collectionContract
+      collectionContract,
+      airdropstatus,
     };
   }
 
   useEffect(() => {
     getIssuers();
     getNFTCollections();
-    // getCollectors();
   }, []);
 
   async function addCollection(data) {
@@ -120,6 +121,7 @@ export const FirebaseDataContextProvider = (props) => {
       createdBy: data.createdBy,
       platforms: data.platforms,
       mode: data.mode,
+      airdropstatus: data.airdropstatus,
     };
     setLoading(true);
 
@@ -139,6 +141,7 @@ export const FirebaseDataContextProvider = (props) => {
       createdBy: data.createdBy,
       platforms: data.platforms,
       mode: data.mode,
+      airdropstatus: data.airdropstatus,
     });
 
     setLoading(false);
@@ -212,8 +215,6 @@ export const FirebaseDataContextProvider = (props) => {
   async function getClaimers(eventId, chain, collectionContract) {
     const arry = [];
     try {
-
-  
       setLoading(true);
       const collectors = query(
         collection(db, "Collectors"),
@@ -221,14 +222,11 @@ export const FirebaseDataContextProvider = (props) => {
         where("chain", "==", chain),
         where("tokenContract", "==", collectionContract)
       );
-     
 
       const collectorsSnapshot = await getDocs(collectors);
 
       for (const fire of collectorsSnapshot.docs) {
         setType(fire.data().type);
-
-     
 
         let meta = await axios.get(fire.data().ipfsurl);
 
@@ -252,7 +250,6 @@ export const FirebaseDataContextProvider = (props) => {
             fire.data().ipfsurl
           )
         );
-        
       }
 
       setClaim(arry);
@@ -264,20 +261,55 @@ export const FirebaseDataContextProvider = (props) => {
     }
   }
 
-  async function generateClaimersExcellSheet(eventId, eventTitle, type, chain, collectionContract) {
+  async function generateClaimersExcellSheet(
+    eventId,
+    eventTitle,
+    type,
+    chain,
+    mode,
+    collectionContract
+  ) {
     setExportLoading(true);
-    let claimers = await getClaimers(eventId, chain,collectionContract);
+    let claimers = await getClaimers(eventId, chain, collectionContract);
     var arr = [];
     for (let i = 0; i < claimers.length; i++) {
       if (type == "badge") {
-        arr.push({
-          ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
-        });
+        if (mode == "claimurl") {
+          arr.push({
+            ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
+          });
+        } else {
+          arr.push({
+            address: claimers[i].claimerAddress,
+            ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
+          });
+        }
       } else {
-        arr.push({
-          Name: claimers[i].name,
-          ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
-        });
+        if (mode == "claimurl") {
+          if (claimers[i].name == "") {
+            arr.push({
+              ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
+            });
+          } else {
+            arr.push({
+              Name: claimers[i].name,
+              ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
+            });
+          }
+        } else {
+          if (claimers[i].name == "") {
+            arr.push({
+              address: claimers[i].claimerAddress,
+              ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
+            });
+          } else {
+            arr.push({
+              Name: claimers[i].name,
+              address: claimers[i].claimerAddress,
+              ClaimUrl: `https://trustified.xyz/claim/${claimers[i].claimToken}`,
+            });
+          }
+        }
       }
     }
     let obj = {
@@ -325,8 +357,6 @@ export const FirebaseDataContextProvider = (props) => {
       const querySnapshot = await getDocs(q);
 
       querySnapshot.forEach(async (fire) => {
-
-      
         var obj = {};
 
         const template =
@@ -407,11 +437,6 @@ export const FirebaseDataContextProvider = (props) => {
       const snap = await getDocs(qr);
 
       for (const e of snap.docs) {
-        // console.log(e.data(),"dasndnsan")
-        // if (
-        //   e.data().collectionContract ==
-        //   trustifiedContracts[e.data().chain].trustified
-        // ) {
         const date = new Date(e.data().issueDate.seconds * 1000);
         const dd = String(date.getDate()).padStart(2, "0");
         const mm = String(date.getMonth() + 1).padStart(2, "0");
@@ -440,16 +465,14 @@ export const FirebaseDataContextProvider = (props) => {
           e.data().mode,
           e.data().image,
           e.data().collectionContract,
+          e.data().airdropstatus
         );
-
-
 
         if (e.data().type === "badge") {
           badgesData.push(data);
         } else {
           certificates.push(data);
         }
-        // }
       }
     }
     setBadgesData(badgesData);
@@ -468,12 +491,10 @@ export const FirebaseDataContextProvider = (props) => {
       const q = query(
         collection(db, "Collectors"),
         where("claimerAddress", "==", add),
-        where("claimed","==","Yes")
-
+        where("claimed", "==", "Yes")
       );
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach(async (fire) => {
-
         var obj;
         if (fire.exists) {
           obj = fire.data();
@@ -569,26 +590,11 @@ export const FirebaseDataContextProvider = (props) => {
     });
   }
 
-  async function updateIpfs(ipfsurl, id) {
-    const userRef = doc(db, "Collectors", id);
+  async function updateAirdropStatus(id) {
+    const userRef = doc(db, "Collections", id);
     await updateDoc(userRef, {
-      ipfsurl: ipfsurl,
+      airdropstatus: true,
     });
-  }
-
-  async function getCollectors() {
-    const q = query(collection(db, "Collectors"));
-    const querySnapshot = await getDocs(q);
-    let arr = [];
-    querySnapshot.forEach(async (fire) => {
-      if (!fire.data().ipfsurl.includes("metadata.json")) {
-        let obj = fire.data();
-        obj.id = fire.id;
-        arr.push(obj);
-      }
-    });
-
-    return arr;
   }
 
   return (
@@ -625,8 +631,7 @@ export const FirebaseDataContextProvider = (props) => {
         getIssuers,
         updateIssuerNFT,
         updateAirdroppedCollectors,
-        updateIpfs,
-        getCollectors,
+        updateAirdropStatus,
         updateStatusLoading,
       }}
       {...props}
