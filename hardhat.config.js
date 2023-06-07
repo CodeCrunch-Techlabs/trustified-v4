@@ -18,12 +18,12 @@ module.exports = {
       runs: 10000,
     },
   },
-  defaultNetwork: "hyperspace",
+  defaultNetwork: "calibration",
   networks: {
     hardhat: {},
-    hyperspace: {
-      chainId: 3141,
-      url: "https://api.hyperspace.node.glif.io/rpc/v1",
+    calibration: {
+      chainId: 314159,
+      url: "https://api.calibration.node.glif.io/rpc/v1 ",
       accounts: [PRIVATE_KEY],
     },
     fvm: {

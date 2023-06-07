@@ -66,10 +66,10 @@ function User() {
       checked: false,
     },
     fvmtestnet: {
-      label: "FVM Testnet(Hyperspace)",
+      label: "FVM Testnet(Calibration)",
       value: "fvmtestnet",
       image: "/assets/filecoin.png",
-      chainId: 3141,
+      chainId: 314159,
       priority: 1,
       checked: false,
     },

@@ -914,48 +914,40 @@ export const Web3ContextProvider = (props) => {
       setUpdateIssuers(true);
 
       for (let i = 0; i < multiChains.length; i++) {
-        if (
-          multiChains[i].value !== "fvm" &&
-          multiChains[i].value !== "polygon" &&
-          multiChains[i].value !== "celomainnet" &&
-          multiChains[i].value !== "fvmtestnet"
-        ) {
-          let addresses = [];
-          await issuers.map((issuer) => {
-            if (
-              issuer.networks !== undefined &&
-              issuer.networks[multiChains[i].value].checked
-            ) {
-              addresses.push(issuer.Address);
-            }
-          });
+        let addresses = [];
+        await issuers.map((issuer) => {
+          if (
+            issuer.networks !== undefined &&
+            issuer.networks[multiChains[i].value].checked
+          ) {
+            addresses.push(issuer.Address);
+          }
+        });
 
-          if (addresses.length > 0) {
-            await switchNetwork(ethers.utils.hexValue(multiChains[i].chainId));
+        if (addresses.length > 0) {
+          await switchNetwork(ethers.utils.hexValue(multiChains[i].chainId));
 
-            const provider = new ethers.providers.Web3Provider(window.ethereum);
-            const signer = provider.getSigner();
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const signer = provider.getSigner();
 
-            const trustifiedIssuerContract = new ethers.Contract(
-              trustifiedContracts[multiChains[i].value].trustifiedIssuernft,
-              trustifiedIssuerAbi.abi,
-              signer
-            );
+          const trustifiedIssuerContract = new ethers.Contract(
+            trustifiedContracts[multiChains[i].value].trustifiedIssuernft,
+            trustifiedIssuerAbi.abi,
+            signer
+          );
 
-            const airdropIssuerNFT =
-              await trustifiedIssuerContract.createTokens(
-                "https://bafybeibsjdxc4b7p4v46322tx5nrkmemgz6e6ni5mpslmsl6wigwjec4du.ipfs.dweb.link/ItsTrustified.png",
-                addresses
-              );
-            const txanft = await airdropIssuerNFT.wait();
-            if (i == multiChains.length - 1) {
-              setUpdateIssuers(false);
-            }
-          } else {
-            if (i == multiChains.length - 1) {
-              toast.info("Airdroped issuer nfts to all the approved issuers!");
-              setUpdateIssuers(false);
-            }
+          const airdropIssuerNFT = await trustifiedIssuerContract.createTokens(
+            "https://bafybeibsjdxc4b7p4v46322tx5nrkmemgz6e6ni5mpslmsl6wigwjec4du.ipfs.dweb.link/ItsTrustified.png",
+            addresses
+          );
+          const txanft = await airdropIssuerNFT.wait();
+          if (i == multiChains.length - 1) {
+            setUpdateIssuers(false);
+          }
+        } else {
+          if (i == multiChains.length - 1) {
+            toast.info("Airdroped issuer nfts to all the approved issuers!");
+            setUpdateIssuers(false);
           }
         }
       }

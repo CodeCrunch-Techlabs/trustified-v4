@@ -2,8 +2,8 @@ import { ethers } from "ethers";
 
 export const trustifiedContracts = {
   fvmtestnet: {
-    trustified: "0x164262560566Cc30eFD1e67ce363fF7F3f9FC941",
-    trustifiedIssuernft: "0x6c7aE2f26C0a97C8F6287369fc69aB9eB09fB03a",
+    trustified: "0x23da8a4aDfB35006927715A21599FD7f0820805A",
+    trustifiedIssuernft: "0x06a8fa03F246adCC8D1Ce4f3A8f8323125A51b1a",
   }, // Testnet
   fvm: {
     trustified: "0xb93F6F074107C4dd6707879874D1C017450898FC",
@@ -44,7 +44,7 @@ export const trustifiedContracts = {
 };
 
 export const chain = {
-  3141: "fvmtestnet",
+  314159: "fvmtestnet",
   314: "fvm",
   80001: "mumbai",
   137: "polygon",
@@ -67,11 +67,11 @@ export const logos = {
   gnosis: "/assets/logo/gnosis.png",
   arbitrum: "/assets/logo/arbitrum.png",
   bsc: "/assets/logo/bsc.png",
-};  
+};
 
 export const networkURL = {
   fvm: "https://filfox.info/en/tx",
-  fvmtestnet: "https://hyperspace.filfox.info/en/tx",
+  fvmtestnet: "https://calibration.filfox.info/en/tx",
   mumbai: "https://mumbai.polygonscan.com/tx",
   polygon: "https://polygonscan.com/tx",
   celotestnet: "https://alfajores-blockscout.celo-testnet.org/tx",
@@ -84,7 +84,7 @@ export const networkURL = {
 
 export const networkIds = {
   fvm: 314,
-  fvmtestnet: 3141,
+  fvmtestnet: 314159,
   mumbai: 80001,
   polygon: 137,
   celotestnet: 44787,
@@ -118,9 +118,9 @@ export const chainParams = [
     decimals: 18,
   },
   {
-    chainId: ethers.utils.hexValue(3141),
-    rpcUrl: "https://api.hyperspace.node.glif.io/rpc/v1",
-    chainName: "Filecoin Hyperspace",
+    chainId: ethers.utils.hexValue(314159),
+    rpcUrl: "https://api.calibration.node.glif.io/rpc/v1",
+    chainName: "Filecoin Calibration",
     symbol: "tFIL",
     decimals: 18,
   },
@@ -155,62 +155,62 @@ export const chainParams = [
 ];
 
 export const multiChains = [
-  {
-    label: "FVM(Mainnet)",
-    value: "fvm",
-    image: "/assets/filecoin.png",
-    chainId: 314,
-    priority: 0,
-  },
-  {
-    label: "FVM Testnet(Hyperspace)",
-    value: "fvmtestnet",
-    image: "/assets/filecoin.png",
-    chainId: 3141,
-    priority: 1,
-  },
-  {
-    label: "Polygon",
-    value: "polygon",
-    image: "/assets/coin.png",
-    chainId: 137,
-    priority: 0,
-  },
-  {
-    label: "Polygon Mumbai",
-    value: "mumbai",
-    image: "/assets/coin.png",
-    chainId: 80001,
-    priority: 1,
-  },
+  // {
+  //   label: "FVM(Mainnet)",
+  //   value: "fvm",
+  //   image: "/assets/filecoin.png",
+  //   chainId: 314,
+  //   priority: 0,
+  // },
+  // {
+  //   label: "FVM Testnet(Calibration)",
+  //   value: "fvmtestnet",
+  //   image: "/assets/filecoin.png",
+  //   chainId: 314159,
+  //   priority: 1,
+  // },
+  // {
+  //   label: "Polygon",
+  //   value: "polygon",
+  //   image: "/assets/coin.png",
+  //   chainId: 137,
+  //   priority: 0,
+  // },
+  // {
+  //   label: "Polygon Mumbai",
+  //   value: "mumbai",
+  //   image: "/assets/coin.png",
+  //   chainId: 80001,
+  //   priority: 1,
+  // },
   {
     label: "Alfajores Testnet(Celo)",
     value: "celotestnet",
     image: "/assets/celo.png",
     chainId: 44787,
-    priority: 1,
+    priority: 0,
   },
   {
     label: "Celo Mainnet",
     value: "celomainnet",
     image: "/assets/celo.png",
     chainId: 42220,
-    priority: 1,
-  },
-  {
-    label: "Arbitrum Goerli",
-    value: "arbitrumtestnet",
-    image: "/assets/airbitrum.png",
-    chainId: 421613,
-    priority: 1,
-  },
-  {
-    label: "Ethereum Sepolia",
-    value: "ethereumtestnet",
-    image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
-    chainId: 11155111,
     priority: 0,
   },
+  // {
+  //   label: "Arbitrum Goerli",
+  //   value: "arbitrumtestnet",
+  //   image: "/assets/airbitrum.png",
+  //   chainId: 421613,
+  //   priority: 1,
+  // },
+  // {
+  //   label: "Ethereum Sepolia",
+  //   value: "ethereumtestnet",
+  //   image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
+  //   chainId: 11155111,
+  //   priority: 0,
+  // },
 ];
 
 export const fsize = [
