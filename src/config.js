@@ -155,34 +155,34 @@ export const chainParams = [
 ];
 
 export const multiChains = [
-  // {
-  //   label: "FVM(Mainnet)",
-  //   value: "fvm",
-  //   image: "/assets/filecoin.png",
-  //   chainId: 314,
-  //   priority: 0,
-  // },
-  // {
-  //   label: "FVM Testnet(Calibration)",
-  //   value: "fvmtestnet",
-  //   image: "/assets/filecoin.png",
-  //   chainId: 314159,
-  //   priority: 1,
-  // },
-  // {
-  //   label: "Polygon",
-  //   value: "polygon",
-  //   image: "/assets/coin.png",
-  //   chainId: 137,
-  //   priority: 0,
-  // },
-  // {
-  //   label: "Polygon Mumbai",
-  //   value: "mumbai",
-  //   image: "/assets/coin.png",
-  //   chainId: 80001,
-  //   priority: 1,
-  // },
+  {
+    label: "FVM(Mainnet)",
+    value: "fvm",
+    image: "/assets/filecoin.png",
+    chainId: 314,
+    priority: 0,
+  },
+  {
+    label: "FVM Testnet(Calibration)",
+    value: "fvmtestnet",
+    image: "/assets/filecoin.png",
+    chainId: 314159,
+    priority: 1,
+  },
+  {
+    label: "Polygon",
+    value: "polygon",
+    image: "/assets/coin.png",
+    chainId: 137,
+    priority: 0,
+  },
+  {
+    label: "Polygon Mumbai",
+    value: "mumbai",
+    image: "/assets/coin.png",
+    chainId: 80001,
+    priority: 1,
+  },
   {
     label: "Alfajores Testnet(Celo)",
     value: "celotestnet",
@@ -197,20 +197,20 @@ export const multiChains = [
     chainId: 42220,
     priority: 0,
   },
-  // {
-  //   label: "Arbitrum Goerli",
-  //   value: "arbitrumtestnet",
-  //   image: "/assets/airbitrum.png",
-  //   chainId: 421613,
-  //   priority: 1,
-  // },
-  // {
-  //   label: "Ethereum Sepolia",
-  //   value: "ethereumtestnet",
-  //   image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
-  //   chainId: 11155111,
-  //   priority: 0,
-  // },
+  {
+    label: "Arbitrum Goerli",
+    value: "arbitrumtestnet",
+    image: "/assets/airbitrum.png",
+    chainId: 421613,
+    priority: 1,
+  },
+  {
+    label: "Ethereum Sepolia",
+    value: "ethereumtestnet",
+    image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
+    chainId: 11155111,
+    priority: 0,
+  },
 ];
 
 export const fsize = [

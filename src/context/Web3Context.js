@@ -10,6 +10,7 @@ import {
 } from "../config";
 import trustifiedContractAbi from "../abi/Trustified.json";
 import trustifiedIssuerAbi from "../abi/TrustifiedIssuer.json";
+import trustifiedV1Abi from "../abi/Trustifiedv1.json";
 import { toast } from "react-toastify";
 import { firebaseDataContext } from "./FirebaseDataContext";
 import axios from "axios";
@@ -813,17 +814,37 @@ export const Web3ContextProvider = (props) => {
       try {
         const trustifiedContract = new ethers.Contract(
           fire.data().tokenContract,
-          trustifiedContractAbi.abi,
+          trustifiedContracts[fire.data().chain].trustified ==
+          fire.data().tokenContract
+            ? trustifiedContractAbi.abi
+            : trustifiedV1Abi.abi,
           signer
         );
 
-        let transferTokenTransaction = await trustifiedContract.safeMint(
-          update
-            ? `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
-            : fire.data().ipfsurl,
-          fire.data().tokenId,
-          claimerAddress
-        );
+        var transferTokenTransaction;
+
+        if (
+          trustifiedContracts[fire.data().chain].trustified ==
+          fire.data().tokenContract
+        ) {
+          transferTokenTransaction = await trustifiedContract.safeMint(
+            update
+              ? `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+              : fire.data().ipfsurl,
+            fire.data().tokenId,
+            claimerAddress
+          );
+        } else {
+          transferTokenTransaction = await trustifiedContract.transferToken(
+            fire.data().tokenContract,
+            claimerAddress,
+            fire.data().tokenId,
+            update
+              ? `https://nftstorage.link/ipfs/${metadata.ipnft}/metadata.json`
+              : fire.data().ipfsurl,
+            1
+          );
+        }
 
         const txt = await transferTokenTransaction.wait();
 
@@ -871,15 +892,33 @@ export const Web3ContextProvider = (props) => {
       try {
         const trustifiedContract = new ethers.Contract(
           fire.data().tokenContract,
-          trustifiedContractAbi.abi,
+          trustifiedContracts[fire.data().chain].trustified ==
+          fire.data().tokenContract
+            ? trustifiedContractAbi.abi
+            : trustifiedV1Abi.abi,
           signer
         );
 
-        let transferTokenTransaction = await trustifiedContract.safeMint(
-          fire.data().ipfsurl,
-          fire.data().tokenId,
-          claimerAddress
-        );
+        var transferTokenTransaction;
+
+        if (
+          trustifiedContracts[fire.data().chain].trustified ==
+          fire.data().tokenContract
+        ) {
+          transferTokenTransaction = await trustifiedContract.safeMint(
+            fire.data().ipfsurl,
+            fire.data().tokenId,
+            claimerAddress
+          );
+        } else {
+          transferTokenTransaction = await trustifiedContract.transferToken(
+            fire.data().tokenContract,
+            claimerAddress,
+            fire.data().tokenId,
+            "",
+            0
+          );
+        }
 
         const txt = await transferTokenTransaction.wait();
 
@@ -895,6 +934,7 @@ export const Web3ContextProvider = (props) => {
           setClaimLoading(false);
         }
       } catch (error) {
+        console.log(error);
         setClaimLoading(false);
         if (error.message === "Internal JSON-RPC error.") {
           toast.error("You don't have enough balance to claim certificate!");
