@@ -6,8 +6,8 @@ export const trustifiedContracts = {
     trustifiedIssuernft: "0x06a8fa03F246adCC8D1Ce4f3A8f8323125A51b1a",
   }, // Testnet
   fvm: {
-    trustified: "0xb93F6F074107C4dd6707879874D1C017450898FC",
-    trustifiedIssuernft: "",
+    trustified: "0x86Fc2de800796ae824cAFDE6B000115Aa2d916a2",
+    trustifiedIssuernft: "0x7058BFC2141E13b241D744dfB387E2784d8733C7",
   }, // Mainnet
   mumbai: {
     trustified: "0x480a90061Eb948DdDe5cABD6529D2e9eD3298b3d", //v5
@@ -15,15 +15,16 @@ export const trustifiedContracts = {
     //trustified: "0xA7683AEDEcECc2C85EBB6D0f93a1AE852bBeA077", v4
   },
   polygon: {
-    trustified: "0xf8545458E45168C268016BBA7eFfD54c4CF2808C",
-    trustifiedIssuernft: "",
+    trustified: "0x227487a4Fcd8dE7eBb4A5b966E8AcCde0B41b9ea",
+    trustifiedIssuernft: "0x6d41f642786601DD60c52dAA0e3536a04B2abea6",
   },
   celotestnet: {
     trustified: "0x8907F6f3040fB8f4A9794BfaAFf8F1ac136F8f06",
     trustifiedIssuernft: "0x66c820B0559A97611918D3d496eEb46BAE3e7202",
   },
   celomainnet: {
-    trustified: "0xb1D54e85A8e069DE67acaa73b15B1B8c28224Aff",
+    trustified: "0xb93F6F074107C4dd6707879874D1C017450898FC",
+    trustifiedIssuernft: "0x493d4C9c27eA03DE1AeA37d8793F0C765676Dc18",
   },
   arbitrumtestnet: {
     trustified: "0x2c01ECa5DF2Fb1Ae9166744b14363984dD27199A",
