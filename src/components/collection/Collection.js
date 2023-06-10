@@ -42,7 +42,7 @@ function Collections() {
                     />
                 </div> */}
               <div className="cert-coll">
-                <span>Trustified</span>
+      
                 <p>Certificates</p>
               </div>
 

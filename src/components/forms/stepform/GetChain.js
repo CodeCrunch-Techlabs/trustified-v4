@@ -181,7 +181,7 @@ function GetChain({ message, quantityMessage, mode, setMode, setCustomeType }) {
               </FormHelperText>
             ) : (
               <FormHelperText sx={{ fontWeight: "bold" }}>
-                "Make sure first column should be Name and second should be
+                "Make sure first column should be Name and if you want to airdrop then second should be
                 Address. Download sample file."
               </FormHelperText>
             )}

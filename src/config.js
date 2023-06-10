@@ -61,6 +61,7 @@ export const logos = {
   mumbai: "/assets/logo/mumbai.png",
   polygon: "/assets/logo/mumbai.png",
   ether: "/assets/logo/ethereum.png",
+  ethereumtestnet: "/assets/logo/ethereum.png",
   celotestnet: "/assets/logo/celo.png",
   celomainnet: "/assets/logo/celo.png",
   fvm: "/assets/logo/fvm.png",
@@ -161,28 +162,28 @@ export const multiChains = [
     value: "fvm",
     image: "/assets/filecoin.png",
     chainId: 314,
-    priority: 0,
+    priority: 1,
   },
   {
     label: "FVM Testnet(Calibration)",
     value: "fvmtestnet",
     image: "/assets/filecoin.png",
     chainId: 314159,
-    priority: 1,
+    priority: 0,
   },
   {
     label: "Polygon",
     value: "polygon",
     image: "/assets/coin.png",
     chainId: 137,
-    priority: 0,
+    priority: 1,
   },
   {
     label: "Polygon Mumbai",
     value: "mumbai",
     image: "/assets/coin.png",
     chainId: 80001,
-    priority: 1,
+    priority: 0,
   },
   {
     label: "Alfajores Testnet(Celo)",
@@ -196,7 +197,7 @@ export const multiChains = [
     value: "celomainnet",
     image: "/assets/celo.png",
     chainId: 42220,
-    priority: 0,
+    priority: 1,
   },
   {
     label: "Arbitrum Goerli",
@@ -210,7 +211,7 @@ export const multiChains = [
     value: "ethereumtestnet",
     image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
     chainId: 11155111,
-    priority: 0,
+    priority: 1,
   },
 ];
 

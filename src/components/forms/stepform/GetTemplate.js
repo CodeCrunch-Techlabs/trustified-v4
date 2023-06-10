@@ -307,7 +307,7 @@ function GetTemplate({ message }) {
                     >
                       {fontList.map((e) => {
                         return (
-                          <MenuItem style={{ fontFamily: e }} value={e}>
+                          <MenuItem key={e} style={{ fontFamily: e }} value={e}>
                             {e}
                           </MenuItem>
                         );
@@ -329,7 +329,7 @@ function GetTemplate({ message }) {
                       onChange={handleSizeChange}
                     >
                       {fsize.map((e) => {
-                        return <MenuItem value={e}>{e}</MenuItem>;
+                        return <MenuItem  key={e}  value={e}>{e}</MenuItem>;
                       })}
                     </Select>
                   </FormControl>
@@ -348,7 +348,7 @@ function GetTemplate({ message }) {
                       onChange={handleBoldChange}
                     >
                       {fbold.map((e) => {
-                        return <MenuItem value={e}>{e}</MenuItem>;
+                        return <MenuItem  key={e}  value={e}>{e}</MenuItem>;
                       })}
                     </Select>
                   </FormControl>

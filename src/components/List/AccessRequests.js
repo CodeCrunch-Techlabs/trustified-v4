@@ -133,8 +133,8 @@ const Requests = () => {
                 </TableHead>
                 <TableBody>
                   {requests &&
-                    requests.map((request) => (
-                      <TableRow>
+                    requests.map((request, index) => (
+                      <TableRow key={index}>
                         <TableCell>{request.Name}</TableCell>
                         <TableCell>
                           <p

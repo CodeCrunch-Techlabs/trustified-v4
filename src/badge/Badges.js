@@ -86,6 +86,7 @@ const Badges = () => {
                       />
                     </div>
                   </div>
+             
 
                   <div
                     style={{

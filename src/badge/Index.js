@@ -36,7 +36,7 @@ const Index = () => {
           <Box sx={{ width: "100%" }}>
             <div className="d-flex justify-content-between  mb-2">
               <div className="cert-coll">
-                <span>Trustified</span>
+                
                 <p>Badges</p>
               </div>
               <div>

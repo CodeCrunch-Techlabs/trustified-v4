@@ -58,7 +58,7 @@ darkTheme = responsiveFontSizes(darkTheme);
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <React.StrictMode>
+
     <BrowserRouter>
       <ThemeProvider theme={darkTheme}>
         <ToastContainer />
@@ -75,7 +75,7 @@ root.render(
         </FirebaseDataContextProvider>
       </ThemeProvider>
     </BrowserRouter>
-  </React.StrictMode>
+
 );
 
 // If you want to start measuring performance in your app, pass a function

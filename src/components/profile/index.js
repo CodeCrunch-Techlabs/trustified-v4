@@ -284,12 +284,10 @@ function User() {
                       <Avatar
                         sx={{ width: 100, height: 100 }}
                         src={
-                          loading ? (
-                            <CircularProgress />
-                          ) : profileData.avatar ? (
+                          profileData.avatar ? (
                             profileData.avatar
                           ) : (
-                            "/images/log.png"
+                            "/assets/logo.png"
                           )
                         }
                       />
@@ -409,7 +407,7 @@ function User() {
                       {Object.keys(state).map((key) => {
                         const checkbox = state[key];
                         return (
-                          <>
+                          < div key={key}>
                             <FormControlLabel
                               control={
                                 <Checkbox
@@ -421,7 +419,7 @@ function User() {
                               label={checkbox.label}
                               labelPlacement="end"
                             />
-                          </>
+                          </div>
                         );
                       })}
                     </FormGroup>
