@@ -19,6 +19,12 @@ import {
   Checkbox,
   FormLabel,
   FormHelperText,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
@@ -136,7 +142,7 @@ function User() {
   const error = Object.values(state).filter((v) => v.checked).length < 1;
 
   const firebaseContext = React.useContext(firebaseDataContext);
-  const { getMyCollection } = firebaseContext;
+  const { getMyCollection, message, open, handleClose } = firebaseContext;
 
   useEffect(() => {
     let add = localStorage.getItem("address");
@@ -206,7 +212,6 @@ function User() {
       setUpdate(!update);
       toast.success("Requested Access successfully!!");
     } else {
-
       querySnapshot.forEach((fire) => {
         const data = {
           Name: profileData.name !== "" ? profileData.name : fire.data().Name,
@@ -233,6 +238,8 @@ function User() {
       });
     }
   };
+
+  console.log(message);
 
   return (
     <>
@@ -284,11 +291,9 @@ function User() {
                       <Avatar
                         sx={{ width: 100, height: 100 }}
                         src={
-                          profileData.avatar ? (
-                            profileData.avatar
-                          ) : (
-                            "/assets/logo.png"
-                          )
+                          profileData.avatar
+                            ? profileData.avatar
+                            : "/assets/logo.png"
                         }
                       />
                     </Badge>
@@ -407,7 +412,7 @@ function User() {
                       {Object.keys(state).map((key) => {
                         const checkbox = state[key];
                         return (
-                          < div key={key}>
+                          <div key={key}>
                             <FormControlLabel
                               control={
                                 <Checkbox
@@ -498,6 +503,22 @@ function User() {
         <Row className="mt-5">
           <MyCollection show={true}></MyCollection>
         </Row>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Alert</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              {message}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );

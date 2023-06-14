@@ -1,6 +1,7 @@
 import { getDoc } from "firebase/firestore";
 import React, { createContext, useEffect, useState } from "react";
 import { trustifiedContracts } from "../config";
+import { useNavigate } from "react-router-dom";
 
 import {
   addDoc,
@@ -35,6 +36,9 @@ export const FirebaseDataContextProvider = (props) => {
   const [certLoad, setCertLoad] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
   const [updateStatusLoading, setUpdateLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   function createDataCollector(
     claimToken,
@@ -597,6 +601,57 @@ export const FirebaseDataContextProvider = (props) => {
     });
   }
 
+  async function checkUserStatus(add) {
+    var status;
+    try {
+      const q = query(
+        collection(db, "UserProfile"),
+        where("Address", "==", add),
+        where("status", "==", "requested")
+      );
+      const q1 = query(
+        collection(db, "UserProfile"),
+        where("Address", "==", add),
+        where("status", "==", "rejected")
+      );
+      const q2 = query(
+        collection(db, "UserProfile"),
+        where("Address", "==", add)
+      );
+      const querySnapshot = await getDocs(q);
+      const querySnapshot1 = await getDocs(q1);
+      const querySnapshot2 = await getDocs(q2);
+      if (!querySnapshot.empty) {
+        setOpen(true);
+        setMessage("We are reviewing your request. Please hold thight!");
+        navigate("/dashboard/profile");
+        status = false;
+      } else if (!querySnapshot1.empty) {
+        setOpen(true);
+        setMessage(
+          "Your request has been not approved due to insufficient information. Please fill this form!"
+        );
+        navigate("/dashboard/profile");
+        status = false;
+      } else if (querySnapshot2.empty) {
+        setOpen(true);
+        setMessage("Please fill up profile and request access.");
+        navigate("/dashboard/profile");
+        status = false;
+      } else {
+        setOpen(false);
+        setMessage("");
+        status = true;
+      }
+      return status;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <firebaseDataContext.Provider
       value={{
@@ -632,6 +687,10 @@ export const FirebaseDataContextProvider = (props) => {
         updateIssuerNFT,
         updateAirdroppedCollectors,
         updateAirdropStatus,
+        checkUserStatus,
+        handleClose,
+        open,
+        message,
         updateStatusLoading,
       }}
       {...props}

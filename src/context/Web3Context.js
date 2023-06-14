@@ -55,6 +55,7 @@ export const Web3ContextProvider = (props) => {
     updateAirdroppedCollectors,
     updateAirdropStatus,
     claim,
+    checkUserStatus,
   } = firebasedatacontext;
 
   useEffect(() => {
@@ -152,18 +153,8 @@ export const Web3ContextProvider = (props) => {
       // await issueCredId(issuerName, accounts[0]);
       setAddress(accounts[0]);
       window.localStorage.setItem("address", accounts[0]);
+      await checkUserStatus(accounts[0]);
 
-      const q = query(
-        collection(db, "UserProfile"),
-        where("Address", "==", accounts[0]),
-        where("verified", "==", 1)
-      );
-      const querySnapshot = await getDocs(q);
-
-      if (querySnapshot.empty) {
-        toast.info("Please make a Request to access!");
-        navigate("/dashboard/profile");
-      }
       setUpdate(!update);
       setaLoading(false);
     } catch (err) {

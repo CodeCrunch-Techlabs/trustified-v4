@@ -7,22 +7,18 @@ import AddIcon from "@mui/icons-material/Add";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase";
 import { toast } from "react-toastify";
+import { firebaseDataContext } from "../../context/FirebaseDataContext";
 
 function Collections() {
   const navigate = useNavigate();
+  const firebasedatacontext = React.useContext(firebaseDataContext);
+  const { checkUserStatus } = firebasedatacontext;
 
   const handleClickNavigate = async () => {
     const add = window.localStorage.getItem("address");
-    const q = query(
-      collection(db, "UserProfile"),
-      where("Address", "==", add),
-      where("verified", "==", 1)
-    );
-    const querySnapshot = await getDocs(q);
-    if (querySnapshot.empty) {
-      toast.info("Please make a Request to access!");
-      navigate("/dashboard/profile");
-    } else {
+    let status = await checkUserStatus(add);
+
+    if (status) {
       navigate("/dashboard/certificate");
     }
   };
@@ -42,7 +38,6 @@ function Collections() {
                     />
                 </div> */}
               <div className="cert-coll">
-      
                 <p>Certificates</p>
               </div>
 

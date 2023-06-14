@@ -7,24 +7,18 @@ import AddIcon from "@mui/icons-material/Add";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../firebase";
 import { toast } from "react-toastify";
+import { firebaseDataContext } from "../context/FirebaseDataContext";
 
 const Index = () => {
   const navigate = useNavigate();
+  const firebasedatacontext = React.useContext(firebaseDataContext);
+  const { checkUserStatus } = firebasedatacontext;
 
   const handleNavigate = async () => {
     const add = window.localStorage.getItem("address");
-    const q = query(
-      collection(db, "UserProfile"),
-      where("Address", "==", add)
-      // where("verified", "==", 1)
-    );
+    let status = await checkUserStatus(add);
 
-    const querySnapshot = await getDocs(q);
-
-    if (querySnapshot.empty) {
-      await toast.info("Please make a Request to access!");
-      navigate("/dashboard/profile");
-    } else {
+    if (status) {
       navigate("/dashboard/badge");
     }
   };
@@ -36,7 +30,6 @@ const Index = () => {
           <Box sx={{ width: "100%" }}>
             <div className="d-flex justify-content-between  mb-2">
               <div className="cert-coll">
-                
                 <p>Badges</p>
               </div>
               <div>
