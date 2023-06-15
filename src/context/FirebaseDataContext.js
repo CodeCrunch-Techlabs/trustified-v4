@@ -629,7 +629,7 @@ export const FirebaseDataContextProvider = (props) => {
       } else if (!querySnapshot1.empty) {
         setOpen(true);
         setMessage(
-          "Your request has been not approved due to insufficient information. Please fill this form!"
+          "Your request has been not approved due to insufficient information."
         );
         navigate("/dashboard/profile");
         status = false;
