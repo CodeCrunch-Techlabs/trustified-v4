@@ -86,7 +86,6 @@ const Badges = () => {
                       />
                     </div>
                   </div>
-             
 
                   <div
                     style={{
@@ -123,7 +122,6 @@ const Badges = () => {
 
                   {item?.mode == "airdrop" && item?.airdropstatus == false ? (
                     <div className="badge-footer mt-2">
-                      {console.log(item)}
                       <Button
                         onClick={async (e) => {
                           let claimers = await getClaimers(

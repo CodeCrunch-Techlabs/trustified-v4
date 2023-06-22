@@ -152,6 +152,7 @@ function User() {
   useEffect(() => {
     const init = async () => {
       const add = window.localStorage.getItem("address");
+
       const q = query(
         collection(db, "UserProfile"),
         where("Address", "==", add)
@@ -238,8 +239,6 @@ function User() {
       });
     }
   };
-
-  console.log(message);
 
   return (
     <>

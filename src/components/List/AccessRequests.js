@@ -15,6 +15,11 @@ import {
   CircularProgress,
   Card,
   TableBody,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import Chip from "@mui/material/Chip";
@@ -52,6 +57,7 @@ TabPanel.propTypes = {
 
 const Requests = () => {
   const [requests, setRequests] = React.useState([]);
+  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
   const web3Context = React.useContext(Web3Context);
   const firebaseContext = React.useContext(firebaseDataContext);
@@ -69,6 +75,14 @@ const Requests = () => {
     updateIssuerNFT,
     // updatedata,
   } = firebaseContext;
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   useEffect(() => {
     const init = async () => {
@@ -110,9 +124,7 @@ const Requests = () => {
           <button
             className="thm-btn header__cta-btn"
             onClick={async () => {
-              let issuers = await getIssuers();
-              await updateIssuerAccess(issuers);
-              await updateIssuerNFT();
+              handleClickOpen();
             }}
           >
             <span>{updateIssuer ? "Updating..." : "Update Access"}</span>
@@ -202,6 +214,33 @@ const Requests = () => {
             </TableContainer>
           </Card>
         </Stack>
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Alert!</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              Make sure you have enough balance to airdrop issuer nfts to the
+              requested issuers on the networks we supports.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>Not sure</Button>
+            <Button
+              onClick={async () => {
+                let issuers = await getIssuers();
+                await updateIssuerAccess(issuers);
+                await updateIssuerNFT();
+                handleClose();
+              }}
+            >
+              I have
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </>
   );

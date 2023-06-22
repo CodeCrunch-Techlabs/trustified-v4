@@ -17,6 +17,9 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import { NFTStorage, File } from "nft.storage";
 
+import { usePrivy, useWallets } from "@privy-io/react-auth";
+import SmartAccount from "@biconomy/smart-account";
+
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Web3 from "web3";
@@ -30,6 +33,7 @@ const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
 export const Web3ContextProvider = (props) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { wallets } = useWallets();
   const [address, setAddress] = useState();
   const [update, setUpdate] = useState(false);
   const [data, setData] = useState();
@@ -39,6 +43,10 @@ export const Web3ContextProvider = (props) => {
   const [aLoading, setaLoading] = useState(false);
   const [updateIssuer, setUpdateIssuers] = useState(false);
   const [airdropLoading, setAirdropLoading] = useState(false);
+  const [smartAccount, setSmartAccount] = useState(null);
+  const [privyProvider, setPrivyProvider] = useState(null);
+
+  const { ready, authenticated, user, login, logout } = usePrivy();
 
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
@@ -82,6 +90,64 @@ export const Web3ContextProvider = (props) => {
       initialize();
     }
   }, [add]);
+
+  useEffect(() => {
+    const init = async () => {
+      if (ready && authenticated) {
+        setaLoading(false);
+        console.log((user?.wallet?.address).toLowerCase());
+        setAddress(user && (user?.wallet?.address).toLowerCase());
+        window.localStorage.setItem(
+          "address",
+          user && (user?.wallet?.address).toLowerCase()
+        );
+        await checkUserStatus(user && (user?.wallet?.address).toLowerCase());
+        setUpdate(!update);
+        setaLoading(false);
+      }
+    };
+    init();
+  }, [user]);
+
+  async function setupSmartAccount(selectedChain) {
+    try {
+      const embeddedWallet = wallets.find(
+        (wallet) =>
+          wallet.walletClientType === "privy" ||
+          wallet.walletClientType === "metamask"
+      );
+
+      const provider = await embeddedWallet?.getEthersProvider();
+      setPrivyProvider(provider);
+
+      if (!provider) {
+        toast.error("Unable to retrieve ethers provider from embedded wallet.");
+        return;
+      }
+
+      let options = {
+        activeNetworkId: networkIds[selectedChain],
+        supportedNetworksIds: [networkIds[selectedChain]],
+
+        networkConfig: [
+          {
+            chainId: networkIds[selectedChain],
+            // Dapp API Key you will get from new Biconomy dashboard that will be live soon
+            // Meanwhile you can use the test dapp api key mentioned above
+            dappAPIKey: process.env.REACT_APP_BICONOMY_API_KEY,
+          },
+        ],
+      };
+
+      let smartAccount = new SmartAccount(provider, options);
+      smartAccount = await smartAccount.init();
+      setSmartAccount(smartAccount);
+
+      return [smartAccount, provider];
+    } catch (err) {
+      console.log("error setting up smart account... ", err);
+    }
+  }
 
   async function switchNetwork(chainId) {
     try {
@@ -142,39 +208,22 @@ export const Web3ContextProvider = (props) => {
   const connectWallet = async (issuerName) => {
     const { ethereum } = window;
     setaLoading(true);
-
-    if (!ethereum) {
-      alert("Please install the Metamask Extension!");
-    }
     try {
-      const accounts = await ethereum.request({
-        method: "eth_requestAccounts",
-      });
-      // await issueCredId(issuerName, accounts[0]);
-      setAddress(accounts[0]);
-      window.localStorage.setItem("address", accounts[0]);
-      await checkUserStatus(accounts[0]);
-
-      setUpdate(!update);
-      setaLoading(false);
-    } catch (err) {
-      setaLoading(false);
-      if (err.code === 4902) {
-        try {
-          setaLoading(true);
-          const accounts = await ethereum.request({
-            method: "eth_requestAccounts",
-          });
-          // await issueCredId(issuerName, accounts[0]);
-          setAddress(accounts[0]);
-          window.localStorage.setItem("address", accounts[0]);
-          setUpdate(!update);
-          setaLoading(false);
-        } catch (err) {
-          setaLoading(false);
-          alert(err.message);
-        }
+      login();
+      if (ready && authenticated) {
+        setaLoading(false);
+        console.log((user?.wallet?.address).toLowerCase());
+        setAddress(user && (user?.wallet?.address).toLowerCase());
+        window.localStorage.setItem(
+          "address",
+          user && (user?.wallet?.address).toLowerCase()
+        );
+        await checkUserStatus(user && (user?.wallet?.address).toLowerCase());
+        setUpdate(!update);
+        setaLoading(false);
       }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -249,10 +298,12 @@ export const Web3ContextProvider = (props) => {
   const disconnectWallet = () => {
     if (location?.pathname.indexOf("claim") > -1) {
       window.localStorage.removeItem("address");
+      logout();
       setUpdate(!update);
     } else {
       navigate("/");
       window.localStorage.removeItem("address");
+      logout();
       setUpdate(!update);
       window.location.reload();
     }
@@ -286,6 +337,10 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
+        let [smartaccount, privyprovider] = await setupSmartAccount(
+          firebasedata.chain
+        );
+
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
 
@@ -297,25 +352,46 @@ export const Web3ContextProvider = (props) => {
 
         const balance = await trustifiedIssuerNFTContract.balanceOf(address);
 
+        console.log(balance,"balance");
+
         if (Number(balance) > 0) {
           const trustifiedContract = new ethers.Contract(
             trustifiedContracts[firebasedata.chain].trustified,
             trustifiedContractAbi.abi,
-            signer
+            privyprovider
           );
+console.log(trustifiedContract,"trustifiedContract");
+          const transactionMint =
+            await trustifiedContract.populateTransaction.bulkMintERC721(
+              mode == "claimurl"
+                ? parseInt(firebasedata.quantity)
+                : csvData.length,
+              checked
+            );
 
-          var transactionMint = await trustifiedContract.bulkMintERC721(
-            mode == "claimurl"
-              ? parseInt(firebasedata.quantity)
-              : csvData.length,
-            checked
-          ); // Bulk Mint NFT collection.
+            console.log(transactionMint,"transactionMint");
+
+          const tx1 = {
+            to: trustifiedContract.address,
+            data: transactionMint.data,
+          };
+
+          console.log(tx1,"tx1");
+
+          const txResponse = await smartaccount.sendTransaction({
+            transaction: tx1,
+          });
+
+          console.log(txResponse,"txResponse");
+          const txHash = await txResponse.wait();
+
+          console.log(txHash);
 
           await trustifiedContract.once(
             "TokensCreated",
             async (eventId, issuer) => {
-              let txm = await transactionMint.wait();
               let tokenIds = await trustifiedContract.getEventTokens(eventId);
+              console.log(tokenIds,"tokenIds");
               firebasedata.contract = trustifiedContract.address;
               firebasedata.userId = userId;
               firebasedata.eventId = parseInt(Number(eventId));
@@ -323,8 +399,8 @@ export const Web3ContextProvider = (props) => {
               firebasedata.image = `https://nftstorage.link/ipfs/${data.tokenUris[0]}/metadata.json`;
               firebasedata.templateId = "";
               firebasedata.Nontransferable = checked == true ? "on" : "off";
-              firebasedata.txHash = txm.transactionHash;
-              firebasedata.createdBy = txm.from;
+              firebasedata.txHash = txHash.transactionHash;
+              firebasedata.createdBy = txHash.from;
               firebasedata.platforms = [];
               firebasedata.mode = mode;
               firebasedata.airdropstatus = false;
@@ -352,8 +428,8 @@ export const Web3ContextProvider = (props) => {
                 issueDate: firebasedata.issueDate,
                 position: "",
                 uploadObj: "",
-                txHash: txm.transactionHash,
-                createdBy: txm.from,
+                txHash: txHash.transactionHash,
+                createdBy: txHash.from,
                 platforms: [],
               };
 
@@ -946,6 +1022,7 @@ export const Web3ContextProvider = (props) => {
 
       for (let i = 0; i < multiChains.length; i++) {
         let addresses = [];
+        var chainsCounts = i;
         await issuers.map((issuer) => {
           if (
             issuer.networks !== undefined &&
@@ -976,11 +1053,11 @@ export const Web3ContextProvider = (props) => {
             setUpdateIssuers(false);
           }
         } else {
-          if (i == multiChains.length - 1) {
-            toast.info("Airdroped issuer nfts to all the approved issuers!");
-            setUpdateIssuers(false);
-          }
+          toast.info(
+            `Airdroped issuer nfts to all the approved issuers on ${multiChains[i].label}!`
+          );
         }
+        setUpdateIssuers(false);
       }
     } catch (error) {
       console.log(error);

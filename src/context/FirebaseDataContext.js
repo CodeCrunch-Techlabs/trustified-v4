@@ -210,6 +210,7 @@ export const FirebaseDataContextProvider = (props) => {
       const collectionSnapshot = await getDocs(collections);
 
       const collectionList = collectionSnapshot.docs.map((doc) => doc.data());
+
       setCollections(collectionList);
     } catch (error) {
       console.log(error);
