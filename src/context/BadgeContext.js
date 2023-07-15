@@ -138,7 +138,7 @@ export const BadgeContextProvider = (props) => {
             console.log(error.code);
             console.log(error.message);
 
-            if (error.message == "Internal JSON-RPC error.") {
+            if (error.message == "Internal JSON-RPC error." ||  error.code == "CALL_EXCEPTION") {
               toast.error("You don't have enough balance to create Badges!");
             } else if (error.code == "ACTION_REJECTED") {
               toast.error(
