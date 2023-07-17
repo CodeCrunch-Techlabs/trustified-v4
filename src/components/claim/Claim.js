@@ -11,6 +11,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "react-toastify";
 import Iconify from "../../components/utils/Iconify";
 import { networkIds, networkURL } from "../../config";
+import FeedbackModal from "../FeedbackModal";
 
 export default function Claim() {
   const web3Context = React.useContext(Web3Context);
@@ -82,6 +83,7 @@ export default function Claim() {
         <div className="row">
           <div className="col-xl-8 col-lg-8 col-12 col-md-8 col-sm-10 mx-auto">
             <div className="banner-one__claimcontent">
+            <FeedbackModal/>
               {claimer ? (
                 <div
                   className="py-4"

@@ -5,6 +5,7 @@
   "proxy": "https://bg26hulzpl.execute-api.ap-south-1.amazonaws.com/v1/trustified/api",
   "dependencies": {
     "@creds-protocol/contracts": "^0.1.9",
+    "@emailjs/browser": "^3.11.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@glif/filecoin-address": "^2.0.20",
@@ -25,6 +26,7 @@
     "cors": "^2.8.5",
     "cors-anywhere": "^0.4.4",
     "crypto": "^1.0.1",
+    "emailjs": "^4.0.2",
     "ethers": "^5.7.2",
     "express": "^4.18.2",
     "firebase": "^9.15.0",
