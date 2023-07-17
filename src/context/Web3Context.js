@@ -21,6 +21,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import Web3 from "web3";
 import { getIssuerMarkleTree } from "../utils/markleTree";
+import { ethAddressFromDelegated } from "@glif/filecoin-address";
 
 export const Web3Context = createContext(undefined);
 
@@ -870,10 +871,22 @@ export const Web3ContextProvider = (props) => {
 
   const claimBadges = async (claimToken, claimerAddress) => {
     setClaimLoading(true);
+
+    var addressType = claimerAddress.substring(0, 2);
+
+    var ethAddress = "";
+
+    if (addressType == "f4") {
+      ethAddress = ethAddressFromDelegated(claimerAddress).toString();
+    } else {
+      ethAddress = claimerAddress;
+    }
+
     const q = query(
       collection(db, "Collectors"),
       where("claimToken", "==", claimToken)
     );
+
     const provider = await new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
 
@@ -899,12 +912,12 @@ export const Web3ContextProvider = (props) => {
           transferTokenTransaction = await trustifiedContract.safeMint(
             fire.data().ipfsurl,
             fire.data().tokenId,
-            claimerAddress
+            ethAddress.toString()
           );
         } else {
           transferTokenTransaction = await trustifiedContract.transferToken(
             fire.data().tokenContract,
-            claimerAddress,
+            ethAddress.toString(),
             fire.data().tokenId,
             "",
             0
@@ -917,7 +930,7 @@ export const Web3ContextProvider = (props) => {
           setClaimer(fire.data());
           await updateCollectorsForBadges({
             id: fire.id,
-            claimerAddress: claimerAddress,
+            claimerAddress: ethAddress.toString(),
             claimed: "Yes",
             txHash: txt.transactionHash,
           });

@@ -10,6 +10,7 @@ import UploadPreview from "./UploadPreview";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { toast } from "react-toastify";
 import Iconify from "../../components/utils/Iconify";
+import FormHelperText from "@mui/material/FormHelperText";
 import { networkIds, networkURL } from "../../config";
 
 export default function Claim() {
@@ -182,75 +183,90 @@ export default function Claim() {
                 </button>
               </div>
             ) : (
-              <div className="d-flex justify-content-start">
-                <TextField
-                  name="Address"
-                  label="Wallet Address"
-                  fullWidth
-                  className="address mr-2"
-                  onChange={(e) => setAddress(e.target.value)}
-                  sx={{ background: "white" }}
-                />
-                <button
-                  className="thm-btn header__cta-btn"
-                  onClick={async () => {
-                    try {
-                      if (claimer.status === "Yes") {
-                        toast.error("This certificate is already claimed!");
-                        return;
-                      }
-                      if (add === "") {
-                        toast.error("Please Enter Address!");
-                        return;
-                      }
-                      if (!window.ethereum) {
-                        toast.error("Please install Metamask");
-                        return;
-                      }
-                      const provider = new ethers.providers.Web3Provider(
-                        window.ethereum
-                      );
-                      const { chainId } = await provider.getNetwork();
-                      const selectedNetworkId = networkIds[claimer.chain];
-                      if (selectedNetworkId && chainId !== selectedNetworkId) {
-                        await switchNetwork(
-                          ethers.utils.hexValue(selectedNetworkId)
+              <>
+                <div className="d-flex justify-content-start">
+                  <TextField
+                    name="Address"
+                    label="Wallet Address"
+                    fullWidth
+                    className="address mr-2"
+                    onChange={(e) => setAddress(e.target.value)}
+                    sx={{ background: "white" }}
+                  />
+                  <button
+                    className="thm-btn header__cta-btn"
+                    onClick={async () => {
+                      try {
+                        if (claimer.status === "Yes") {
+                          toast.error("This certificate is already claimed!");
+                          return;
+                        }
+                        if (add === "") {
+                          toast.error("Please Enter Address!");
+                          return;
+                        }
+                        if (!window.ethereum) {
+                          toast.error("Please install Metamask");
+                          return;
+                        }
+                        const provider = new ethers.providers.Web3Provider(
+                          window.ethereum
                         );
-                      }
-
-                      if (claimer?.type === "badge") {
-                        await claimBadges(token, add);
-                      } else {
+                        const { chainId } = await provider.getNetwork();
+                        const selectedNetworkId = networkIds[claimer.chain];
                         if (
-                          claimer?.position !== "" &&
-                          claimer?.position !== undefined
+                          selectedNetworkId &&
+                          chainId !== selectedNetworkId
                         ) {
-                          await claimUploadedCertificate(
-                            token,
-                            add,
-                            claimer,
-                            claimer?.uploadObj.style.color,
-                            claimer?.uploadObj.width,
-                            claimer?.uploadObj.height
-                          );
-                        } else {
-                          await claimCertificate(
-                            token,
-                            add,
-                            claimer,
-                            claimer?.template.name.style.color,
-                            claimer?.template.name.style.fontFamily
+                          await switchNetwork(
+                            ethers.utils.hexValue(selectedNetworkId)
                           );
                         }
+
+                        if (claimer?.type === "badge") {
+                          await claimBadges(token, add);
+                        } else {
+                          if (
+                            claimer?.position !== "" &&
+                            claimer?.position !== undefined
+                          ) {
+                            await claimUploadedCertificate(
+                              token,
+                              add,
+                              claimer,
+                              claimer?.uploadObj.style.color,
+                              claimer?.uploadObj.width,
+                              claimer?.uploadObj.height
+                            );
+                          } else {
+                            await claimCertificate(
+                              token,
+                              add,
+                              claimer,
+                              claimer?.template.name.style.color,
+                              claimer?.template.name.style.fontFamily
+                            );
+                          }
+                        }
+                      } catch (error) {
+                        console.log(error, "err");
                       }
-                    } catch (error) {
-                      console.log(error, "err");
-                    }
-                  }}
-                >
-                  <span> Claim</span>
-                </button>
-              </div>
+                    }}
+                  >
+                    <span> Claim</span>
+                  </button>
+                </div>
+
+                <div>
+                  {claimer?.chain == "fvm" || claimer?.chain == "fvmtestnet" ? (
+                    <FormHelperText style={{fontSize:"17px",textAlign:"center"}}>
+                      Make sure wallet address should have 0x or f410 prefix!
+                    </FormHelperText>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </>
             )}
 
             {claimLoading && (
@@ -261,6 +277,7 @@ export default function Claim() {
                 </p>
               </>
             )}
+
             <div className="mt-4">
               <button
                 className="thm-btn header__cta-btn"
