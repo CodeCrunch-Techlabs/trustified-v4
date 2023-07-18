@@ -869,7 +869,9 @@ const handleCloseFeedback=()=>{
         }
       } catch (error) {
         setClaimLoading(false);
-        if (error.message === "Internal JSON-RPC error.") {
+        if (error?.code == 'CALL_EXCEPTION') {
+          toast.error("You don't have enough balance to claim certificate!")
+        } else  if (error.message === "Internal JSON-RPC error.") {
           toast.error("You don't have enough balance to claim certificate!");
         } else if (error.code === "ACTION_REJECTED") {
           toast.error(
@@ -954,8 +956,10 @@ const handleCloseFeedback=()=>{
       } catch (error) {
         console.log(error);
         setClaimLoading(false);
-        if (error.message === "Internal JSON-RPC error.") {
-          toast.error("You don't have enough balance to claim certificate!");
+        if (error?.code == 'CALL_EXCEPTION') {
+          toast.error("You don't have enough balance to claim Badge!")
+        } else  if (error.message === "Internal JSON-RPC error.") {
+          toast.error("You don't have enough balance to claim Badge!");
         } else if (error.code === "ACTION_REJECTED") {
           toast.error(
             "MetaMask Tx Signature: User denied transaction signature!"
