@@ -869,6 +869,7 @@ const handleCloseFeedback=()=>{
         }
       } catch (error) {
         setClaimLoading(false);
+        console.log(error,"error");
         if (error?.code == 'CALL_EXCEPTION') {
           toast.error("You don't have enough balance to claim certificate!")
         } else  if (error.message === "Internal JSON-RPC error.") {
@@ -885,10 +886,8 @@ const handleCloseFeedback=()=>{
   };
 
   const claimBadges = async (claimToken, claimerAddress) => {
-    setClaimLoading(true);
-
-    var addressType = claimerAddress.substring(0, 2);
-
+    setClaimLoading(true); 
+    var addressType = claimerAddress.substring(0, 2); 
     var ethAddress = "";
 
     if (addressType == "f4") {
