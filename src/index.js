@@ -22,6 +22,8 @@ import { NFTStorageContextProvider } from "./context/NFTStorageContext";
 import { Web3ContextProvider } from "./context/Web3Context";
 import { BadgeContextProvider } from "./context/BadgeContext"; 
 import { TemplateContextProvider } from "./context/CreateTemplateContext";
+import { Analytics } from '@vercel/analytics/react';
+
 
 let darkTheme = createTheme({
   palette: {
@@ -68,6 +70,7 @@ root.render(
             <BadgeContextProvider>
               <NFTStorageContextProvider>
                 <App />
+                <Analytics/>
               </NFTStorageContextProvider>
             </BadgeContextProvider>
           </Web3ContextProvider>
