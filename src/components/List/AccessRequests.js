@@ -96,6 +96,10 @@ const [order, setOrder] = useState('asc');
       label: "Name",
     },
     {
+      id: "purpose",
+      label: "Purpose",
+    },
+    {
       id: "Address",
       label: "Address",
     },
@@ -105,7 +109,7 @@ const [order, setOrder] = useState('asc');
     },
     {
       id: "CreatedAt",
-      label: "Request Date",
+      label: "Date",
     },
     {
       id: "status",
@@ -139,6 +143,7 @@ const [order, setOrder] = useState('asc');
     };
     init();
   }, [updateStatusLoading]);
+ 
 
   const handleSort = (column) => {
     const isAsc = orderBy === column && order === 'asc';
@@ -146,23 +151,17 @@ const [order, setOrder] = useState('asc');
   
     setOrderBy(column);
     setOrder(newOrder);
-
-   
   
-    // Sort the data based on the column and order
-    const sortedData = requests.sort((a, b) => { 
-
+    const sortedData = requests.sort((a, b) => {
       if (column === 'CreatedAt') {
-        const dateA =  moment(a[column].toDate()).format('LL');
-        const dateB = moment(b[column].toDate()).format('LL');
-        if (dateA < dateB) return isAsc ? -1 : 1;
-        if (dateA > dateB) return isAsc ? 1 : -1;
+        const dateA = a.CreatedAt.seconds * 1000 + a.CreatedAt.nanoseconds / 1000000;
+        const dateB = b.CreatedAt.seconds * 1000 + b.CreatedAt.nanoseconds / 1000000;
+        return (isAsc ? 1 : -1) * (dateA - dateB);
+      } else {
+        if (a[column] < b[column]) return isAsc ? -1 : 1;
+        if (a[column] > b[column]) return isAsc ? 1 : -1;
         return 0;
-      } 
-
-      if (a[column] < b[column]) return isAsc ? -1 : 1;
-      if (a[column] > b[column]) return isAsc ? 1 : -1;
-      return 0;
+      }
     });
   
     setRequests([...sortedData]);
@@ -222,6 +221,7 @@ const [order, setOrder] = useState('asc');
                       return (
                         <TableRow key={index}>
                           <TableCell>{request.Name}</TableCell>
+                          <TableCell>{request.purpose}</TableCell>
                           <TableCell>
                             <p
                               style={{
@@ -288,7 +288,7 @@ const [order, setOrder] = useState('asc');
               </Table>
             </TableContainer>
             <TablePagination
-              rowsPerPageOptions={[5, 10, 50]}
+              rowsPerPageOptions={[5, 10,20,30,40,50,100]}
               component="div"
               count={requests.length}
               rowsPerPage={rowsPerPage}

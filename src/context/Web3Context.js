@@ -421,7 +421,7 @@ const handleCloseFeedback=()=>{
             message: "You don't own issuer nft on the selected network!",
           });
         }
-      } catch (err) {
+      } catch (err) { 
         return reject(err);
       }
     });
@@ -563,7 +563,7 @@ const handleCloseFeedback=()=>{
         }
       } catch (err) {
         // console.log(err);
-        // toast.error("Something want wrong!!", err);
+        // toast.error("Something want wrong!!", err); 
         return reject(err);
       }
     });
