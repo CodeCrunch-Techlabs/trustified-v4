@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Button,
@@ -15,6 +15,7 @@ import {
   CircularProgress,
   Card,
   TableBody,
+  TablePagination,
 } from "@mui/material";
 import PropTypes from "prop-types";
 import Chip from "@mui/material/Chip";
@@ -23,6 +24,8 @@ import { Web3Context } from "../../context/Web3Context";
 import { firebaseDataContext } from "../../context/FirebaseDataContext";
 
 import { collection, db, query, where, getDocs } from "../../firebase";
+import moment from "moment/moment";
+import TableSortLabel from '@mui/material/TableSortLabel';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -69,6 +72,47 @@ const Requests = () => {
     updateIssuerNFT,
     // updatedata,
   } = firebaseContext;
+ 
+const [orderBy, setOrderBy] = useState(''); // The currently sorted column
+const [order, setOrder] = useState('asc');
+
+
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
+  const columns = [
+    {
+      id: "Name",
+      label: "Name",
+    },
+    {
+      id: "Address",
+      label: "Address",
+    },
+    {
+      id: "type",
+      label: "Type",
+    },
+    {
+      id: "CreatedAt",
+      label: "Request Date",
+    },
+    {
+      id: "status",
+      label: "Status",
+    }
+  ];
+
 
   useEffect(() => {
     const init = async () => {
@@ -84,6 +128,7 @@ const Requests = () => {
             obj.id = doc?.id;
             return obj;
           });
+          console.log(profileList, "profileList");
           setRequests(profileList);
         } else {
           navigate("/");
@@ -94,6 +139,34 @@ const Requests = () => {
     };
     init();
   }, [updateStatusLoading]);
+
+  const handleSort = (column) => {
+    const isAsc = orderBy === column && order === 'asc';
+    const newOrder = isAsc ? 'desc' : 'asc';
+  
+    setOrderBy(column);
+    setOrder(newOrder);
+
+   
+  
+    // Sort the data based on the column and order
+    const sortedData = requests.sort((a, b) => { 
+
+      if (column === 'CreatedAt') {
+        const dateA =  moment(a[column].toDate()).format('LL');
+        const dateB = moment(b[column].toDate()).format('LL');
+        if (dateA < dateB) return isAsc ? -1 : 1;
+        if (dateA > dateB) return isAsc ? 1 : -1;
+        return 0;
+      } 
+
+      if (a[column] < b[column]) return isAsc ? -1 : 1;
+      if (a[column] > b[column]) return isAsc ? 1 : -1;
+      return 0;
+    });
+  
+    setRequests([...sortedData]);
+  };
 
   return (
     <>
@@ -119,88 +192,111 @@ const Requests = () => {
           </button>
         </Stack>
         <Stack>
-          <Card>
-            <TableContainer component={Paper}>
-              <Table aria-label="collapsible table">
+          <Paper sx={{ width: "100%", overflow: "hidden" }}>
+            <TableContainer sx={{ maxHeight: 500 }}>
+              <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Address</TableCell>
-                    <TableCell>Type</TableCell>
+                    {columns.map((column) => (
+                      <TableCell
+                        key={column.id}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        <TableSortLabel
+                          active={orderBy === column.id}
+                          direction={orderBy === column.id ? order : 'asc'}
+                          onClick={() => handleSort(column.id)}
+                        >
+                          {column.label}
+                        </TableSortLabel>
 
-                    <TableCell>Status</TableCell>
+                      </TableCell>
+                    ))}
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {requests &&
-                    requests.map((request, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{request.Name}</TableCell>
-                        <TableCell>
-                          <p
-                            style={{
-                              border: "1px solid #eee",
-                              padding: "3px 15px",
-                              borderRadius: "20px",
-                              fontWeight: "bolder",
-                              width: "fit-content",
-                            }}
-                          >
-                            {shortAddress(request.Address)}
-                          </p>
-                        </TableCell>
-                        <TableCell>{request.type}</TableCell>
-
-                        <TableCell>
-                          {request.status === "approved" ? (
-                            <Chip
-                              label={request.status}
-                              color="success"
-                              variant="outlined"
-                            />
-                          ) : request.status == "rejected" ? (
-                            <Chip
+                  {requests && requests
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((request, index) => {
+                      return (
+                        <TableRow key={index}>
+                          <TableCell>{request.Name}</TableCell>
+                          <TableCell>
+                            <p
                               style={{
-                                color: "red",
-                                border: "1px solid red",
+                                border: "1px solid #eee",
+                                padding: "3px 15px",
+                                borderRadius: "20px",
+                                fontWeight: "bolder",
+                                width: "fit-content",
                               }}
-                              label="Rejected"
-                              variant="outlined"
-                            />
-                          ) : (
-                            <>
+                            >
+                              {shortAddress(request.Address)}
+                            </p>
+                          </TableCell>
+                          <TableCell>{request.type}</TableCell>
+                          <TableCell>{moment(request.CreatedAt.toDate()).format('LL')}</TableCell>
+                          <TableCell>
+                            {request.status === "approved" ? (
                               <Chip
-                                style={{
-                                  color: "dodgerblue",
-                                  border: "1px solid dodgerblue",
-                                }}
-                                label={"Approve"}
+                                label={request.status}
+                                color="success"
                                 variant="outlined"
-                                onClick={() =>
-                                  updateStatus(request, "approved")
-                                }
                               />
-                              &nbsp;
+                            ) : request.status == "rejected" ? (
                               <Chip
                                 style={{
                                   color: "red",
                                   border: "1px solid red",
                                 }}
-                                label={"Reject"}
+                                label="Rejected"
                                 variant="outlined"
-                                onClick={() =>
-                                  updateStatus(request, "rejected")
-                                }
                               />
-                            </>
-                          )}
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                            ) : (
+                              <>
+                                <Chip
+                                  style={{
+                                    color: "dodgerblue",
+                                    border: "1px solid dodgerblue",
+                                  }}
+                                  label={"Approve"}
+                                  variant="outlined"
+                                  onClick={() =>
+                                    updateStatus(request, "approved")
+                                  }
+                                />
+                                &nbsp;
+                                <Chip
+                                  style={{
+                                    color: "red",
+                                    border: "1px solid red",
+                                  }}
+                                  label={"Reject"}
+                                  variant="outlined"
+                                  onClick={() =>
+                                    updateStatus(request, "rejected")
+                                  }
+                                />
+                              </>
+                            )}
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })}
                 </TableBody>
               </Table>
             </TableContainer>
-          </Card>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 50]}
+              component="div"
+              count={requests.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
         </Stack>
       </Container>
     </>

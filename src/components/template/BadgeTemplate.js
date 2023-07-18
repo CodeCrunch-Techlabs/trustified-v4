@@ -15,6 +15,7 @@ import { BadgeContext } from "../../context/BadgeContext";
 import GetTitle from "../../badge/stepform/GetTitle";
 import GetCsvFile from "../../badge/stepform/GetCsvFile";
 import GetBadgeTemlate from "../../badge/stepform/GetBadgeTemlate";
+import FeedbackModal from "../FeedbackModal";
 
 const steps = [
   {
@@ -127,6 +128,7 @@ const BadgeTemplate = () => {
       sx={{ borderRadius: "12px", p: 3 }}
       className="top-ba nner-cert"
     >
+       <FeedbackModal/>
       <div className="text-center ">
         <h4 className=" text-dark">Create Badge</h4>
         <p className="">
