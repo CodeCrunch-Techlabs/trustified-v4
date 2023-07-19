@@ -618,25 +618,35 @@ export const FirebaseDataContextProvider = (props) => {
         collection(db, "UserProfile"),
         where("Address", "==", add)
       );
+
+    
+
       const querySnapshot = await getDocs(q);
       const querySnapshot1 = await getDocs(q1);
       const querySnapshot2 = await getDocs(q2);
       if (!querySnapshot.empty) {
         setOpen(true);
         setMessage("We are reviewing your request. Please hold thight!");
-        navigate("/dashboard/profile");
+        if (location?.pathname.indexOf("claim") > -1 == false) {
+          navigate("/dashboard/profile");
+        }
+
         status = false;
       } else if (!querySnapshot1.empty) {
         setOpen(true);
         setMessage(
           "Your request has been not approved due to insufficient information."
         );
-        navigate("/dashboard/profile");
+        if (location?.pathname.indexOf("claim") > -1 == false){
+          navigate("/dashboard/profile");
+        }
         status = false;
       } else if (querySnapshot2.empty) {
         setOpen(true);
         setMessage("Please fill up profile and request access.");
-        navigate("/dashboard/profile");
+        if (location?.pathname.indexOf("claim") > -1 == false) {
+          navigate("/dashboard/profile");
+        }
         status = false;
       } else {
         setOpen(false);
