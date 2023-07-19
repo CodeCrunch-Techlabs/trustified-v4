@@ -161,15 +161,20 @@ export const NFTStorageContextProvider = (props) => {
           })
           .catch((error) => {
             setUploading(false);
-            if (error.message == "Internal JSON-RPC error.") {
+            if (error?.code == 'CALL_EXCEPTION') {
+              toast.error("You don't have enough balance to create certificate!")
+            } else if (error?.message == "Internal JSON-RPC error.") {
               toast.error(
                 "You don't have enough balance to create certificate!"
               );
-            } else if (error.code == "ACTION_REJECTED") {
+            } else if (error?.code == "ACTION_REJECTED") {
               toast.error(
                 "MetaMask Tx Signature: User denied transaction signature!"
               );
-            } else {
+            } else if (error?.code == "NFT_OWNER") {
+              toast.error('You dont own issuer nft on the selected network!');
+            }
+            else {
               toast.error(error.message);
             }
           });
@@ -182,7 +187,6 @@ export const NFTStorageContextProvider = (props) => {
           usernamePos,
           ipfsurl,
           uploadObj,
-          visiblity,
           mode,
           customeType,
           tokenURIS
@@ -193,21 +197,26 @@ export const NFTStorageContextProvider = (props) => {
           })
           .catch((error) => {
             setUploading(false);
-            if (error.message == "Internal JSON-RPC error.") {
+            if (error?.code == 'CALL_EXCEPTION') {
+              toast.error("You don't have enough balance to create certificate!")
+            } else if (error.message == "Internal JSON-RPC error.") {
               toast.error(
                 "You don't have enough balance to create certificate!"
               );
-            } else if (error.code == "ACTION_REJECTED") {
+            } else if (error?.code == "ACTION_REJECTED") {
               toast.error(
                 "MetaMask Tx Signature: User denied transaction signature!"
               );
+            } else if (error?.code == "NFT_OWNER") {
+              toast.error('You dont own issuer nft on the selected network!');
             } else {
+              console.log(error.message, "error.message");
               toast.error(error.message);
             }
           });
       }
     } catch (error) {
-      console.log(error);
+      console.log(error, "errror ee");
       setUploading(false);
     }
   };

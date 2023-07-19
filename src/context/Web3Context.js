@@ -40,11 +40,13 @@ export const Web3ContextProvider = (props) => {
   const [aLoading, setaLoading] = useState(false);
   const [updateIssuer, setUpdateIssuers] = useState(false);
   const [airdropLoading, setAirdropLoading] = useState(false);
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
 
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState(null);
 
   const [csvData, setCsvData] = useState([]);
+ 
 
   const firebasedatacontext = React.useContext(firebaseDataContext);
   const {
@@ -58,6 +60,12 @@ export const Web3ContextProvider = (props) => {
     claim,
     checkUserStatus,
   } = firebasedatacontext;
+
+
+ 
+const handleCloseFeedback=()=>{
+  setFeedbackOpen(false);
+}
 
   useEffect(() => {
     getFirestoreData();
@@ -403,6 +411,7 @@ export const Web3ContextProvider = (props) => {
               downloadLink.download = `${firebasedata.title}.csv`;
               downloadLink.click();
               toast.success("Badges successfully issued!");
+              setFeedbackOpen(true);
               resolve({ isResolved: true });
             }
           );
@@ -412,7 +421,7 @@ export const Web3ContextProvider = (props) => {
             message: "You don't own issuer nft on the selected network!",
           });
         }
-      } catch (err) {
+      } catch (err) { 
         return reject(err);
       }
     });
@@ -432,6 +441,7 @@ export const Web3ContextProvider = (props) => {
   ) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log(formData,"formData");
         const provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const trustifiedIssuerNFTContract = new ethers.Contract(
@@ -539,9 +549,9 @@ export const Web3ContextProvider = (props) => {
               const downloadLink = document.createElement("a");
               downloadLink.href = URL.createObjectURL(blob);
               downloadLink.download = `${formData.title}.csv`;
-              downloadLink.click();
-
+              downloadLink.click(); 
               toast.success("Certificate Successfully issued!");
+              setFeedbackOpen(true);
               resolve({ isResolved: true });
             }
           );
@@ -553,7 +563,7 @@ export const Web3ContextProvider = (props) => {
         }
       } catch (err) {
         // console.log(err);
-        // toast.error("Something want wrong!!", err);
+        // toast.error("Something want wrong!!", err); 
         return reject(err);
       }
     });
@@ -605,6 +615,7 @@ export const Web3ContextProvider = (props) => {
       }
       setAirdropLoading(false);
       toast.success("Successfully Airdroped nfts!");
+      setFeedbackOpen(true);
     } catch (error) {
       setAirdropLoading(false);
       toast.error("Something went wrong! Please try again after some time!");
@@ -724,6 +735,7 @@ export const Web3ContextProvider = (props) => {
 
             toast.success("Certificate Successfully claimed!");
             setClaimLoading(false);
+            setFeedbackOpen(true);
           }
         }
       } catch (error) {
@@ -853,10 +865,14 @@ export const Web3ContextProvider = (props) => {
           });
           toast.success("Certificate Successfully claimed!");
           setClaimLoading(false);
+          setFeedbackOpen(true);
         }
       } catch (error) {
         setClaimLoading(false);
-        if (error.message === "Internal JSON-RPC error.") {
+        console.log(error,"error");
+        if (error?.code == 'CALL_EXCEPTION') {
+          toast.error("You don't have enough balance to claim certificate!")
+        } else  if (error.message === "Internal JSON-RPC error.") {
           toast.error("You don't have enough balance to claim certificate!");
         } else if (error.code === "ACTION_REJECTED") {
           toast.error(
@@ -870,10 +886,8 @@ export const Web3ContextProvider = (props) => {
   };
 
   const claimBadges = async (claimToken, claimerAddress) => {
-    setClaimLoading(true);
-
-    var addressType = claimerAddress.substring(0, 2);
-
+    setClaimLoading(true); 
+    var addressType = claimerAddress.substring(0, 2); 
     var ethAddress = "";
 
     if (addressType == "f4") {
@@ -936,12 +950,15 @@ export const Web3ContextProvider = (props) => {
           });
           toast.success("Badge Successfully claimed!");
           setClaimLoading(false);
+          setFeedbackOpen(true);
         }
       } catch (error) {
         console.log(error);
         setClaimLoading(false);
-        if (error.message === "Internal JSON-RPC error.") {
-          toast.error("You don't have enough balance to claim certificate!");
+        if (error?.code == 'CALL_EXCEPTION') {
+          toast.error("You don't have enough balance to claim Badge!")
+        } else  if (error.message === "Internal JSON-RPC error.") {
+          toast.error("You don't have enough balance to claim Badge!");
         } else if (error.code === "ACTION_REJECTED") {
           toast.error(
             "MetaMask Tx Signature: User denied transaction signature!"
@@ -1048,6 +1065,9 @@ export const Web3ContextProvider = (props) => {
         checkAllowList,
         airdropNFTs,
         airdropLoading,
+        feedbackOpen,
+        setFeedbackOpen, 
+         handleCloseFeedback
       }}
       {...props}
     >

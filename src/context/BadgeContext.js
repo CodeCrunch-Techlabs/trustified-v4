@@ -137,7 +137,9 @@ export const BadgeContextProvider = (props) => {
 
             console.log(error.code);
             console.log(error.message);
-
+            if(error?.code === 'CALL_EXCEPTION'){
+              toast.error("You don't have enough balance to create Badges!")
+            } 
             if (error.message == "Internal JSON-RPC error." ||  error.code == "CALL_EXCEPTION") {
               toast.error("You don't have enough balance to create Badges!");
             } else if (error.code == "ACTION_REJECTED") {
@@ -146,8 +148,8 @@ export const BadgeContextProvider = (props) => {
               );
             } else if (error.code == "UNPREDICTABLE_GAS_LIMIT") {
               toast.error("You are not approved! Please contact admin!");
-            } else if ((error.code = "NFT_OWNER")) {
-              toast.error(error.message);
+            } else if ((error.code == "NFT_OWNER")) {
+              toast.error('You dont own issuer nft on the selected network!');
             } else {
               toast.error(error.message);
             }

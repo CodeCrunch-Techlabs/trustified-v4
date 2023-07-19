@@ -16,6 +16,7 @@ import Step from "@mui/material/Step";
 import StepContent from "@mui/material/StepContent";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import FeedbackModal from "../FeedbackModal";
 
 const steps = [
   {
@@ -131,6 +132,7 @@ const NewTemplates = () => {
           Please fill out the form with as much information as possible.
         </p>
       </div>
+      <FeedbackModal/>
       <Box sx={{ marginTop: "30px" }}>
         <Stepper activeStep={activeStep} orientation="vertical">
           {steps.map((step, index) => (
