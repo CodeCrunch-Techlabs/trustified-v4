@@ -2,7 +2,7 @@ import { getDoc } from "firebase/firestore";
 import React, { createContext, useEffect, useState } from "react";
 import { trustifiedContracts } from "../config";
 import { useNavigate } from "react-router-dom";
-
+import emailjs from '@emailjs/browser';
 import {
   addDoc,
   collection,
@@ -367,8 +367,8 @@ export const FirebaseDataContextProvider = (props) => {
           fire.data().type == "badge"
             ? ""
             : fire.data().position != "" && fire.data().position != undefined
-            ? ""
-            : await getTemplate(fire.data().templateId);
+              ? ""
+              : await getTemplate(fire.data().templateId);
         obj.template = template;
         obj.chain = fire.data().chain;
         obj.type = fire.data().type;
@@ -406,8 +406,8 @@ export const FirebaseDataContextProvider = (props) => {
       setLoading(false);
       console.log(error);
     }
-  } 
- 
+  }
+
   async function getIssuers(id) {
     // const arry = [];
     // const q = query(collection(db, "Collectors"),where("collectionContract", "==", id));
@@ -542,9 +542,36 @@ export const FirebaseDataContextProvider = (props) => {
   async function updateStatus(data, status) {
     setUpdateLoading(true);
     const userRef = doc(db, "UserProfile", data.id);
-    await updateDoc(userRef, {
-      status: status,
-    });
+    const querySnapshot = await getDoc(userRef);
+    if (querySnapshot.exists) {
+      await updateDoc(userRef, {
+        status: status,
+      });
+
+      let msg = "";
+      if (status === "approved") {
+        msg = "Your Trustified Issuer request has been Accepted!"
+      } else {
+        msg = "Your Trustified Issuer request has been Rejected!"
+      }
+
+      emailjs.send(
+        'service_yfxlrxb',
+        'template_xvpx3h7',
+        {
+          to_name: querySnapshot.data().Name,
+          from_name: "Trustified Team",
+          to_email: querySnapshot.data().email,
+          message: msg
+        },
+        'sCGsL3MO0DOgcQLFy'
+      ).then(() => {
+        toast.success('Successfully send!');
+      }, (error) => {
+        console.log(error);
+        toast.error("Something went wrong!");
+      })
+    }
     setUpdateLoading(false);
   }
 
@@ -619,8 +646,6 @@ export const FirebaseDataContextProvider = (props) => {
         where("Address", "==", add)
       );
 
-    
-
       const querySnapshot = await getDocs(q);
       const querySnapshot1 = await getDocs(q1);
       const querySnapshot2 = await getDocs(q2);
@@ -637,7 +662,7 @@ export const FirebaseDataContextProvider = (props) => {
         setMessage(
           "Your request has been not approved due to insufficient information."
         );
-        if (location?.pathname.indexOf("claim") > -1 == false){
+        if (location?.pathname.indexOf("claim") > -1 == false) {
           navigate("/dashboard/profile");
         }
         status = false;

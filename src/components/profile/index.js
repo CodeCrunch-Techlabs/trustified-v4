@@ -35,6 +35,7 @@ import {
   query,
   where,
   getDocs,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "../../firebase";
 import { toast } from "react-toastify";
@@ -52,12 +53,16 @@ function User() {
   const web3Context = React.useContext(Web3Context);
   const { shortAddress, setUpdate, update } = web3Context;
   const [loading, setLoading] = useState(false);
-  const storage = getStorage(); 
+  const storage = getStorage();
 
   const validationSchema = yup.object({
     name: yup
       .string('Enter your Name')
       .required('Name is required'),
+    email: yup
+      .string('Enter your email')
+      .email('Enter a valid email')
+      .required('Email is required'),
     purpose: yup
       .string('Enter your purpose')
       .required('purpose is required'),
@@ -67,6 +72,7 @@ function User() {
     initialValues: {
       avatar: "",
       name: "",
+      email:"",
       bio: "",
       purpose: "",
       address: "",
@@ -75,8 +81,7 @@ function User() {
       networks: [],
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
+    onSubmit: (values) => { 
       updateProfile()
     },
   });
@@ -177,22 +182,11 @@ function User() {
         where("Address", "==", add)
       );
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((fire) => {
-        let obj = {
-          avatar: fire.data().Photo,
-          name: fire.data().Name,
-          bio: fire.data().Bio,
-          purpose: fire.data().purpose,
-          address: fire.data().Address,
-          verified: fire.data().verified,
-          status: fire.data().status,
-          type: fire.data().type,
-          url: fire.data().url,
-          networks: fire.data().networks ? fire.data().networks : [],
-        }; 
+      querySnapshot.forEach((fire) => { 
         formik.setValues({
           avatar: fire.data().Photo,
           name: fire.data().Name,
+          email: fire.data().email,
           bio: fire.data().Bio,
           purpose: fire.data().purpose,
           address: fire.data().Address,
@@ -213,8 +207,8 @@ function User() {
     const file = e.target.files[0];
     const storageRef = ref(storage, `Photo/${file.name}`);
     uploadBytes(storageRef, file).then((snapshot) => {
-      getDownloadURL(snapshot.ref).then((url) => { 
-        formik.setValues({...formik.values,avatar:url});
+      getDownloadURL(snapshot.ref).then((url) => {
+        formik.setValues({ ...formik.values, avatar: url });
       });
     });
     setLoading(false);
@@ -225,6 +219,7 @@ function User() {
 
     const data = {
       Name: formik.values.name,
+      email: formik.values.email,
       Bio: formik.values.bio,
       Photo: formik.values.avatar,
       Address: add,
@@ -246,7 +241,7 @@ function User() {
       querySnapshot.forEach((fire) => {
         const data = {
           Name: formik.values.name !== "" ? formik.values.name : fire.data().Name,
-
+          email: formik.values.email !== "" ? formik.values.email : fire.data().email,
           Bio: formik.values.bio !== "" ? formik.values.bio : fire.data().Bio,
           Photo:
             formik.values.avatar !== "" ? formik.values.avatar : fire.data().Photo,
@@ -268,7 +263,34 @@ function User() {
         toast.success("Profile successfully updated!!");
       });
     }
-  }; 
+  };
+
+ // add email field in database
+  // const handleupdatefield= async()=>{ 
+  //   try { 
+  //     const collectionRef = collection(db, 'UserProfile');
+    
+  //     // Fetch all documents from the collection
+  //     const snapshot = await getDocs(collectionRef);
+  //     console.log(snapshot, "snapshot");
+    
+  //     // Create the batch
+  //     const batch = writeBatch(db);
+  //     console.log(batch, "batch");
+    
+  //     // Update each document with the new "Name" field
+  //     snapshot.forEach((doc) => {
+  //       batch.update(doc.ref, { email: 'test123@gmail.com' });
+  //     });
+    
+  //     // Commit the batch update
+  //     await batch.commit();
+    
+  //   toast.success('email field added to all documents successfully!');
+  //     } catch (error) {
+  //     console.error('Error adding name field:', error);
+  //     }
+  // }
 
   return (
     <>
@@ -351,17 +373,26 @@ function User() {
                       id="outlined-multiline-flexible"
                       label="Name"
                       name="name"
-                      type="text"
-                      // value={profileData.name}
-                      // onChange={(e) =>
-                      //   setProfileData({ ...profileData, name: e.target.value })
-                      // }
+                      type="text" 
                       fullWidth
                       value={formik.values.name}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       error={formik.touched.name && Boolean(formik.errors.name)}
                       helperText={formik.touched.name && formik.errors.name}
+                    />
+                     <TextField
+                      sx={{ m: 2 }}
+                      id="outlined-multiline-flexible"
+                      label="Email"
+                      name="email"
+                      type="email" 
+                      fullWidth
+                      value={formik.values.email}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      error={formik.touched.email && Boolean(formik.errors.email)}
+                      helperText={formik.touched.email && formik.errors.email}
                     />
 
                     <TextField
@@ -396,7 +427,7 @@ function User() {
                       id="outlined-multiline-flexible"
                       label="Purpose of Issue"
                       name="purpose"
-                      type="text" 
+                      type="text"
                       value={formik.values.purpose}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
@@ -468,7 +499,7 @@ function User() {
                   </button>
                 </Card.Footer>
               </Card>
-            </form>
+            </form> 
           </Col>
           <Col md="5">
             <Card sx={{ border: "1px solid #eee" }}>

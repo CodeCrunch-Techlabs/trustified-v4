@@ -62,8 +62,7 @@ const FeedbackModal = () => {
                 setLoading(false);
                 toast.error("Something went wrong!");
             })
-        }
-
+        } 
     }
 
 

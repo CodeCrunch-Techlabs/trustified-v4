@@ -165,7 +165,7 @@ const [order, setOrder] = useState('asc');
     });
   
     setRequests([...sortedData]);
-  };
+  }; 
 
   return (
     <>
