@@ -406,8 +406,8 @@ export const FirebaseDataContextProvider = (props) => {
       setLoading(false);
       console.log(error);
     }
-  }
-
+  } 
+ 
   async function getIssuers(id) {
     // const arry = [];
     // const q = query(collection(db, "Collectors"),where("collectionContract", "==", id));

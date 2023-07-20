@@ -14,6 +14,7 @@ import Preview from "./components/template/Preview";
 import BadgeTemplate from "./components/template/BadgeTemplate";
 import MyCollection from "./components/myCollection";
 import Requests from "./components/List/AccessRequests";
+import CollectionDetail from "./components/CollectionDetail";
 
 export default function Router() {
   return useRoutes([
@@ -78,6 +79,13 @@ export default function Router() {
       element: <LendingPageLayout />,
       children: [
         { path: "/my-collection", element: <MyCollection show={true} /> },
+      ],
+    },
+    {
+      path: "/collection",
+      element: <LendingPageLayout />,
+      children: [
+        { path: "/collection/:id", element: <CollectionDetail /> },
       ],
     },
   ]);

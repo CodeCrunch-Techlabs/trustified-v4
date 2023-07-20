@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { 
-  CircularProgress, 
+import {
+  CircularProgress,
   Typography,
   Box,
 } from "@mui/material";
@@ -9,7 +9,7 @@ import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import web3 from "web3";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Iconify from "./utils/Iconify";
 import Tooltip from "@mui/material/Tooltip";
 import { IconButton } from "@mui/material";
@@ -54,7 +54,7 @@ function a11yProps(index) {
 export default function MyCollection({ show }) {
   const firebaseContext = React.useContext(firebaseDataContext);
   const { myCollection, certLoad, getMyCollection } = firebaseContext;
-
+  const navigate = useNavigate();
   const location = useLocation();
 
   const [value, setValue] = React.useState(0);
@@ -155,7 +155,11 @@ export default function MyCollection({ show }) {
     const url = networkURL[chain];
     return url;
   };
- 
+
+  const navigateTo = (id) => {
+    navigate(`/collection/${id}`);
+  };
+
 
   return (
     <div
@@ -196,18 +200,14 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={0}>
             <div className="row">
               {badgesData.length != 0 &&
-                badgesData.map((e, i) => {
+                badgesData.map((e, i) => { 
                   return (
                     <div key={i} className="col-12 col-lg-3 col-sm-4 col-md-3">
                       <div
-                        className="mt-2 template-card mb-2 text-center"
-                        style={{ display: "grid" }}
-                      >
-                        <Link
-                          to={e.ipfsurl}
-                          target="_blank"
-                          // style={{ width: "50%" }}
-                        >
+                        className="mt-2 template-card mb-2 text-center "
+                        style={{ display: "inline-grid" , cursor: 'pointer'}}
+                        onClick={() => navigateTo(e.claimToken)}
+                      > 
                           <img
                             height="auto"
                             width="100%"
@@ -215,20 +215,19 @@ export default function MyCollection({ show }) {
                             src={e.ipfsurl}
                             alt={e.title}
                           />
-                        </Link>
 
-                        <Typography
-                          variant="body"
-                          component="a"
-                          sx={{
-                            fontWeight: 600,
-                            margin: "10px",
-                            color: "#84a8fb",
-                            textDecoration: "none",
-                          }}
-                        >
-                          {e.title}
-                        </Typography>
+                          <Typography
+                            variant="body"
+                            component="a"
+                            sx={{
+                              fontWeight: 600,
+                              margin: "10px auto",
+                              color: "#84a8fb",
+                              textDecoration: "none",
+                            }}
+                          >
+                            {e.title}
+                          </Typography> 
                       </div>
                     </div>
                   );
@@ -251,7 +250,7 @@ export default function MyCollection({ show }) {
                       key={i}
                     >
                       <div className="card-root">
-                        <Link to={item.ipfsurl} target="_blank">
+                        <div  onClick={() => navigateTo(item.claimToken)}>
                           <img
                             style={{ cursor: "pointer" }}
                             src={
@@ -262,7 +261,7 @@ export default function MyCollection({ show }) {
                             alt=""
                             width="100%"
                           />
-                        </Link>
+                        </div>
                         <div className="card-body-cert">
                           <div className="d-flex justify-content-between">
                             <Typography

@@ -1,7 +1,8 @@
 
-import React, { useState } from "react"; 
+import React, { useState } from "react";
 import { db } from "../../firebase";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Link } from "react-router-dom";
 // import { collection, deleteDoc, getDoc, getDocs, query, where } from "firebase/firestore";
 
 const UploadPreview = ({ claimer, id }) => {
@@ -29,30 +30,35 @@ const UploadPreview = ({ claimer, id }) => {
         id="certificateX"
         style={{
           position: "relative",
-          width: claimer.uploadObj.width,
-          height: claimer.uploadObj.height,
+          width: claimer?.uploadObj.width,
+          height: claimer?.uploadObj.height,
         }}
       >
-        <LazyLoadImage
-          alt="Image Alt"
-          height={claimer.uploadObj.height}
-          src={claimer.ipfsurl}
-          placeholderSrc="/assets/bg-preview.jpg"
-          width={claimer.uploadObj.width}
-          onLoad={() => setLoaded(!loaded)}
-          effect="blur"
-        />
-
-        {loaded === true && claimer.status !== "Yes" && (
+        <Link
+          to={claimer?.ipfsurl}
+          target="_blank"
+        >
+          <LazyLoadImage
+            alt="Image Alt"
+            height={claimer?.uploadObj.height}
+            style={{ borderRadius: '4px' }}
+            src={claimer?.ipfsurl}
+            placeholderSrc="/assets/bg-preview.jpg"
+            width={claimer?.uploadObj.width}
+            onLoad={() => setLoaded(!loaded)}
+            effect="blur"
+          />
+        </Link>
+        {loaded === true && claimer?.status !== "Yes" && (
           <>
-            <div style={claimer.uploadObj.style}>{claimer?.claimer}</div>
+            <div style={claimer?.uploadObj.style}>{claimer?.claimer}</div>
             <div
               style={{
                 position: "absolute",
                 right: 0,
                 padding: "0 5px",
                 bottom: 0,
-                color: claimer.uploadObj.style.color,
+                color: claimer?.uploadObj.style.color,
                 fontSize: "12px",
               }}
             >
