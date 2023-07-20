@@ -29,9 +29,8 @@ function getLabelText(value) {
 const FeedbackModal = () => {
     const web3conext = useContext(Web3Context);
     const { feedbackOpen, setFeedbackOpen, handleCloseFeedback } = web3conext;
-    const [value, setValue] = React.useState(0);
-    const [message, setMessage] = useState("");
-    const [name, setName] = useState("");
+    const [value, setValue] = React.useState(3);
+    const [message, setMessage] = useState(""); 
     const [email, setEmail] = useState("");
     const [hover, setHover] = React.useState(-1);
     const [loading, setLoading] = useState(false);
@@ -43,7 +42,7 @@ const FeedbackModal = () => {
 
 
     const handleSubmit = () => {
-        if (message.length === 0 || name.length === 0 || email.length === 0) {
+        if (message.length === 0  || email.length === 0) {
             toast.warning("All the fields are required!");
         } else {
             setLoading(true);
@@ -52,7 +51,7 @@ const FeedbackModal = () => {
                 'template_vitqwf7',
                 {
                     to_name: 'Trustified Team',
-                    from_name: name,
+                    from_name: "",
                     from_email: email,
                     to_email: 'dev.jaydip83@gmail.com',
                     rating: value,
@@ -64,8 +63,7 @@ const FeedbackModal = () => {
                 toast.success('Thank you for your feedback!');
                 setValue(0);
                 setMessage("");
-                setEmail("");
-                setName("");
+                setEmail(""); 
                 handleCloseFeedback();
 
             }, (error) => {
@@ -80,13 +78,12 @@ const FeedbackModal = () => {
 
 
     return (
-        <div>
-            <button onClick={handleopen}>open feedback</button>
-            <Dialog open={feedbackOpen} onClose={handleCloseFeedback}>
+        <div> 
+            <Dialog open={feedbackOpen} onClose={handleCloseFeedback} maxWidth="lg">
                 <DialogTitle>Feedback</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                      We will need it to  "Thank you" for your feedback.
+                      
                     </DialogContentText>
 
                     <Box
@@ -94,6 +91,7 @@ const FeedbackModal = () => {
                             width: 200,
                             display: 'flex',
                             alignItems: 'center',
+                            mb:3
                         }}
                     >
                         <Rating
@@ -106,26 +104,15 @@ const FeedbackModal = () => {
                             }}
                             onChangeActive={(event, newHover) => {
                                 setHover(newHover);
-                            }}
-                            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                            }} 
+                            emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="medium" />}
                         />
                         {value !== null && (
-                            <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
+                            <Box  sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
                         )}
                     </Box>
-                    <div className="mb-3">
-                        <label for="exampleFormControlTextarea1" className="form-label">Your Name: </label>
-                        <TextField
-                            id="outlined-multiline-static"
-                            label="Your Name"
-                            name='name'
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            fullWidth
-                        />
-                    </div>
-                    <div className="mb-3">
-                        <label for="exampleFormControlTextarea1" className="form-label">Email: </label>
+                    
+                    <div className="mb-3">  
                         <TextField
                             id="outlined-multiline-static"
                             label="Email"
@@ -133,11 +120,12 @@ const FeedbackModal = () => {
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             fullWidth
+                            helperText={`We will need it to  "Thank you" for your feedback 😊`} 
                         />
+                        {/* <label for="exampleFormControlTextarea1" className="form-label"> </label> */}
                     </div>
 
-                    <div className="mb-3">
-                        <label for="exampleFormControlTextarea1" className="form-label">Message: </label>
+                    <div className="mb-3"> 
                         <TextField
                             id="outlined-multiline-static"
                             label="Feedback Message"
@@ -148,8 +136,7 @@ const FeedbackModal = () => {
                             rows={4}
                             fullWidth
                         />
-                    </div>
-
+                    </div> 
                 </DialogContent>
                 <DialogActions>
                     <Button variant="contained" color='error' onClick={handleCloseFeedback}>Cancel</Button>
