@@ -31,21 +31,30 @@ const FeedbackModal = () => {
     const { feedbackOpen, setFeedbackOpen, handleCloseFeedback } = web3conext;
     const [value, setValue] = React.useState(0);
     const [message, setMessage] = useState("");
+    const [name, setName] = useState("");
+    const [email, setEmail] = useState("");
     const [hover, setHover] = React.useState(-1);
     const [loading, setLoading] = useState(false);
 
 
+    const handleopen=()=>{
+        setFeedbackOpen(true);
+    }
+
+
     const handleSubmit = () => {
-        if (message.length === 0) {
-            toast.warning("Please fill up this field!");
+        if (message.length === 0 || name.length === 0 || email.length === 0) {
+            toast.warning("All the fields are required!");
         } else {
             setLoading(true);
             emailjs.send(
                 'service_tdxktw6',
                 'template_vitqwf7',
                 {
-                    to_name: 'Trustified',
-                    to_email: 'Trustified Feedback',
+                    to_name: 'Trustified Team',
+                    from_name: name,
+                    from_email: email,
+                    to_email: 'dev.jaydip83@gmail.com',
                     rating: value,
                     message: message
                 },
@@ -55,6 +64,8 @@ const FeedbackModal = () => {
                 toast.success('Thank you for your feedback!');
                 setValue(0);
                 setMessage("");
+                setEmail("");
+                setName("");
                 handleCloseFeedback();
 
             }, (error) => {
@@ -62,7 +73,7 @@ const FeedbackModal = () => {
                 setLoading(false);
                 toast.error("Something went wrong!");
             })
-        } 
+        }
     }
 
 
@@ -70,11 +81,12 @@ const FeedbackModal = () => {
 
     return (
         <div>
+            <button onClick={handleopen}>open feedback</button>
             <Dialog open={feedbackOpen} onClose={handleCloseFeedback}>
                 <DialogTitle>Feedback</DialogTitle>
                 <DialogContent>
                     <DialogContentText>
-                        We'll never share your email with anyone else.
+                      We will need it to  "Thank you" for your feedback.
                     </DialogContentText>
 
                     <Box
@@ -101,9 +113,31 @@ const FeedbackModal = () => {
                             <Box sx={{ ml: 2 }}>{labels[hover !== -1 ? hover : value]}</Box>
                         )}
                     </Box>
+                    <div className="mb-3">
+                        <label for="exampleFormControlTextarea1" className="form-label">Your Name: </label>
+                        <TextField
+                            id="outlined-multiline-static"
+                            label="Your Name"
+                            name='name'
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            fullWidth
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label for="exampleFormControlTextarea1" className="form-label">Email: </label>
+                        <TextField
+                            id="outlined-multiline-static"
+                            label="Email"
+                            name='email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            fullWidth
+                        />
+                    </div>
 
                     <div className="mb-3">
-                        <label for="exampleFormControlTextarea1" className="form-label">Feedback: </label>
+                        <label for="exampleFormControlTextarea1" className="form-label">Message: </label>
                         <TextField
                             id="outlined-multiline-static"
                             label="Feedback Message"
