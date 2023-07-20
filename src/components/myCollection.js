@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  CircularProgress,
-  Typography,
-  Box,
-} from "@mui/material";
+import { CircularProgress, Typography, Box } from "@mui/material";
 import { firebaseDataContext } from "../context/FirebaseDataContext";
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
@@ -100,6 +96,14 @@ export default function MyCollection({ show }) {
         }
       }
     }
+    const compareDates = (a, b) => {
+      const dateA = new Date(a.issueDate);
+      const dateB = new Date(b.issueDate);
+      return dateB - dateA; // Sort in descending order (recent dates first)
+    };
+
+    badges = badges.sort(compareDates);
+    certificates = certificates.sort(compareDates);
     setbadgesData(badges);
     setcertificatesData(certificates);
   }, [myCollection]);
@@ -160,7 +164,6 @@ export default function MyCollection({ show }) {
     navigate(`/collection/${id}`);
   };
 
-
   return (
     <div
       className={
@@ -200,34 +203,34 @@ export default function MyCollection({ show }) {
           <TabPanel value={value} index={0}>
             <div className="row">
               {badgesData.length != 0 &&
-                badgesData.map((e, i) => { 
+                badgesData.map((e, i) => {
                   return (
                     <div key={i} className="col-12 col-lg-3 col-sm-4 col-md-3">
                       <div
                         className="mt-2 template-card mb-2 text-center "
-                        style={{ display: "inline-grid" , cursor: 'pointer'}}
+                        style={{ display: "inline-grid", cursor: "pointer" }}
                         onClick={() => navigateTo(e.claimToken)}
-                      > 
-                          <img
-                            height="auto"
-                            width="100%"
-                            className="claimBadge"
-                            src={e.ipfsurl}
-                            alt={e.title}
-                          />
+                      >
+                        <img
+                          height="auto"
+                          width="100%"
+                          className="claimBadge"
+                          src={e.ipfsurl}
+                          alt={e.title}
+                        />
 
-                          <Typography
-                            variant="body"
-                            component="a"
-                            sx={{
-                              fontWeight: 600,
-                              margin: "10px auto",
-                              color: "#84a8fb",
-                              textDecoration: "none",
-                            }}
-                          >
-                            {e.title}
-                          </Typography> 
+                        <Typography
+                          variant="body"
+                          component="a"
+                          sx={{
+                            fontWeight: 600,
+                            margin: "10px auto",
+                            color: "#84a8fb",
+                            textDecoration: "none",
+                          }}
+                        >
+                          {e.title}
+                        </Typography>
                       </div>
                     </div>
                   );
@@ -250,7 +253,7 @@ export default function MyCollection({ show }) {
                       key={i}
                     >
                       <div className="card-root">
-                        <div  onClick={() => navigateTo(item.claimToken)}>
+                        <div onClick={() => navigateTo(item.claimToken)}>
                           <img
                             style={{ cursor: "pointer" }}
                             src={
