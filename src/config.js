@@ -206,13 +206,13 @@ export const multiChains = [
     chainId: 421613,
     priority: 1,
   },
-  {
-    label: "Ethereum Sepolia",
-    value: "ethereumtestnet",
-    image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
-    chainId: 11155111,
-    priority: 1,
-  },
+  // {
+  //   label: "Ethereum Sepolia",
+  //   value: "ethereumtestnet",
+  //   image: "https://request-icons.s3.eu-west-1.amazonaws.com/eth.svg",
+  //   chainId: 11155111,
+  //   priority: 1,
+  // },
 ];
 
 export const fsize = [

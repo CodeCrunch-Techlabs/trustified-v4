@@ -2,7 +2,7 @@ import { getDoc } from "firebase/firestore";
 import React, { createContext, useEffect, useState } from "react";
 import { trustifiedContracts } from "../config";
 import { useNavigate } from "react-router-dom";
-import emailjs from '@emailjs/browser';
+import emailjs from "@emailjs/browser";
 import {
   addDoc,
   collection,
@@ -367,8 +367,8 @@ export const FirebaseDataContextProvider = (props) => {
           fire.data().type == "badge"
             ? ""
             : fire.data().position != "" && fire.data().position != undefined
-              ? ""
-              : await getTemplate(fire.data().templateId);
+            ? ""
+            : await getTemplate(fire.data().templateId);
         obj.template = template;
         obj.chain = fire.data().chain;
         obj.type = fire.data().type;
@@ -550,27 +550,32 @@ export const FirebaseDataContextProvider = (props) => {
 
       let msg = "";
       if (status === "approved") {
-        msg = "Your Trustified Issuer request has been Accepted!"
+        msg = "Your Trustified Issuer request has been Accepted!";
       } else {
-        msg = "Your Trustified Issuer request has been Rejected!"
+        msg = "Your Trustified Issuer request has been Rejected!";
       }
 
-      emailjs.send(
-        'service_yfxlrxb',
-        'template_xvpx3h7',
-        {
-          to_name: querySnapshot.data().Name,
-          from_name: "Trustified Team",
-          to_email: querySnapshot.data().email,
-          message: msg
-        },
-        'sCGsL3MO0DOgcQLFy'
-      ).then(() => {
-        toast.success('Successfully send!');
-      }, (error) => {
-        console.log(error);
-        toast.error("Something went wrong!");
-      })
+      emailjs
+        .send(
+          "service_yfxlrxb",
+          "template_xvpx3h7",
+          {
+            to_name: querySnapshot.data().Name,
+            from_name: "Trustified Team",
+            to_email: querySnapshot.data().email,
+            message: msg,
+          },
+          "sCGsL3MO0DOgcQLFy"
+        )
+        .then(
+          () => {
+            toast.success("Successfully send!");
+          },
+          (error) => {
+            console.log(error);
+            toast.error("Something went wrong!");
+          }
+        );
     }
     setUpdateLoading(false);
   }
@@ -583,9 +588,11 @@ export const FirebaseDataContextProvider = (props) => {
     );
     const querySnapshot = await getDocs(q);
     let issuers = [];
-    querySnapshot.forEach(async (fire) => {
+
+    querySnapshot.docs.map((fire) => {
       issuers.push(fire.data());
     });
+
     return issuers;
   }
 
@@ -605,6 +612,30 @@ export const FirebaseDataContextProvider = (props) => {
     });
     setUpdateLoading(false);
   }
+
+  // async function updateNetworks() {
+  //   setUpdateLoading(true);
+  //   const q = query(
+  //     collection(db, "UserProfile"),
+  //     where("status", "==", "approved"),
+  //     where("verified", "==", 0)
+  //   );
+  //   const querySnapshot = await getDocs(q);
+  //   querySnapshot.forEach(async (fire) => {
+  //     const userRef = doc(db, "UserProfile", fire.id);
+  //     console.log(fire.data());
+  //     var obj = fire.data().networks;
+  //     for (var i in obj) {
+  //       obj[i].transferred = false;
+  //     }
+
+  //     await updateDoc(userRef, {
+  //       networks: obj,
+  //     });
+  //     console.log(obj);
+  //   });
+  //   setUpdateLoading(false);
+  // }
 
   async function updateAirdroppedCollectors(data) {
     const q = query(

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PhotoCamera } from "@mui/icons-material";
+import { FormatListBulletedSharp, PhotoCamera } from "@mui/icons-material";
 import {
   Avatar,
   Badge,
@@ -46,8 +46,8 @@ import { multiChains } from "../../config";
 
 import { Card, Container, Row, Col } from "react-bootstrap";
 import web3 from "web3";
-import { useFormik } from 'formik';
-import * as yup from 'yup';
+import { useFormik } from "formik";
+import * as yup from "yup";
 
 function User() {
   const web3Context = React.useContext(Web3Context);
@@ -56,23 +56,19 @@ function User() {
   const storage = getStorage();
 
   const validationSchema = yup.object({
-    name: yup
-      .string('Enter your Name')
-      .required('Name is required'),
+    name: yup.string("Enter your Name").required("Name is required"),
     email: yup
-      .string('Enter your email')
-      .email('Enter a valid email')
-      .required('Email is required'),
-    purpose: yup
-      .string('Enter your purpose')
-      .required('purpose is required'),
+      .string("Enter your email")
+      .email("Enter a valid email")
+      .required("Email is required"),
+    purpose: yup.string("Enter your purpose").required("purpose is required"),
   });
 
   const formik = useFormik({
     initialValues: {
       avatar: "",
       name: "",
-      email:"",
+      email: "",
       bio: "",
       purpose: "",
       address: "",
@@ -81,11 +77,21 @@ function User() {
       networks: [],
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => { 
-      updateProfile()
+    onSubmit: (values) => {
+      if (error) {
+        toast.error("Please select network!");
+      } else {
+        updateProfile();
+      }
     },
   });
 
+  useEffect(() => {
+    if (!formik.isSubmitting) return;
+    if (Object.keys(formik.errors).length > 0) {
+      document.getElementsByName(Object.keys(formik.errors)[0])[0].focus();
+    }
+  }, [formik]);
 
   const [state, setState] = React.useState({
     fvm: {
@@ -95,6 +101,7 @@ function User() {
       chainId: 314,
       priority: 0,
       checked: false,
+      transferred: false,
     },
     fvmtestnet: {
       label: "FVM Testnet(Calibration)",
@@ -103,6 +110,7 @@ function User() {
       chainId: 314159,
       priority: 1,
       checked: false,
+      transferred: false,
     },
     polygon: {
       label: "Polygon",
@@ -111,6 +119,7 @@ function User() {
       chainId: 137,
       priority: 0,
       checked: false,
+      transferred: false,
     },
     mumbai: {
       label: "Polygon Mumbai",
@@ -119,6 +128,7 @@ function User() {
       chainId: 80001,
       priority: 1,
       checked: false,
+      transferred: false,
     },
     celotestnet: {
       label: "Alfajores Testnet(Celo)",
@@ -127,6 +137,7 @@ function User() {
       chainId: 44787,
       priority: 1,
       checked: false,
+      transferred: false,
     },
     celomainnet: {
       label: "Celo Mainnet",
@@ -135,6 +146,7 @@ function User() {
       chainId: 42220,
       priority: 1,
       checked: false,
+      transferred: false,
     },
     arbitrumtestnet: {
       label: "Arbitrum Goerli",
@@ -143,6 +155,7 @@ function User() {
       chainId: 421613,
       priority: 1,
       checked: false,
+      transferred: false,
     },
     ethereumtestnet: {
       label: "Ethereum Sepolia",
@@ -151,6 +164,7 @@ function User() {
       chainId: 11155111,
       priority: 0,
       checked: false,
+      transferred: false,
     },
   });
 
@@ -182,7 +196,7 @@ function User() {
         where("Address", "==", add)
       );
       const querySnapshot = await getDocs(q);
-      querySnapshot.forEach((fire) => { 
+      querySnapshot.forEach((fire) => {
         formik.setValues({
           avatar: fire.data().Photo,
           name: fire.data().Name,
@@ -240,11 +254,17 @@ function User() {
     } else {
       querySnapshot.forEach((fire) => {
         const data = {
-          Name: formik.values.name !== "" ? formik.values.name : fire.data().Name,
-          email: formik.values.email !== "" ? formik.values.email : fire.data().email,
+          Name:
+            formik.values.name !== "" ? formik.values.name : fire.data().Name,
+          email:
+            formik.values.email !== ""
+              ? formik.values.email
+              : fire.data().email,
           Bio: formik.values.bio !== "" ? formik.values.bio : fire.data().Bio,
           Photo:
-            formik.values.avatar !== "" ? formik.values.avatar : fire.data().Photo,
+            formik.values.avatar !== ""
+              ? formik.values.avatar
+              : fire.data().Photo,
           Address: add,
           verified: fire.data().verified,
           UpdatedAt: new Date(),
@@ -253,7 +273,8 @@ function User() {
               ? formik.values.purpose
               : fire.data().purpose,
           status: fire.data().status,
-          type: formik.values.type !== "" ? formik.values.type : fire.data().type,
+          type:
+            formik.values.type !== "" ? formik.values.type : fire.data().type,
           url: formik.values.url !== "" ? formik.values.url : fire.data().url,
           networks: state,
         };
@@ -264,33 +285,6 @@ function User() {
       });
     }
   };
-
- // add email field in database
-  // const handleupdatefield= async()=>{ 
-  //   try { 
-  //     const collectionRef = collection(db, 'UserProfile');
-    
-  //     // Fetch all documents from the collection
-  //     const snapshot = await getDocs(collectionRef);
-  //     console.log(snapshot, "snapshot");
-    
-  //     // Create the batch
-  //     const batch = writeBatch(db);
-  //     console.log(batch, "batch");
-    
-  //     // Update each document with the new "Name" field
-  //     snapshot.forEach((doc) => {
-  //       batch.update(doc.ref, { email: 'test123@gmail.com' });
-  //     });
-    
-  //     // Commit the batch update
-  //     await batch.commit();
-    
-  //   toast.success('email field added to all documents successfully!');
-  //     } catch (error) {
-  //     console.error('Error adding name field:', error);
-  //     }
-  // }
 
   return (
     <>
@@ -373,7 +367,7 @@ function User() {
                       id="outlined-multiline-flexible"
                       label="Name"
                       name="name"
-                      type="text" 
+                      type="text"
                       fullWidth
                       value={formik.values.name}
                       onChange={formik.handleChange}
@@ -381,17 +375,19 @@ function User() {
                       error={formik.touched.name && Boolean(formik.errors.name)}
                       helperText={formik.touched.name && formik.errors.name}
                     />
-                     <TextField
+                    <TextField
                       sx={{ m: 2 }}
                       id="outlined-multiline-flexible"
                       label="Email"
                       name="email"
-                      type="email" 
+                      type="email"
                       fullWidth
                       value={formik.values.email}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={formik.touched.email && Boolean(formik.errors.email)}
+                      error={
+                        formik.touched.email && Boolean(formik.errors.email)
+                      }
                       helperText={formik.touched.email && formik.errors.email}
                     />
 
@@ -431,8 +427,12 @@ function User() {
                       value={formik.values.purpose}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      error={formik.touched.purpose && Boolean(formik.errors.purpose)}
-                      helperText={formik.touched.purpose && formik.errors.purpose}
+                      error={
+                        formik.touched.purpose && Boolean(formik.errors.purpose)
+                      }
+                      helperText={
+                        formik.touched.purpose && formik.errors.purpose
+                      }
                       fullWidth
                       multiline
                       maxRows={4}
@@ -484,7 +484,7 @@ function User() {
                       <FormHelperText>
                         {error
                           ? "Please select networks"
-                          : "Networks, on which you would like to issue badges or certificates"}
+                          : "Note: Networks, on which you would like to issue badges or certificates"}
                       </FormHelperText>
                     </FormControl>
                   </Box>
@@ -499,7 +499,7 @@ function User() {
                   </button>
                 </Card.Footer>
               </Card>
-            </form> 
+            </form>
           </Col>
           <Col md="5">
             <Card sx={{ border: "1px solid #eee" }}>
@@ -544,10 +544,14 @@ function User() {
                   >
                     <h3>
                       <a href="#none">
-                        {formik.values.name !== "" ? formik.values.name : "@name"}
+                        {formik.values.name !== ""
+                          ? formik.values.name
+                          : "@name"}
                       </a>
                     </h3>
-                    <p>{formik.values.bio !== "" ? formik.values.bio : "Bio"}</p>
+                    <p>
+                      {formik.values.bio !== "" ? formik.values.bio : "Bio"}
+                    </p>
                   </div>
                 </Box>
               </CardContent>
